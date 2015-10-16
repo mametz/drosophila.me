@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  male_id: 1
+  female_id: 1
+  link: MyString
+
+two:
+  male_id: 1
+  female_id: 1
+  link: MyString

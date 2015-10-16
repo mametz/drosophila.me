@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Crosses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Male</th>
+      <th>Female</th>
+      <th>Link</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @crosses.each do |cross| %>
+      <tr>
+        <td><%= cross.male_id %></td>
+        <td><%= cross.female_id %></td>
+        <td><%= cross.link %></td>
+        <td><%= link_to 'Show', cross %></td>
+        <td><%= link_to 'Edit', edit_cross_path(cross) %></td>
+        <td><%= link_to 'Destroy', cross, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Cross', new_cross_path %>

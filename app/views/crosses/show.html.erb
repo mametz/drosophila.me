@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Male:</strong>
+  <%= @cross.male_id %>
+</p>
+
+<p>
+  <strong>Female:</strong>
+  <%= @cross.female_id %>
+</p>
+
+<p>
+  <strong>Link:</strong>
+  <%= @cross.link %>
+</p>
+
+<%= link_to 'Edit', edit_cross_path(@cross) %> |
+<%= link_to 'Back', crosses_path %>
