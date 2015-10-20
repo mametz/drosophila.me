@@ -1,4 +1,10 @@
 <p id="notice"><%= notice %></p>
+<p>
+
+<%= link_to @cross, method: :delete, data: { confirm: 'Are you sure?' }, :class => "button alert small" do %>
+	<i class="fi-trash size-21" ></i>
+<% end %>
+</p>
 
 <%= mathjax_tag %>
 <div class="panel">
@@ -46,12 +52,10 @@
 \quad &#x2640;
 }\]
 
-
-<ul class="small-block-grid-3">
+<div align="center" data-equalizer>
 <% @progeny.each do |p| %>
 	<% semikolon = 0 %>
-
-	<li><a href="?male=<%= p %>">\[
+	<div draggable="true" class="button small secondary" data-equalizer-watch>\[
 	<% p.each do |chr| %>
 		<% if chr.size > 1 %>
 			<% if semikolon != 0 %>;<% end %>
@@ -68,12 +72,9 @@
 		<% end %> 
 		<% semikolon = 1 %>
 	<% end %>
-	\]</a></li>
+	\]</div>
 <% end %>
-
-</ul>
+</div>
 </div>
 
-<p>
-<%= link_to 'Destroy', @cross, method: :delete, data: { confirm: 'Are you sure?' } %>
-</p>
+<%= render 'formcrossfly' %>
