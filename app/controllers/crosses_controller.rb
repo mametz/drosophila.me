@@ -13,40 +13,23 @@ class CrossesController < ApplicationController
     @flym = Fly.find(@cross.male_id)
     @flyf = Fly.find(@cross.female_id)
 
-    if @flym.chr1 == @flyf.chr1
-      chr1 = [@flym.chr1]
-    else
-      chrm = @flym.chr1.split('/')
-      chrf = @flym.chr1.split('/')
+    chrm = @flym.chr1.split('/')
+    chrf = @flyf.chr1.split('/')
+    chr1 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-      chr1 = [[chrm[0],chrf[0]],[chrm[0],chrf[1]],[chrm[1],chrf[0]],[chrm[1],chrf[1]]]
-    end
-    if @flym.chr2 == @flyf.chr2
-      chr2 = [@flym.chr2]
-    else
-      chrm = @flym.chr2.split('/')
-      chrf = @flym.chr2.split('/')
+    chrm = @flym.chr2.split('/')
+    chrf = @flyf.chr2.split('/')
+    chr2 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-      chr2 = [[chrm[0],chrf[0]],[chrm[0],chrf[1]],[chrm[1],chrf[0]],[chrm[1],chrf[1]]]
-    end
-    if @flym.chr3 == @flyf.chr3
-      chr3 = [@flym.chr3]
-    else
-      chrm = @flym.chr3.split('/')
-      chrf = @flym.chr3.split('/')
+    chrm = @flym.chr3.split('/')
+    chrf = @flyf.chr3.split('/')
+    chr3 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-      chr3 = [[chrm[0],chrf[0]],[chrm[0],chrf[1]],[chrm[1],chrf[0]],[chrm[1],chrf[1]]]
-    end
-    if @flym.chr4 == @flyf.chr4
-      chr4 = [@flym.chr4]
-    else
-      chrm = @flym.chr4.split('/')
-      chrf = @flym.chr4.split('/')
+    chrm = @flym.chr4.split('/')
+    chrf = @flyf.chr4.split('/')
+    chr4 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-      chr4 = [[chrm[0],chrf[0]],[chrm[0],chrf[1]],[chrm[1],chrf[0]],[chrm[1],chrf[1]]]
-    end
-
-    @progeny = chr1.product(chr2,chr3,chr4)
+    @progeny = chr1.product(chr2,chr3,chr4).uniq
 
   end
 
@@ -72,29 +55,7 @@ class CrossesController < ApplicationController
       if @cross.save
 
         if params[:m_X] == "+/-"
-          params[:m_X] = "+"
-        end
-        if params[:m_II] == "+/+"
-          params[:m_II] = "+"
-        end
-        if params[:m_III] == "+/+"
-          params[:m_III] = "+"
-        end
-        if params[:m_IV] == "+/+"
-          params[:m_IV] = "+"
-        end
-
-        if params[:f_X] == "+/+"
-          params[:f_X] = "+"
-        end
-        if params[:f_II] == "+/+"
-          params[:f_II] = "+"
-        end
-        if params[:f_III] == "+/+"
-          params[:f_III] = "+"
-        end
-        if params[:f_IV] == "+/+"
-          params[:f_IV] = "+"
+          params[:m_X] = "+/+"
         end
 
         @flym = Fly.new(:chr1 => params[:m_X], :chr2 => params[:m_II], :chr3 => params[:m_III], :chr4 => params[:m_IV], :cross_id => @cross.id)
