@@ -52,10 +52,10 @@
 \quad &#x2640;
 }\]
 
-<div align="center" data-equalizer>
+<div align="center">
 <% @progeny.each do |p| %>
 	<% semikolon = 0 %>
-	<div draggable="true" class="button small secondary" data-equalizer-watch>\[
+	<div class="button small secondary">\[
 	<% p.each do |chr| %>
 		<% if chr.size > 1 %>
 			<% if semikolon != 0 %>;<% end %>
@@ -73,6 +73,7 @@
 		<% semikolon = 1 %>
 	<% end %>
 	\]</div>
+	<% counter = 3 %>
 <% end %>
 </div>
 </div>

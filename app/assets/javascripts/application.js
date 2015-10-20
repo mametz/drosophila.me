@@ -18,3 +18,18 @@
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
+
+$(document).ready(function() {
+    $('.draggableObject').draggable();
+
+    $('.droppableRightArm').droppable({
+        drop: function(event, ui) {
+            var $this = $(this); // reuse JQuery object.
+            var droppedObject = ui.draggable.data('object'); // get object type
+            // css reset
+            $this.removeClass();
+            $this.addClass("rpRightArm" + droppedObject);
+            //
+        }
+    });
+});​

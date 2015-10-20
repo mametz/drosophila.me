@@ -12,3 +12,31 @@
 .size-48 { font-size: 48px; }
 .size-60 { font-size: 60px; }
 .size-72 { font-size: 72px; }
+
+.draggableObject { float:left; }
+
+.droppableRightArm{
+    width:400px;
+   height:400px;
+    background-color:red;
+    float:left;
+}
+
+.bandage{
+    width:100px;
+   height:100px;
+    background-color:blue;
+}
+.plaster{
+    width:100px;
+   height:100px;
+    background-color:pink;
+}
+
+.rpRightArmPlaster {
+ background-color:yellow;   
+}
+
+.rpRightArmBandage {
+ background-color:grey; 
+}
