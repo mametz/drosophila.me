@@ -30,6 +30,8 @@ class CrossesController < ApplicationController
     chr4 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
     @progeny = chr1.product(chr2,chr3,chr4).uniq
+    @parent_male = [@flym.chr1.split('/').to_set, @flym.chr2.split('/').to_set, @flym.chr3.split('/').to_set, @flym.chr4.split('/').to_set]
+    @parent_female = [@flyf.chr1.split('/').to_set, @flyf.chr2.split('/').to_set, @flyf.chr3.split('/').to_set, @flyf.chr4.split('/').to_set]
 
   end
 
@@ -54,7 +56,7 @@ class CrossesController < ApplicationController
     respond_to do |format|
       if @cross.save
 
-        if params[:m_X] == "+/-"
+        if params[:m_X] == "+/-" and params[:f_X] == "+/+"
           params[:m_X] = "+/+"
         end
 

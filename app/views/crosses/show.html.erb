@@ -2,13 +2,55 @@
 
 <%= mathjax_tag %>
 <div class="panel">
-\[\underbrace{&#x2642;<%= @flym.chr1 %> ; <%= @flym.chr2 %> ; <%= @flym.chr3 %> ; <%= @flym.chr4 %> \qquad X \qquad &#x2640; <%= @flyf.chr1 %> ; <%= @flyf.chr2 %> ; <%= @flyf.chr3 %> ; <%= @flyf.chr4 %>}\]
+\[\underbrace{
+
+&#x2642; \quad 
+
+<% semikolon = 0 %>
+<% @parent_male.each do |chr| %>
+		<% if chr.size > 1 %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr %>
+			\dfrac
+			<% chr.each do |n| %>
+				{<%= n %>}
+			<% end %>
+		<% else %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr.each do |n| %>
+				<%= n %>
+			<% end %>
+		<% end %> 
+		<% semikolon = 1 %>
+	<% end %> 
+
+\qquad X \qquad 
+
+<% semikolon = 0 %>
+<% @parent_female.each do |chr| %>
+		<% if chr.size > 1 %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr %>
+			\dfrac
+			<% chr.each do |n| %>
+				{<%= n %>}
+			<% end %>
+		<% else %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr.each do |n| %>
+				<%= n %>
+			<% end %>
+		<% end %> 
+		<% semikolon = 1 %>
+	<% end %>
+\quad &#x2640;
+}\]
 
 
 <ul class="small-block-grid-3">
 <% @progeny.each do |p| %>
 	<% semikolon = 0 %>
-	
+
 	<li><a href="?male=<%= p %>">\[
 	<% p.each do |chr| %>
 		<% if chr.size > 1 %>
@@ -33,6 +75,5 @@
 </div>
 
 <p>
-<%= link_to 'Edit', edit_cross_path(@cross) %> |
 <%= link_to 'Destroy', @cross, method: :delete, data: { confirm: 'Are you sure?' } %>
 </p>
