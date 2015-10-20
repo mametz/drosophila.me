@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title><%= content_for?(:title) ? yield(:title) : "foundation-rails" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "drosophila.me" %></title>
 
     <%= stylesheet_link_tag    "application" %>
     <%= javascript_include_tag "vendor/modernizr" %>
@@ -14,7 +14,49 @@
 
   <body>
 
-    <%= yield %>
+<div class="icon-bar five-up">
+  <a class="item" href="<%= root_path %>">
+    <i class="fi-home" ></i>
+    <label>Home</label>
+  </a>
+  <a class="item" href="<%= new_cross_path %>">
+    <i class="fi-arrows-in" ></i>
+    <label>New cross</label>
+  </a>
+  <a class="item" href="<%= crosses_path %>">
+    <i class="fi-list-thumbnails" ></i>
+    <label>Your crosses</label>
+  </a>
+
+<% if user_signed_in? %>
+  <%= link_to edit_user_registration_path, :class => 'item' do %>
+    <i class="fi-pencil" ></i>
+    <label>Edit Profile</label>
+  <% end %>
+  <%= link_to destroy_user_session_path, method: :delete, :class => 'item' do %>
+    <i class="fi-power" ></i>
+    <label>Logout</label>
+  <% end %>
+<% else %>
+  <%= link_to new_user_registration_path, :class => 'item' do %>
+    <i class="fi-pencil" ></i>
+    <label>New user</label>
+  <% end %>
+  <%= link_to new_user_session_path, :class => 'item' do %>
+    <i class="fi-power" ></i>
+    <label>Login</label>
+  <% end %>
+<% end %>
+
+</div>
+
+
+
+<div class="row">
+  <div class="large-2 columns"></div>
+  <div class="large-8 columns"><%= yield %></div>
+  <div class="large-2 columns"></div>
+</div>
 
   </body>
 </html>

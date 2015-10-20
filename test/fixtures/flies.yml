@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  chr1: MyText
+  chr2: MyText
+  chr3: MyText
+  chr4: MyText
+  cross_id: 
+
+two:
+  chr1: MyText
+  chr2: MyText
+  chr3: MyText
+  chr4: MyText
+  cross_id: 
