@@ -11,19 +11,78 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :male_id %><br>
-    <%= f.number_field :male_id %>
-  </div>
-  <div class="field">
-    <%= f.label :female_id %><br>
-    <%= f.number_field :female_id %>
-  </div>
-  <div class="field">
-    <%= f.label :link %><br>
-    <%= f.text_field :link %>
-  </div>
-  <div class="actions">
+<div class="field">
+<div class="panel">
+  <h5>Female genotype</h5>
+    <div class="row">
+      <div class="large-6 columns">
+        <label>X/Y chromosome
+          <%= text_field_tag(:m_X, "+/-") %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 2
+          <%= text_field_tag(:m_II, "+/+") %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 3
+          <%= text_field_tag(:m_III, "+/+") %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 4
+          <%= text_field_tag(:m_IV, "+/+") %>
+        </label>
+      </div>
+    </div>
+</div>
+
+<div class="panel">
+  <h5>Female genotype</h5>
+    <div class="row">
+      <div class="large-6 columns">
+        <label>X chromosome
+          <%= text_field_tag(:f_X, "+/+") %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 2
+          <%= text_field_tag(:f_II, "+/+") %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 3
+          <%= text_field_tag(:f_III, "+/+") %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 4
+          <%= text_field_tag(:f_IV, "+/+") %>
+          </label>
+      </div>
+    </div>
+</div>
+
+<div class="panel">
+  <h5>Lethal alleles</h5>
+        <label>Alleles separated by comma
+          <%= text_field_tag(:lethal) %>
+        </label>
+  <h5>Balancers</h5>
+        <label>Balancers separated by comma
+          <%= text_field_tag(:balancers) %>
+        </label>
+  <h5>Comments</h5>
+        <label>Describe this cross
+          <%= text_field_tag(:description) %>
+        </label>       
+</div>
+
+
+<div class="actions">
     <%= f.submit %>
-  </div>
+</div>
+</div>
+
 <% end %>

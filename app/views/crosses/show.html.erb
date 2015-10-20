@@ -1,19 +1,24 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Male:</strong>
-  <%= @cross.male_id %>
-</p>
+<%= mathjax_tag %>
+<div class="panel">
+\[\underbrace{&#x2642;<%= @flym.chr1 %> ; <%= @flym.chr2 %> ; <%= @flym.chr3 %> ; <%= @flym.chr4 %> \qquad X \qquad &#x2640; <%= @flyf.chr1 %> ; <%= @flyf.chr2 %> ; <%= @flyf.chr3 %> ; <%= @flyf.chr4 %>}\]
+
+\[
+<% @progeny.each do |p| %>
+	<% p.each do |chr| %>
+		<% if chr.size > 1 %>
+			\dfrac{<%= chr[0] %>}{<%= chr[1] %>};
+		<% else %>
+			<%= chr %>;
+		<% end %> 
+	<% end %>
+	\qquad
+<% end %>
+\]
+</div>
 
 <p>
-  <strong>Female:</strong>
-  <%= @cross.female_id %>
-</p>
-
-<p>
-  <strong>Link:</strong>
-  <%= @cross.link %>
-</p>
-
 <%= link_to 'Edit', edit_cross_path(@cross) %> |
-<%= link_to 'Back', crosses_path %>
+<%= link_to 'Destroy', @cross, method: :delete, data: { confirm: 'Are you sure?' } %>
+</p>

@@ -3,10 +3,18 @@
 <h1>Listing Crosses</h1>
 
 <% @crosses.each do |cross| %>
+
+<% @flym = Fly.find(cross.male_id) %>
+<% @flyf = Fly.find(cross.female_id) %>
+
 <a href="<%= cross_path(cross) %>">
 <div class="panel">
-  <h5><%= cross.male_id %> X <%= cross.female_id %></h5>
-  <p>Description</p>
+  <h5>
+  	<%= @flym.chr1 %> ; <%= @flym.chr2 %> ; <%= @flym.chr3 %> ; <%= @flym.chr4 %> 
+  	X 
+  	<%= @flyf.chr1 %> ; <%= @flyf.chr2 %> ; <%= @flyf.chr3 %> ; <%= @flyf.chr4 %>
+  </h5>
+  <p><%= cross.description %></p>
 </div>
 </a>
 <% end %>
