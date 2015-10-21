@@ -1,15 +1,4 @@
 <%= form_for(@cross) do |f| %>
-  <% if @cross.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@cross.errors.count, "error") %> prohibited this cross from being saved:</h2>
-
-      <ul>
-      <% @cross.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
 
 <div class="field">
 <div class="panel">

@@ -53,6 +53,7 @@
 }\]
 
 <div align="center">
+<% counter = 0 %>
 <% @progeny.each do |p| %>
 	<% semikolon = 0 %>
 
@@ -76,16 +77,15 @@
 	<% end %>
 
 	<% if death == 1 %>
-		<div class="button small alert disabled">
+		<a class="button small alert disabled" href="?fly=<%= @prog_id[counter] %>">
 	<% else %>
-		<div class="button small secondary">
+		<a class="button small secondary" href="?fly=<%= @prog_id[counter] %>">
 	<% end %>
 
 		\[
 	<% p.each do |chr| %>
 		<% if chr.size > 1 %>
 			<% if semikolon != 0 %>;<% end %>
-			<% chr %>
 			\dfrac
 			<% chr.each do |n| %>
 				{<%= n %>}
@@ -98,8 +98,8 @@
 		<% end %> 
 		<% semikolon = 1 %>
 	<% end %>
-	\]</div>
-	<% counter = 3 %>
+	\]</a>
+	<% counter = counter + 1 %>
 <% end %>
 </div>
 </div>
