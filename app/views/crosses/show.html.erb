@@ -55,7 +55,33 @@
 <div align="center">
 <% @progeny.each do |p| %>
 	<% semikolon = 0 %>
-	<div class="button small secondary">\[
+
+<% #Check for lethal and balancers %>
+<% death = 0 %>
+	<% p.each do |chr| %>
+		<% if chr.size == 1 %>
+			<% chr.each do |n| %>
+				<% @balancers.each do |b| %>
+					<% if n == b %>
+						<% death = 1 %>
+					<% end %>
+				<% end %>
+				<% @lethal.each do |l| %>
+					<% if n == l %>
+						<% death = 1 %>
+					<% end %>
+				<% end %>
+			<% end %>
+		<% end %>
+	<% end %>
+
+	<% if death == 1 %>
+		<div class="button small alert disabled">
+	<% else %>
+		<div class="button small secondary">
+	<% end %>
+
+		\[
 	<% p.each do |chr| %>
 		<% if chr.size > 1 %>
 			<% if semikolon != 0 %>;<% end %>

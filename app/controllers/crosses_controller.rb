@@ -33,6 +33,9 @@ class CrossesController < ApplicationController
     @parent_male = [@flym.chr1.split('/').to_set, @flym.chr2.split('/').to_set, @flym.chr3.split('/').to_set, @flym.chr4.split('/').to_set]
     @parent_female = [@flyf.chr1.split('/').to_set, @flyf.chr2.split('/').to_set, @flyf.chr3.split('/').to_set, @flyf.chr4.split('/').to_set]
 
+    @balancers = @cross.balancers.split(',')
+    @lethal = @cross.lethal.split(',')
+
   end
 
   # GET /crosses/new
@@ -51,7 +54,8 @@ class CrossesController < ApplicationController
     require 'securerandom'
     random_string = SecureRandom.hex
 
-    @cross = Cross.new(:link => random_string, :description => params[:description])
+    @cross = Cross.new(:link => random_string, :description => params[:description], 
+                        :balancers => params[:balancers], :lethal => params[:lethal])
 
     respond_to do |format|
       if @cross.save
