@@ -17,22 +17,22 @@
     <div class="row">
       <div class="large-6 columns">
         <label>X/Y chromosome
-          <%= text_field_tag(:m_X, "+/-") %>
+          <%= f.text_field :m_X, :value => "+/-" %>
         </label>
       </div>
       <div class="large-6 columns">
         <label>Chromosome 2
-          <%= text_field_tag(:m_II, "+/+") %>
+          <%= f.text_field :m_II, :value => "+/+" %>
         </label>
       </div>
       <div class="large-6 columns">
         <label>Chromosome 3
-          <%= text_field_tag(:m_III, "+/+") %>
+          <%= f.text_field :m_III, :value => "+/+" %>
         </label>
       </div>
       <div class="large-6 columns">
         <label>Chromosome 4
-          <%= text_field_tag(:m_IV, "+/+") %>
+          <%= f.text_field :m_IV, :value => "+/+" %>
         </label>
       </div>
     </div>
@@ -43,22 +43,22 @@
     <div class="row">
       <div class="large-6 columns">
         <label>X chromosome
-          <%= text_field_tag(:f_X, "+/+") %>
+          <%= f.text_field :f_X, :value => "+/+" %>
         </label>
       </div>
       <div class="large-6 columns">
         <label>Chromosome 2
-          <%= text_field_tag(:f_II, "+/+") %>
+          <%= f.text_field :f_II, :value => "+/+" %>
         </label>
       </div>
       <div class="large-6 columns">
         <label>Chromosome 3
-          <%= text_field_tag(:f_III, "+/+") %>
+          <%= f.text_field :f_III, :value => "+/+" %>
         </label>
       </div>
       <div class="large-6 columns">
         <label>Chromosome 4
-          <%= text_field_tag(:f_IV, "+/+") %>
+          <%= f.text_field :f_IV, :value => "+/+" %>
           </label>
       </div>
     </div>
@@ -67,19 +67,19 @@
 <div class="panel">
   <h5>Lethal alleles</h5>
         <label>Alleles separated by comma
-          <%= text_field_tag(:lethal) %>
+          <%= f.text_field :lethal %>
         </label>
   <h5>Balancers</h5>
         <label>Balancers separated by comma
-          <%= text_field_tag(:balancers) %>
+          <%= f.text_field :balancers %>
         </label>
   <h5>Comments</h5>
         <label>Describe this cross
-          <%= text_field_tag(:description) %>
+          <%= f.text_field :description %>
         </label>       
 </div>
 
-
+<%= f.hidden_field(:parent, :value => 0) %>
 <div class="actions">
     <%= f.submit %>
 </div>

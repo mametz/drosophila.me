@@ -6,7 +6,6 @@
 <% end %>
 </p>
 
-<%= mathjax_tag %>
 <div class="panel">
 \[\underbrace{
 
@@ -106,7 +105,7 @@
 
 <h3>Next cross</h3>
 
-<%= form_for Fly.new do |f| %>
+<%= form_for :cross, :url => {:action => "create"}, :method => "post" do |f| %>
 <div class="panel">
 <p> &#x2642;
 <% if @is_m == 1 %>
@@ -131,7 +130,7 @@
 	<% end %> 
 	\]
 </a>
-<input type="hidden" name="male_id" value="@male_id" />
+<%= f.hidden_field(:male_id, :value => @male_id) %>
 <% else %>
 	<% if params[:fly].to_i > 1 && params[:of].to_i > 1 %>
 		<a class="button small secondary" href="?g=m&of=<%= params[:of]%>&fly=<%= params[:fly]%>">Select male</a>
@@ -162,7 +161,7 @@
 	<% end %> 
 	\]
 </a>
-<input type="hidden" name="female_id" value="@female_id" />
+<%= f.hidden_field(:female_id, :value => @female_id) %>
 <% else %>
 	<% if params[:fly].to_i > 1 && params[:of].to_i > 1 %>
 		<a class="button small secondary" href="?g=f&of=<%= params[:of]%>&fly=<%= params[:fly]%>">Select female</a>
@@ -173,10 +172,10 @@
 &#x2640;
 </p>
 <% if params[:fly].to_i > 1 && params[:of].to_i > 1 && params[:s] != "" %>
-<input type="hidden" name="balancer" value="<%= @balancer_string %>" />
-<input type="hidden" name="lethal" value="<%= @lethal_string %>" />
-<input type="hidden" name="next_gen" value="1" />
-<input type="hidden" name="link" value="<%= @random_string %>" />
+<%= f.hidden_field(:balancers, :value => @balancer_string) %>
+<%= f.hidden_field(:lethal, :value => @lethal_string) %>
+<%= f.hidden_field(:parent, :value => @cross.id) %>
+<%= f.hidden_field(:link, :value => @random_string) %>
 <%= f.submit %>
 <% end %>
 </div>
