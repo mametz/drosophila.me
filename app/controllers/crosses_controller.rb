@@ -10,6 +10,9 @@ class CrossesController < ApplicationController
   # GET /crosses/1
   # GET /crosses/1.json
   def show
+    require 'securerandom'
+    @random_string = SecureRandom.hex
+
     flym = Fly.find(@cross.male_id)
     flyf = Fly.find(@cross.female_id)
 
@@ -32,7 +35,33 @@ class CrossesController < ApplicationController
     end
 
     @balancers = @cross.balancers.split(',')
+    @balancer_string = @cross.balancers
     @lethal = @cross.lethal.split(',')
+    @lethal_string = @cross.lethal
+
+    if params[:s] == "m" && params[:fly].to_i > 1
+      nm = Fly.find(params[:fly])
+      @male_id = nm.id
+      @next_male = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
+      @is_m = 1
+    elsif params[:of].to_i > 1 && params[:g] != "m"
+      nm = Fly.find(params[:of])
+      @male_id = nm.id
+      @next_male = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
+      @is_m = 1
+    end
+
+    if params[:s] == "f" && params[:fly].to_i > 1
+      nm = Fly.find(params[:fly])
+      @female_id = nm.id
+      @next_female = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
+      @is_f = 1
+    elsif params[:of].to_i > 1 && params[:g] != "f"
+      nm = Fly.find(params[:of])
+      @female_id = nm.id
+      @next_female = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
+      @is_f = 1
+    end
 
   end
 
@@ -52,20 +81,29 @@ class CrossesController < ApplicationController
     require 'securerandom'
     random_string = SecureRandom.hex
 
-    @cross = Cross.new(:link => random_string, :description => params[:description], 
+    if params[:next_gen] == "1"
+      @cross = Cross.new(cross_params)
+    else
+      @cross = Cross.new(:link => random_string, :description => params[:description], 
                         :balancers => params[:balancers], :lethal => params[:lethal])
+    end
 
     respond_to do |format|
       if @cross.save
 
-        if params[:m_X] == "+/-" and params[:f_X] == "+/+"
-          params[:m_X] = "+/+"
+        if params[:next_gen] == "1"
+
+        else
+          if params[:m_X] == "+/-" and params[:f_X] == "+/+"
+            params[:m_X] = "+/+"
+          end
+
+          @flym = Fly.new(:chr1 => params[:m_X], :chr2 => params[:m_II], :chr3 => params[:m_III], :chr4 => params[:m_IV], :cross_id => @cross.id)
+          @flyf = Fly.new(:chr1 => params[:f_X], :chr2 => params[:f_II], :chr3 => params[:f_III], :chr4 => params[:f_IV], :cross_id => @cross.id)
+          @flym.save and @flyf.save
         end
 
-        @flym = Fly.new(:chr1 => params[:m_X], :chr2 => params[:m_II], :chr3 => params[:m_III], :chr4 => params[:m_IV], :cross_id => @cross.id)
-        @flyf = Fly.new(:chr1 => params[:f_X], :chr2 => params[:f_II], :chr3 => params[:f_III], :chr4 => params[:f_IV], :cross_id => @cross.id)
-
-        if @flym.save and @flyf.save
+        if 1 == 1
 
           chrm = @flym.chr1.split('/')
           chrf = @flyf.chr1.split('/')
@@ -145,6 +183,6 @@ class CrossesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cross_params
-      params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers)
+      params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,:next_gen)
     end
 end
