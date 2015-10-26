@@ -39,6 +39,8 @@ class CrossesController < ApplicationController
     @lethal = @cross.lethal.split(',')
     @lethal_string = @cross.lethal
 
+    @qr = RQRCode::QRCode.new(request.original_url).to_img.resize(150, 150).to_data_url
+
   end
 
   # GET /crosses/new
@@ -71,8 +73,24 @@ class CrossesController < ApplicationController
       if @cross.save
 
         if cross_params[:parent].to_i > 1
-          @flym = Fly.find(params[:male_id])
-          @flyf = Fly.find(params[:female_id])
+
+          if params[:male_id] == "new"
+            @flyf = Fly.find(params[:female_id])
+            if cross_params[:X] == "+/-" && @flyf.chr1 == "+/+"
+              m_x = "+/+"
+            else
+              m_x = cross_params[:m_X]
+            end
+            @flym = Fly.new(:chr1 => m_x, :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => @cross.id)
+            @flym.save
+          elsif params[:female_id] == "new"
+            @flym = Fly.find(params[:male_id])
+            @flyf = Fly.new(:chr1 => cross_params[:X], :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => @cross.id)
+            @flyf.save
+          else
+            @flym = Fly.find(params[:male_id])
+            @flyf = Fly.find(params[:female_id])
+          end
         else
           if cross_params[:m_X] == "+/-" && cross_params[:f_X] == "+/+"
             m_x = "+/+"
@@ -165,6 +183,7 @@ class CrossesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def cross_params
       params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
-                                    :parent,:male_id,:female_id,:link)
+                                    :parent,:male_id,:female_id,:link,
+                                    :X,:II,:III,:IV)
     end
 end
