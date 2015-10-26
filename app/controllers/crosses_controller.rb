@@ -22,7 +22,7 @@ class CrossesController < ApplicationController
     prog = Fly.where("cross_id = ?", @cross.id)
 
     if @cross.male_id == @cross.female_id
-      prog = prog.drop(1)
+      prog = prog.drop(1) # this still does not seem to work!!!!!
     else
       prog = prog.drop(2)
     end
@@ -38,30 +38,6 @@ class CrossesController < ApplicationController
     @balancer_string = @cross.balancers
     @lethal = @cross.lethal.split(',')
     @lethal_string = @cross.lethal
-
-    if params[:s] == "m" && params[:fly].to_i > 1
-      nm = Fly.find(params[:fly])
-      @male_id = nm.id
-      @next_male = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
-      @is_m = 1
-    elsif params[:of].to_i > 1 && params[:g] != "m"
-      nm = Fly.find(params[:of])
-      @male_id = nm.id
-      @next_male = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
-      @is_m = 1
-    end
-
-    if params[:s] == "f" && params[:fly].to_i > 1
-      nm = Fly.find(params[:fly])
-      @female_id = nm.id
-      @next_female = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
-      @is_f = 1
-    elsif params[:of].to_i > 1 && params[:g] != "f"
-      nm = Fly.find(params[:of])
-      @female_id = nm.id
-      @next_female = [nm.chr1.split('/').to_set, nm.chr2.split('/').to_set, nm.chr3.split('/').to_set, nm.chr4.split('/').to_set]
-      @is_f = 1
-    end
 
   end
 
@@ -82,8 +58,8 @@ class CrossesController < ApplicationController
     random_string = SecureRandom.hex
 
     if cross_params[:parent].to_i > 1
-      @cross = Cross.new(:male_id => cross_params[:male_id], :link => cross_params[:link], 
-                          :female_id => cross_params[:female_id], :lethal => cross_params[:lethal], 
+      @cross = Cross.new(:male_id => params[:male_id], :link => cross_params[:link], 
+                          :female_id => params[:female_id], :lethal => cross_params[:lethal], 
                           :balancers => cross_params[:balancers], :description => cross_params[:description],
                           :parent => cross_params[:parent])
     else
@@ -95,8 +71,8 @@ class CrossesController < ApplicationController
       if @cross.save
 
         if cross_params[:parent].to_i > 1
-          @flym = Fly.find(cross_params[:male_id])
-          @flyf = Fly.find(cross_params[:female_id])
+          @flym = Fly.find(params[:male_id])
+          @flyf = Fly.find(params[:female_id])
         else
           if cross_params[:m_X] == "+/-" && cross_params[:f_X] == "+/+"
             m_x = "+/+"

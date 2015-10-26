@@ -6,6 +6,7 @@
 <% end %>
 </p>
 
+<%= form_for :cross, :url => {:action => "create"}, :method => "post" do |f| %>
 <div class="panel">
 \[\underbrace{
 
@@ -78,7 +79,7 @@
 	<% if death == 1 %>
 		<a class="button small disabled alert">
 	<% else %>
-		<a class="button small secondary" href="?fly=<%= @prog_id[counter] %>&s=<%= params[:g] %>&of=<%= params[:of] %>">
+		<a class="button small secondary">
 	<% end %>
 
 		\[
@@ -97,86 +98,23 @@
 		<% end %> 
 		<% semikolon = 1 %>
 	<% end %>
-	\]</a>
+	\]
+&#x2642;
+<%= radio_button_tag(:male_id, @prog_id[counter]) %>
+ | &#x2640;
+<%= radio_button_tag(:female_id, @prog_id[counter]) %>
+</a>
 	<% counter = counter + 1 %>
 <% end %>
 </div>
 </div>
 
 <h3>Next cross</h3>
-
-<%= form_for :cross, :url => {:action => "create"}, :method => "post" do |f| %>
 <div class="panel">
-<p> &#x2642;
-<% if @is_m == 1 %>
-<a class="button small secondary">
-	\[
-	<% semikolon = 0 %>
-	<% @next_male.each do |chr| %>
-		<% if chr.size > 1 %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr %>
-			\dfrac
-			<% chr.each do |n| %>
-				{<%= n %>}
-			<% end %>
-		<% else %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr.each do |n| %>
-				<%= n %>
-			<% end %>
-		<% end %> 
-		<% semikolon = 1 %>
-	<% end %> 
-	\]
-</a>
-<%= f.hidden_field(:male_id, :value => @male_id) %>
-<% else %>
-	<% if params[:fly].to_i > 1 && params[:of].to_i > 1 %>
-		<a class="button small secondary" href="?g=m&of=<%= params[:of]%>&fly=<%= params[:fly]%>">Select male</a>
-	<% else %>
-		<a class="button small secondary" href="?g=m&of=<%= params[:fly]%>">Select male</a>
-	<% end %>
-<% end %>
- X
-<% if @is_f == 1 %>
-<a class="button small secondary">
-	\[
-	<% semikolon = 0 %>
-	<% @next_female.each do |chr| %>
-		<% if chr.size > 1 %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr %>
-			\dfrac
-			<% chr.each do |n| %>
-				{<%= n %>}
-			<% end %>
-		<% else %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr.each do |n| %>
-				<%= n %>
-			<% end %>
-		<% end %> 
-		<% semikolon = 1 %>
-	<% end %> 
-	\]
-</a>
-<%= f.hidden_field(:female_id, :value => @female_id) %>
-<% else %>
-	<% if params[:fly].to_i > 1 && params[:of].to_i > 1 %>
-		<a class="button small secondary" href="?g=f&of=<%= params[:of]%>&fly=<%= params[:fly]%>">Select female</a>
-	<% else %>
-		<a class="button small secondary" href="?g=f&of=<%= params[:fly]%>">Select female</a>
-	<% end %>
-<% end %>
-&#x2640;
-</p>
-<% if params[:fly].to_i > 1 && params[:of].to_i > 1 && params[:s] != "" %>
 <%= f.hidden_field(:balancers, :value => @balancer_string) %>
 <%= f.hidden_field(:lethal, :value => @lethal_string) %>
 <%= f.hidden_field(:parent, :value => @cross.id) %>
 <%= f.hidden_field(:link, :value => @random_string) %>
 <%= f.submit %>
-<% end %>
 </div>
 <% end %>
