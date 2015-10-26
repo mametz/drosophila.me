@@ -12,10 +12,12 @@ gem 'friendly_id', '~> 5.1.0'
 gem 'rqrcode_png'
 gem 'dragonfly', '~> 1.0.12'
 
+gem 'rails_12factor', group: :production
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
 # Use sqlite3 as the database for Active Record
-#gem 'sqlite3'
+gem 'sqlite3', group: :development
 gem 'pg'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -41,6 +43,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 #gem 'unicorn'
 
+gem 'puma'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -55,4 +59,4 @@ group :development, :test do
   gem 'spring'
 end
 
-
+ruby "2.2.2"
