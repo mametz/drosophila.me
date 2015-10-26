@@ -22,7 +22,7 @@ class CrossesController < ApplicationController
     prog = Fly.where("cross_id = ?", @cross.id)
 
     if @cross.male_id == @cross.female_id
-      prog = prog.drop(1) # this still does not seem to work!!!!!
+      prog = prog.drop(0)
     else
       prog = prog.drop(2)
     end

@@ -99,10 +99,16 @@
 		<% semikolon = 1 %>
 	<% end %>
 	\]
+
+<% if death != 1 %>
 &#x2642;
 <%= radio_button_tag(:male_id, @prog_id[counter]) %>
  | &#x2640;
 <%= radio_button_tag(:female_id, @prog_id[counter]) %>
+<% else %>
+<i class="fi-skull size-21"></i>
+<% end %>
+
 </a>
 	<% counter = counter + 1 %>
 <% end %>
@@ -118,3 +124,14 @@
 <%= f.submit %>
 </div>
 <% end %>
+
+<a href="#" data-reveal-id="todonotes">View notes</a>
+
+    <div id="todonotes" class="reveal-modal" data-reveal>
+      Hello
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+<script>
+ $(document).foundation();
+</script>
