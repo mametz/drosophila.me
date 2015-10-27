@@ -58,10 +58,23 @@ class CrossesController < ApplicationController
   # POST /crosses.json
   def create
 
+    if cross_params[:parent].to_i >= 1
+      @old_cross = Cross.find(cross_params[:parent])
+    end
+
+    if cross_params[:male_id] == nil
+      redirect_to @old_cross, notice: 'Not all parents were selected.'
+      interrup = 1
+    elsif cross_params[:female_id] == nil
+      redirect_to @old_cross, notice: 'Not all parents were selected.'
+      interrup = 1
+    end
+    
+    if interrup != 1
     require 'securerandom'
     random_string = SecureRandom.hex
 
-    if cross_params[:parent].to_i > 1
+    if cross_params[:parent].to_i >= 1
       @cross = Cross.new(:male_id => cross_params[:male_id], :link => cross_params[:link], 
                           :female_id => cross_params[:female_id], :lethal => cross_params[:lethal], 
                           :balancers => cross_params[:balancers], :description => cross_params[:description],
@@ -143,6 +156,8 @@ class CrossesController < ApplicationController
         format.json { render json: @cross.errors, status: :unprocessable_entity }
       end
     end
+
+  end
   end
 
   # PATCH/PUT /crosses/1
