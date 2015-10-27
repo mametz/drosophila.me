@@ -1,5 +1,6 @@
 class CrossesController < ApplicationController
   before_action :set_cross, only: [:show, :edit, :update, :destroy]
+  before_action :correct_user
 
   # GET /crosses
   # GET /crosses.json
@@ -185,5 +186,14 @@ class CrossesController < ApplicationController
       params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
                                     :parent,:male_id,:female_id,:link,
                                     :X,:II,:III,:IV)
+    end
+    def correct_user
+        if user_signed_in?
+            if current_user.id != 1 or user_signed_in = false
+                redirect_to root_url
+            end
+        else
+           redirect_to root_url
+        end
     end
 end
