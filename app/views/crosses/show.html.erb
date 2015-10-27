@@ -96,9 +96,9 @@
 
 <% if death != 1 %>
 &#x2642;
-<%= radio_button_tag(:male_id, @prog_id[counter]) %>
+<%= f.radio_button(:male_id, @prog_id[counter]) %>
  | &#x2640;
-<%= radio_button_tag(:female_id, @prog_id[counter]) %>
+<%= f.radio_button(:female_id, @prog_id[counter]) %>
 <% else %>
 <i class="fi-skull size-21"></i>
 <% end %>
@@ -131,9 +131,9 @@
 <div class="panel">
   <h5>Genotype</h5>
 &#x2642;
-<%= radio_button_tag(:male_id, "new") %>
+<%= f.radio_button(:male_id, "new") %>
  | &#x2640;
-<%= radio_button_tag(:female_id, "new") %>  
+<%= f.radio_button(:female_id, "new") %>  
     <div class="row">
       <div class="large-6 columns">
         <label>X chromosome

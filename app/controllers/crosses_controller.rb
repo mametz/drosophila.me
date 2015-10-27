@@ -61,8 +61,8 @@ class CrossesController < ApplicationController
     random_string = SecureRandom.hex
 
     if cross_params[:parent].to_i > 1
-      @cross = Cross.new(:male_id => params[:male_id], :link => cross_params[:link], 
-                          :female_id => params[:female_id], :lethal => cross_params[:lethal], 
+      @cross = Cross.new(:male_id => cross_params[:male_id], :link => cross_params[:link], 
+                          :female_id => cross_params[:female_id], :lethal => cross_params[:lethal], 
                           :balancers => cross_params[:balancers], :description => cross_params[:description],
                           :parent => cross_params[:parent])
     else
@@ -75,8 +75,8 @@ class CrossesController < ApplicationController
 
         if cross_params[:parent].to_i > 1
 
-          if params[:male_id] == "new"
-            @flyf = Fly.find(params[:female_id])
+          if cross_params[:male_id] == "new"
+            @flyf = Fly.find(cross_params[:female_id])
             if cross_params[:X] == "+/-" && @flyf.chr1 == "+/+"
               m_x = "+/+"
             else
@@ -84,13 +84,13 @@ class CrossesController < ApplicationController
             end
             @flym = Fly.new(:chr1 => m_x, :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => @cross.id)
             @flym.save
-          elsif params[:female_id] == "new"
-            @flym = Fly.find(params[:male_id])
+          elsif cross_params[:female_id] == "new"
+            @flym = Fly.find(cross_params[:male_id])
             @flyf = Fly.new(:chr1 => cross_params[:X], :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => @cross.id)
             @flyf.save
           else
-            @flym = Fly.find(params[:male_id])
-            @flyf = Fly.find(params[:female_id])
+            @flym = Fly.find(cross_params[:male_id])
+            @flyf = Fly.find(cross_params[:female_id])
           end
         else
           if cross_params[:m_X] == "+/-" && cross_params[:f_X] == "+/+"
