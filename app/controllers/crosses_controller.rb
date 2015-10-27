@@ -60,14 +60,14 @@ class CrossesController < ApplicationController
 
     if cross_params[:parent].to_i >= 1
       @old_cross = Cross.find(cross_params[:parent])
-    end
 
-    if cross_params[:male_id] == nil
-      redirect_to @old_cross, notice: 'Not all parents were selected.'
-      interrup = 1
-    elsif cross_params[:female_id] == nil
-      redirect_to @old_cross, notice: 'Not all parents were selected.'
-      interrup = 1
+      if cross_params[:male_id] == nil
+        redirect_to @old_cross, notice: 'Not all parents were selected.'
+        interrup = 1
+      elsif cross_params[:female_id] == nil
+        redirect_to @old_cross, notice: 'Not all parents were selected.'
+        interrup = 1
+      end
     end
     
     if interrup != 1
