@@ -56,14 +56,20 @@
 	<% p.each do |chr| %>
 		<% if chr.size == 1 %>
 			<% chr.each do |n| %>
+				<% n = n.split(',') %>
 				<% @balancers.each do |b| %>
-					<% if n == b %>
+					<% n.each do |g| %>
+					<% if g == b %>
 						<% death = 1 %>
 					<% end %>
+					<% end %>
 				<% end %>
+
 				<% @lethal.each do |l| %>
-					<% if n == l %>
+					<% n.each do |g| %>
+					<% if g == b %>
 						<% death = 1 %>
+					<% end %>
 					<% end %>
 				<% end %>
 			<% end %>
@@ -151,6 +157,7 @@ if g_user.id == current_user.id
 <%= f.radio_button(:male_id, "new", label: false) %>
  | &#x2640;
 <%= f.radio_button(:female_id, "new", label: false) %>  
+<h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
     <div class="row">
       <div class="large-6 columns">
         <label>X chromosome

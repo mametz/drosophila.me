@@ -36,9 +36,9 @@ class CrossesController < ApplicationController
       @prog_id.append(n.id)
     end
 
-    @balancers = @cross.balancers.split(',')
+    @balancers = @cross.balancers.split(';')
     @balancer_string = @cross.balancers
-    @lethal = @cross.lethal.split(',')
+    @lethal = @cross.lethal.split(';')
     @lethal_string = @cross.lethal
 
     @qr = RQRCode::QRCode.new(request.original_url).to_img.resize(150, 150).to_data_url
