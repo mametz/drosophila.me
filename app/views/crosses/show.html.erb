@@ -1,8 +1,6 @@
-<p id="notice"><%= notice %></p>
-
 <% g_user = User.find(@cross.user_id) %>
 
-<%= form_for :cross, :url => {:action => "create"}, :method => "post" do |f| %>
+<%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
 <div class="panel">
 \[\underbrace{
 
@@ -102,9 +100,9 @@ if user_signed_in?
 if g_user.id == current_user.id
 	%>
 &#x2642;
-<%= f.radio_button(:male_id, @prog_id[counter]) %>
+<%= f.radio_button(:male_id, @prog_id[counter], label: false) %>
  | &#x2640;
-<%= f.radio_button(:female_id, @prog_id[counter]) %>
+<%= f.radio_button(:female_id, @prog_id[counter], label: false) %>
 <% end 
 end %>
 <% else %>
@@ -150,9 +148,9 @@ if g_user.id == current_user.id
 <div class="panel">
   <h5>Genotype</h5>
 &#x2642;
-<%= f.radio_button(:male_id, "new") %>
+<%= f.radio_button(:male_id, "new", label: false) %>
  | &#x2640;
-<%= f.radio_button(:female_id, "new") %>  
+<%= f.radio_button(:female_id, "new", label: false) %>  
     <div class="row">
       <div class="large-6 columns">
         <label>X chromosome

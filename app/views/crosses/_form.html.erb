@@ -1,4 +1,4 @@
-<%= form_for(@cross) do |f| %>
+<%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
   <% if @cross.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@cross.errors.count, "error") %> prohibited this cross from being saved:</h2>
