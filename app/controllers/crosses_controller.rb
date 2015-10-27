@@ -1,5 +1,5 @@
 class CrossesController < ApplicationController
-  before_action :set_cross, only: [:show, :edit, :update, :destroy]
+  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history]
   before_action :correct_user, only: [:edit,:update,:destroy]
   before_action :logged_user, only: [:index, :new, :create]
 
@@ -7,6 +7,26 @@ class CrossesController < ApplicationController
   # GET /crosses.json
   def index
     @crosses = Cross.where("user_id = ?", current_user.id)
+  end
+
+  def history
+    @crosses = []
+    @crosses.append(Cross.find(@cross.id))
+    ncross = Cross.find(@cross.id)
+
+    run = true
+
+    while run;
+      if ncross.parent.to_i == 0     
+        break
+      end
+
+      ncross = Cross.find(ncross.parent)
+      @crosses.append(ncross)
+
+    end
+
+    @crosses.reverse!
   end
 
   # GET /crosses/1
@@ -42,6 +62,7 @@ class CrossesController < ApplicationController
     @lethal_string = @cross.lethal
 
     @qr = RQRCode::QRCode.new(request.original_url).to_img.resize(150, 150).to_data_url
+    @current_url = request.original_url
 
   end
 

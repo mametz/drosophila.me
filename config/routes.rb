@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   resources :flies
   resources :crosses
 
+  get 'crosses/:id/history' => 'crosses#history', as: :history
+
   root :to => "static_pages#home"
 
   mathjax 'mathjax'

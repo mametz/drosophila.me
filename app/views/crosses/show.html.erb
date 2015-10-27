@@ -1,6 +1,12 @@
+<h1>Show cross</h1>
 <% g_user = User.find(@cross.user_id) %>
 
+<% if @cross.parent.to_i >= 1 %>
+<a href="<%= @current_url %>/history" class="button secondary small">Cross history</a>
+<% end %>
+
 <%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
+
 <div class="panel">
 \[\underbrace{
 
