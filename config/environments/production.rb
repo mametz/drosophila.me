@@ -77,5 +77,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  config.logger = RemoteSyslogLogger.new('logs3.papertrailapp.com', 38364, :program => "rails-#{RAILS_ENV}")
   config.lograge.enabled = true
 end
