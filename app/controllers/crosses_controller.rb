@@ -206,7 +206,7 @@ class CrossesController < ApplicationController
         end
     end
     def logged_user
-        if user_signed_in = false
+        if user_signed_in == false
            redirect_to root_url
         end
     end
