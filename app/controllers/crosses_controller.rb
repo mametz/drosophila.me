@@ -206,8 +206,10 @@ class CrossesController < ApplicationController
         end
     end
     def logged_user
-        if user_signed_in == false
-           redirect_to root_url
+        if user_signed_in?
+
+        else
+           redirect_to root_url, notice: 'You need to be logged in.'
         end
     end
 end
