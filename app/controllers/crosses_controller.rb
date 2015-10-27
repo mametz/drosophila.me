@@ -1,11 +1,12 @@
 class CrossesController < ApplicationController
   before_action :set_cross, only: [:show, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit,:update,:destroy]
+  before_action :logged_user, only: [:index, :new, :create]
 
   # GET /crosses
   # GET /crosses.json
   def index
-    @crosses = Cross.all
+    @crosses = Cross.where("user_id = ?", current_user.id)
   end
 
   # GET /crosses/1
@@ -186,6 +187,11 @@ class CrossesController < ApplicationController
                 redirect_to root_url
             end
         else
+           redirect_to root_url
+        end
+    end
+    def logged_user
+        if user_signed_in = false
            redirect_to root_url
         end
     end
