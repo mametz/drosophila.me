@@ -13,9 +13,8 @@ gem 'rqrcode_png'
 gem 'dragonfly', '~> 1.0.12'
 
 gem 'rails_12factor', group: :production
-gem 'remote_syslog_logger', group: :production
-gem "lograge"
-gem 'quiet_assets', group: :development
+gem 'lograge', group: :production
+gem 'quiet_assets', group: :production
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
