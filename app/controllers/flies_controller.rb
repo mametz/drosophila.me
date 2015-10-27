@@ -1,5 +1,6 @@
 class FliesController < ApplicationController
   before_action :set_fly, only: [:show, :edit, :update, :destroy]
+  before_action :redir
 
   # GET /flies
   # GET /flies.json
@@ -70,5 +71,9 @@ class FliesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def fly_params
       params.require(:fly).permit(:chr1, :chr2, :chr3, :chr4, :cross_id)
+    end
+
+    def redir
+      redirect_to root_url
     end
 end
