@@ -78,4 +78,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.logger = RemoteSyslogLogger.new('logs3.papertrailapp.com', 38364)
+
+  config.lograge.enabled = true
 end
