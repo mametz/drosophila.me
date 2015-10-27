@@ -11,6 +11,7 @@ gem 'jquery-ui-rails'
 gem 'friendly_id', '~> 5.1.0'
 gem 'rqrcode_png'
 gem 'dragonfly', '~> 1.0.12'
+gem 'gravtastic'
 
 gem 'rails_12factor', group: :production
 gem 'lograge', group: :production

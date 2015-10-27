@@ -1,5 +1,7 @@
 <p id="notice"><%= notice %></p>
 
+<% g_user = User.find(@cross.user_id) %>
+
 <%= form_for :cross, :url => {:action => "create"}, :method => "post" do |f| %>
 <div class="panel">
 \[\underbrace{
@@ -95,10 +97,16 @@
 	\]
 
 <% if death != 1 %>
+<% 
+if user_signed_in?
+if g_user.id == current_user.id
+	%>
 &#x2642;
 <%= f.radio_button(:male_id, @prog_id[counter]) %>
  | &#x2640;
 <%= f.radio_button(:female_id, @prog_id[counter]) %>
+<% end 
+end %>
 <% else %>
 <i class="fi-skull size-21"></i>
 <% end %>
@@ -110,13 +118,24 @@
 </div>
 
 <p>
+<a href="mailto:<%= g_user.email %>" alt="<%= g_user.email %>" title="<%= g_user.email %>">
+<%= image_tag g_user.gravatar_url %>
+</a>
 
+<% if user_signed_in?
+if g_user.id == current_user.id %>
 <%= link_to @cross, method: :delete, data: { confirm: "Are you sure? The cross and all it's derivatives would be deleted." }, :class => "button alert small" do %>
 	<i class="fi-trash size-21" ></i>
 <% end %> 
+<% end 
+end%>
 
 </p>
 
+<% 
+if user_signed_in?
+if g_user.id == current_user.id
+	%>
 <h3>Next cross</h3>
 <div class="panel">
 <%= f.hidden_field(:balancers, :value => @balancer_string) %>
@@ -182,6 +201,8 @@
 <% end %>
 
 <%= image_tag @qr %> 
+<% end 
+end%>
 
 <script>
  $(document).foundation();

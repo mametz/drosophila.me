@@ -1,6 +1,6 @@
 class CrossesController < ApplicationController
   before_action :set_cross, only: [:show, :edit, :update, :destroy]
-  before_action :correct_user
+  before_action :correct_user, only: [:edit,:update,:destroy]
 
   # GET /crosses
   # GET /crosses.json
@@ -64,10 +64,10 @@ class CrossesController < ApplicationController
       @cross = Cross.new(:male_id => cross_params[:male_id], :link => cross_params[:link], 
                           :female_id => cross_params[:female_id], :lethal => cross_params[:lethal], 
                           :balancers => cross_params[:balancers], :description => cross_params[:description],
-                          :parent => cross_params[:parent])
+                          :parent => cross_params[:parent], :user_id => current_user.id)
     else
       @cross = Cross.new(:link => random_string, :description => cross_params[:description], 
-                        :balancers => cross_params[:balancers], :lethal => cross_params[:lethal])
+                        :balancers => cross_params[:balancers], :lethal => cross_params[:lethal], :user_id => current_user.id)
     end
 
     respond_to do |format|

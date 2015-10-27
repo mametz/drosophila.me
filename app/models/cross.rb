@@ -1,4 +1,5 @@
 class Cross < ActiveRecord::Base
+	belongs_to :user
 	has_many :flies, :dependent => :destroy
 
 	extend FriendlyId
