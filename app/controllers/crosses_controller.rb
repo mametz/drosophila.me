@@ -73,7 +73,7 @@ class CrossesController < ApplicationController
     respond_to do |format|
       if @cross.save
 
-        if cross_params[:parent].to_i > 1
+        if cross_params[:parent].to_i >= 1
 
           if cross_params[:male_id] == "new"
             @flyf = Fly.find(cross_params[:female_id])
@@ -103,47 +103,40 @@ class CrossesController < ApplicationController
           @flym.save and @flyf.save
         end
 
-        if true
+        chrm = @flym.chr1.split('/')
+        chrf = @flyf.chr1.split('/')
+        chr1 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-          chrm = @flym.chr1.split('/')
-          chrf = @flyf.chr1.split('/')
-          chr1 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
+        chrm = @flym.chr2.split('/')
+        chrf = @flyf.chr2.split('/')
+        chr2 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-          chrm = @flym.chr2.split('/')
-          chrf = @flyf.chr2.split('/')
-          chr2 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
+        chrm = @flym.chr3.split('/')
+        chrf = @flyf.chr3.split('/')
+        chr3 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-          chrm = @flym.chr3.split('/')
-          chrf = @flyf.chr3.split('/')
-          chr3 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
+        chrm = @flym.chr4.split('/')
+        chrf = @flyf.chr4.split('/')
+        chr4 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
 
-          chrm = @flym.chr4.split('/')
-          chrf = @flyf.chr4.split('/')
-          chr4 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
+        progeny = chr1.product(chr2,chr3,chr4).uniq
 
-          progeny = chr1.product(chr2,chr3,chr4).uniq
-
-          progeny.each do |p|
-            out = []
-            p.each do |n|
-              if n.size == 1
-                out.append(n.to_a[0]+"/"+n.to_a[0])
-              else
-                out.append(n.to_a.join('/'))
-              end
+        progeny.each do |p|
+          out = []
+          p.each do |n|
+            if n.size == 1
+              out.append(n.to_a[0]+"/"+n.to_a[0])
+            else
+              out.append(n.to_a.join('/'))
             end
-            flyp = Fly.new(:chr1 => out[0], :chr2 => out[1], :chr3 => out[2], :chr4 => out[3], :cross_id => @cross.id)
-            flyp.save
           end
+          flyp = Fly.new(:chr1 => out[0], :chr2 => out[1], :chr3 => out[2], :chr4 => out[3], :cross_id => @cross.id)
+          flyp.save
+        end
+        @cross.update(:male_id => @flym.id, :female_id => @flyf.id)
+        format.html { redirect_to @cross, notice: 'Cross was successfully created.' }
+        format.json { render :show, status: :created, location: @cross }
 
-          @cross.update(:male_id => @flym.id, :female_id => @flyf.id)
-
-          format.html { redirect_to @cross, notice: 'Cross was successfully created.' }
-          format.json { render :show, status: :created, location: @cross }
-        else
-          format.html { render :new }
-          format.json { render json: @cross.errors, status: :unprocessable_entity }
-        end 
       else
         format.html { render :new }
         format.json { render json: @cross.errors, status: :unprocessable_entity }
