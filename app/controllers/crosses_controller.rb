@@ -41,13 +41,7 @@ class CrossesController < ApplicationController
     @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
     @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
 
-    prog = Fly.where("cross_id = ?", @cross.id)
-
-    if @cross.male_id == @cross.female_id
-      prog = prog.drop(0)
-    else
-      prog = prog.drop(2)
-    end
+    prog = Fly.where("cross_id = ? AND id != ? AND id != ?", @cross.id, @cross.male_id, @cross.female_id)
 
     @progeny = []
     @prog_id = []
