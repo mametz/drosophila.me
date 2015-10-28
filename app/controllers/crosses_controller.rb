@@ -169,7 +169,7 @@ class CrossesController < ApplicationController
           flyp.save
         end
         @cross.update(:male_id => @flym.id, :female_id => @flyf.id)
-        format.html { redirect_to @cross, notice: 'Cross was successfully created.' }
+        format.html { redirect_to short_path(@cross.friendly_id), notice: 'Cross was successfully created.' }
         format.json { render :show, status: :created, location: @cross }
 
       else
