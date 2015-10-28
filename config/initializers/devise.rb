@@ -284,7 +284,7 @@ Devise.setup do |config|
   # config.captcha_for_recover = true
 
   # captcha integration for sign up form
-  config.captcha_for_sign_up = true
+  # config.captcha_for_sign_up = true
 
   # captcha integration for sign in form
   # config.captcha_for_sign_in = true
