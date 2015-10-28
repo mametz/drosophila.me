@@ -8,6 +8,8 @@ gem 'foundation_rails_helper'
 gem 'foundation-rails'
 gem 'foundation-icons-sass-rails'
 
+gem "mini_magick"
+
 gem 'mathjax-rails'
 
 gem 'jquery-ui-rails'

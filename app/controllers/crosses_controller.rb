@@ -63,7 +63,7 @@ class CrossesController < ApplicationController
 
     @qr = RQRCode::QRCode.new(request.original_url).to_img.resize(150, 150).to_data_url
     @current_url = request.original_url
-
+    
   end
 
   # GET /crosses/new
