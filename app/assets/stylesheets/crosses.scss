@@ -40,3 +40,20 @@
 .rpRightArmBandage {
  background-color:grey; 
 }
+
+#qrcontainer {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+#qr,
+#qroverlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#qroverlay {
+  z-index: 10;
+}

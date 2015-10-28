@@ -5,7 +5,7 @@
 <% @flym = Fly.find(cross.male_id) %>
 <% @flyf = Fly.find(cross.female_id) %>
 
-<a href="<%= cross_path(cross) %>">
+<a href="<%= short_path(cross.friendly_id) %>">
 <div class="panel">
   <h6>
   	<%= @flym.chr1 %> ; <%= @flym.chr2 %> ; <%= @flym.chr3 %> ; <%= @flym.chr4 %> 
@@ -16,7 +16,3 @@
 </div>
 </a>
 <% end %>
-
-<% # link_to 'Show', cross %>
-<% # link_to 'Edit', edit_cross_path(cross) %>
-<% # link_to 'Destroy', cross, method: :delete, data: { confirm: 'Are you sure?' } %>

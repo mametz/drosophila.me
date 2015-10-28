@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   resources :flies
   resources :crosses
 
-  get 'crosses/:id/history' => 'crosses#history', as: :history
+  get 'crosses/:id/history' => 'crosses#history'
+  get ':id/history' => 'crosses#history'
+  get ':id' => 'crosses#show', :as => 'short'
 
   root :to => "static_pages#home"
 
