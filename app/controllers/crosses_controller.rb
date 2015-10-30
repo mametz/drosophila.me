@@ -84,6 +84,8 @@ class CrossesController < ApplicationController
         interrup = 1
       end
     end
+
+    date = Date.new cross_params["crossdate(1i)"].to_i, cross_params["crossdate(2i)"].to_i, cross_params["crossdate(3i)"].to_i
     
     if interrup != 1
     require 'securerandom'
@@ -93,10 +95,11 @@ class CrossesController < ApplicationController
       @cross = Cross.new(:male_id => cross_params[:male_id], :link => cross_params[:link], 
                           :female_id => cross_params[:female_id], :lethal => cross_params[:lethal], 
                           :balancers => cross_params[:balancers], :description => cross_params[:description],
-                          :parent => cross_params[:parent], :user_id => current_user.id)
+                          :parent => cross_params[:parent], :user_id => current_user.id, :crossdate => date)
     else
       @cross = Cross.new(:link => random_string, :description => cross_params[:description], 
-                        :balancers => cross_params[:balancers], :lethal => cross_params[:lethal], :user_id => current_user.id)
+                        :balancers => cross_params[:balancers], :lethal => cross_params[:lethal], 
+                        :user_id => current_user.id, :crossdate => date)
     end
 
     respond_to do |format|
@@ -209,11 +212,11 @@ class CrossesController < ApplicationController
     def cross_params
       params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
                                     :parent,:male_id,:female_id,:link,
-                                    :X,:II,:III,:IV)
+                                    :X,:II,:III,:IV,:crossdate)
     end
     def correct_user
         if user_signed_in?
-            if current_user.id != 1 or user_signed_in == false
+            if current_user.id != 1 or user_signed_in? == false
                 redirect_to root_url
             end
         else

@@ -13,6 +13,7 @@ gem "mini_magick"
 gem 'mathjax-rails'
 
 gem 'jquery-ui-rails'
+gem 'foundation-datetimepicker-rails'
 
 gem 'friendly_id', '~> 5.1.0'
 gem 'rqrcode_png'

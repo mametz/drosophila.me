@@ -165,7 +165,7 @@ if g_user.id == current_user.id
 <%= f.hidden_field(:link, :value => @random_string) %>
 
 <p>
-<a href="#" data-reveal-id="newfly">Add new fly to cross</a>
+<a href="#" data-reveal-id="newfly" class="button small secondary">Add new fly to cross</a>
 <div id="newfly" class="reveal-modal" data-reveal>
 
 <div class="panel">
@@ -217,6 +217,8 @@ if g_user.id == current_user.id
 <a class="close-reveal-modal">&#215;</a>
 </div>
 </p>
+<h5>Date of cross</h5>
+<%= f.date_select :crossdate %>
 
 <%= f.submit %>
 </div>
