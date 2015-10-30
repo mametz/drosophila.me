@@ -213,7 +213,7 @@ class CrossesController < ApplicationController
     end
     def correct_user
         if user_signed_in?
-            if current_user.id != 1 or user_signed_in = false
+            if current_user.id != 1 or user_signed_in == false
                 redirect_to root_url
             end
         else
