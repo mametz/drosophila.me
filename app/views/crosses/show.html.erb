@@ -34,7 +34,7 @@ end%>
 <%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
 
 <div class="panel">
-\[\underbrace{
+	\[\underbrace{
 
 &#x2642; \quad 
 
@@ -77,6 +77,16 @@ end%>
 	<% end %>
 \quad &#x2640;
 }\]
+
+<% 
+if user_signed_in?
+if g_user.id == current_user.id %>
+
+<ul class="accordion" data-accordion>
+  <li class="accordion-navigation">
+    <a href="#panel1a">Fly view</a>
+    <div id="panel1a" class="content active">
+<% end end %>
 
 <div align="center">
 <% counter = 0 %>
@@ -151,6 +161,39 @@ end %>
 	<% counter = counter + 1 %>
 <% end %>
 </div>
+
+<% 
+if user_signed_in?
+if g_user.id == current_user.id %>
+</div>
+  </li>
+  <li class="accordion-navigation">
+    <a href="#panel2a">Chromosome view</a>
+    <div id="panel2a" class="content">
+
+    	<h4>&#x2642;
+    		<%= f.radio_button(:male_id, "male_chr_s", label: false) %>
+    	</h4>
+    	<div class="row">
+    		<div class="large-3 columns panel"><h5>Chr. X</h5></div>
+    		<div class="large-3 columns panel"><h5>Chr. II</h5></div>
+    		<div class="large-3 columns panel"><h5>Chr. III</h5></div>
+    		<div class="large-3 columns panel"><h5>Chr. IV</h5></div>
+    	</div>
+    	<h4>&#x2640;
+    		<%= f.radio_button(:female_id, "female_chr_s", label: false) %>
+    	</h4>
+    	<div class="row">
+    		<div class="large-3 columns panel"><h5>Chr. X</h5></div>
+    		<div class="large-3 columns panel"><h5>Chr. II</h5></div>
+    		<div class="large-3 columns panel"><h5>Chr. III</h5></div>
+    		<div class="large-3 columns panel"><h5>Chr. IV</h5></div>
+    	</div>
+
+    </div>
+</li>
+</ul>
+<% end end %>
 </div>
 
 <% 
@@ -220,7 +263,7 @@ if g_user.id == current_user.id
 <h5>Date of cross</h5>
 <%= f.date_select :crossdate %>
 
-<%= f.submit %>
+<%= f.submit 'Cross' %>
 </div>
 <% end %>
 
