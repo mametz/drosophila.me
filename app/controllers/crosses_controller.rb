@@ -1,12 +1,28 @@
 class CrossesController < ApplicationController
-  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history]
+  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy]
   before_action :correct_user, only: [:edit,:update,:destroy]
-  before_action :logged_user, only: [:index, :new, :create]
+  before_action :logged_user, only: [:index, :new, :create, :copy]
 
   # GET /crosses
   # GET /crosses.json
   def index
     @crosses = Cross.where("user_id = ?", current_user.id)
+  end
+
+  def copy
+    require 'securerandom'
+    link = SecureRandom.hex
+    @c_cross = Cross.new(:male_id => @cross.male_id, :link => link, 
+                          :female_id => @cross.female_id, :lethal => @cross.lethal, 
+                          :balancers => @cross.balancers, :description => @cross.description,
+                          :parent => @cross.parent, :user_id => current_user.id, :crossdate => @cross.date)
+    if @cross.save
+        format.html { redirect_to @c_cross, notice: 'Cross was copied to your collection' }
+      else
+        format.html { render @cross, notice: 'Cross could not be copied.' }
+      end
+    else
+
   end
 
   def history
