@@ -15,13 +15,15 @@ class CrossesController < ApplicationController
     @c_cross = Cross.new(:male_id => @cross.male_id, :link => link, 
                           :female_id => @cross.female_id, :lethal => @cross.lethal, 
                           :balancers => @cross.balancers, :description => @cross.description,
-                          :parent => @cross.parent, :user_id => current_user.id, :crossdate => @cross.date)
-    if @cross.save
-        format.html { redirect_to @c_cross, notice: 'Cross was copied to your collection' }
+                          :parent => @cross.parent, :user_id => current_user.id, :crossdate => @cross.crossdate)
+    
+    respond_to do |format|
+      if @c_cross.save
+        format.html { redirect_to short_path(@c_cross.friendly_id), notice: 'Cross was copied to your collection' }
       else
         format.html { render @cross, notice: 'Cross could not be copied.' }
       end
-    else
+    end
 
   end
 
@@ -232,7 +234,7 @@ class CrossesController < ApplicationController
     end
     def correct_user
         if user_signed_in?
-            if current_user.id != 1 or user_signed_in? == false
+            if current_user.id != @cross.user_id
                 redirect_to root_url
             end
         else

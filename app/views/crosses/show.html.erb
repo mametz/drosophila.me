@@ -26,9 +26,11 @@ if g_user.id == current_user.id %>
 <%= link_to @cross, method: :delete, data: { confirm: "Are you sure? The cross and all it's derivatives would be deleted." } do %>
 	<i class="fi-trash" ></i> Delete cross
 <% end %> 
-<% end %>
-<%= link_to @cross, method: :copy do %>
+<% else %>
+<%= link_to copy_path do %>
 	<i class="fi-page-copy" ></i> Copy cross
+<% end %>
+<% end %>
 <% end %>
 </div>
 </div>

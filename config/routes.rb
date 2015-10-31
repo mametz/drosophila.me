@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   get ':id/history' => 'crosses#history'
   get ':id' => 'crosses#show', :as => 'short'
 
+  get 'copy/:id' => 'crosses#copy', :as => 'copy'
+
   root :to => "static_pages#home"
 
   mathjax 'mathjax'
