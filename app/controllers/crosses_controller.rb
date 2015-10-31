@@ -16,9 +16,15 @@ class CrossesController < ApplicationController
                           :female_id => @cross.female_id, :lethal => @cross.lethal, 
                           :balancers => @cross.balancers, :description => @cross.description,
                           :parent => @cross.parent, :user_id => current_user.id, :crossdate => @cross.crossdate)
+
+    flies = Fly.where("cross_id = ? AND id != ? AND id != ?", @cross.id, @cross.male_id, @cross.female_id)
     
     respond_to do |format|
       if @c_cross.save
+        flies.each do |f|
+          @fly = Fly.new(:chr1 => f.chr1, :chr2 => f.chr2, :chr3 => f.chr3, :chr4 => f.chr4, :cross_id => @c_cross.id)
+          @fly.save
+        end
         format.html { redirect_to short_path(@c_cross.friendly_id), notice: 'Cross was copied to your collection' }
       else
         format.html { render @cross, notice: 'Cross could not be copied.' }
