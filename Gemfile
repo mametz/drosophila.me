@@ -8,6 +8,8 @@ gem 'foundation_rails_helper'
 gem 'foundation-rails'
 gem 'foundation-icons-sass-rails'
 
+gem 'gravatarify', '~> 3.0.0'
+
 gem "mini_magick"
 
 gem 'mathjax-rails'
