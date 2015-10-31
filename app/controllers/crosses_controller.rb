@@ -12,8 +12,18 @@ class CrossesController < ApplicationController
   def copy
     require 'securerandom'
     link = SecureRandom.hex
-    @c_cross = Cross.new(:male_id => @cross.male_id, :link => link, 
-                          :female_id => @cross.female_id, :lethal => @cross.lethal, 
+
+    @flym = Fly.find(@cross.male_id)
+    @flyf = Fly.find(@cross.female_id)
+
+    @c_flym = Fly.new(:chr1 => @flym.chr1, :chr2 => @flym.chr2, :chr3 => @flym.chr3, :chr4 => @flym.chr4)
+    @c_flym.save
+
+    @c_flyf = Fly.new(:chr1 => @flyf.chr1, :chr2 => @flyf.chr2, :chr3 => @flyf.chr3, :chr4 => @flyf.chr4)
+    @c_flyf.save
+
+    @c_cross = Cross.new(:male_id => @c_flym.id, :link => link, 
+                          :female_id => @c_flyf.id, :lethal => @cross.lethal, 
                           :balancers => @cross.balancers, :description => @cross.description,
                           :parent => @cross.parent, :user_id => current_user.id, :crossdate => @cross.crossdate)
 
@@ -21,6 +31,8 @@ class CrossesController < ApplicationController
     
     respond_to do |format|
       if @c_cross.save
+        @c_flym.update(:cross_id => @c_cross.id)
+        @c_flyf.update(:cross_id => @c_cross.id)
         flies.each do |f|
           @fly = Fly.new(:chr1 => f.chr1, :chr2 => f.chr2, :chr3 => f.chr3, :chr4 => f.chr4, :cross_id => @c_cross.id)
           @fly.save
