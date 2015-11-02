@@ -3,15 +3,24 @@
 <% generation = 1 %>
  
 <% isparent = [] %>
+
+<div class="panel">
 <% @crosses.each do |cro|
 	isparent.append(cro.male_id)
 	isparent.append(cro.female_id)
 end %>
 
 <% @crosses.each do |cro| %>
-
+<div class="row">
+<div class="large-2 columns">
 <h5>F<%= generation %></h5>
-<div class="panel">
+</div>
+<div class="large-10 columns">
+	<%= cro.crossdate.strftime("Crossed on %B %d, %Y") %><br />
+	<%= cro.description %>
+</div>
+</div>
+<div>
 \[\underbrace{
 
 &#x2642; \quad 
@@ -166,3 +175,4 @@ end
 
 <% generation = generation + 1 %>
 <% end %>
+</div>
