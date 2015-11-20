@@ -1,5 +1,5 @@
 class CrossesController < ApplicationController
-  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy]
+  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy, :qr]
   before_action :correct_user, only: [:edit,:update,:destroy]
   before_action :logged_user, only: [:index, :new, :create, :copy]
 
@@ -91,22 +91,22 @@ class CrossesController < ApplicationController
     @lethal = @cross.lethal.split(';')
     @lethal_string = @cross.lethal
 
-    if File.file?(Rails.root.join('public', 'system', @cross.id.to_s + ".png")) != true
-      qr_img = RQRCode::QRCode.new(request.original_url)
-      qr_img = qr_img.to_img.resize(500,500)
-      qr_fly = MiniMagick::Image.read(qr_img.to_blob)
-      fly_img = MiniMagick::Image.open(Rails.root.join('public', 'assets', 'images', 'small.png'))
-
-      qr_result = qr_fly.composite(fly_img) do |c|
-        c.compose "Over"    # OverCompositeOp
-        c.geometry "+0+0" # copy second_image onto first_image from (20, 20)
-      end
-
-      qr_result.write(Rails.root.join('public', 'system', @cross.id.to_s + ".png"))
-    end
-
     @current_url = request.original_url
     
+  end
+
+  def qr
+    qr_img = RQRCode::QRCode.new(request.original_url)
+    qr_img = qr_img.to_img.resize(500,500)
+    qr_fly = MiniMagick::Image.read(qr_img.to_blob)
+    fly_img = MiniMagick::Image.open(Rails.root.join('public', 'assets', 'images', 'small.png'))
+
+    qr_result = qr_fly.composite(fly_img) do |c|
+      c.compose "Over"    # OverCompositeOp
+      c.geometry "+0+0" # copy second_image onto first_image from (20, 20)
+    end
+
+    send_data qr_result.to_blob ,type: "image/png" , disposition: "attachment"
   end
 
   # GET /crosses/new

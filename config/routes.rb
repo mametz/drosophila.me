@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   get 'crosses/:id/history' => 'crosses#history'
   get ':id/history' => 'crosses#history'
+  get ':id/qr' => 'crosses#qr'
+  get '/crosses/:id/qr' => 'crosses#qr'
   get ':id' => 'crosses#show', :as => 'short'
 
   get 'copy/:id' => 'crosses#copy', :as => 'copy'
