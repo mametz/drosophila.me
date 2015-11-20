@@ -96,7 +96,7 @@ class CrossesController < ApplicationController
   end
 
   def qr
-    qr_img = RQRCode::QRCode.new(request.original_url)
+    qr_img = RQRCode::QRCode.new("http://drosophila.me/" + @cross.friendly_id.to_s )
     qr_img = qr_img.to_img.resize(500,500)
     qr_fly = MiniMagick::Image.read(qr_img.to_blob)
     fly_img = MiniMagick::Image.open(Rails.root.join('public', 'assets', 'images', 'small.png'))
