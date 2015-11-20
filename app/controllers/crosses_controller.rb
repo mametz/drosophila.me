@@ -91,11 +91,13 @@ class CrossesController < ApplicationController
     @lethal = @cross.lethal.split(';')
     @lethal_string = @cross.lethal
 
-    require 'chunky_png'
+    #require 'chunky_png'
 
-    qr_img = RQRCode::QRCode.new(request.original_url).to_img.resize(500, 500)
-    fly_img = ChunkyPNG::Image.from_file(Rails.root.join('public', 'assets', 'images', 'small.png'))
-    @qr = qr_img.compose!(fly_img,0,0).to_data_url
+    #qr_img = RQRCode::QRCode.new(request.original_url).to_img.resize(500, 500)
+    #fly_img = ChunkyPNG::Image.from_file(Rails.root.join('public', 'assets', 'images', 'small.png'))
+    #@qr = qr_img.compose!(fly_img,0,0).to_data_url
+
+    @qr = RQRCode::QRCode.new(request.original_url).to_img.resize(500, 500).to_data_url
 
     @current_url = request.original_url
     
