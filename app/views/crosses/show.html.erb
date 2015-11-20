@@ -7,7 +7,7 @@
 <%= image_tag g_user.gravatar_url, :class=> "img-circular" %>
 </a>
 </div>
-<div class="large-10 column">
+<div class="large-5 column">
 <% if @cross.parent.to_i >= 1 %>
 <a href="<%= @current_url %>/history"><i class="fi-page-multiple"></i> Cross history</a>
 <br />
@@ -32,6 +32,10 @@ if g_user.id == current_user.id %>
 <% end %>
 <% end %>
 <% end %>
+</div>
+<div class="large-5 column">
+	<p><%= @cross.crossdate.strftime("Crossed on %B %d, %Y") %><br />
+	<%= @cross.description %></p>
 </div>
 </div>
 <br />

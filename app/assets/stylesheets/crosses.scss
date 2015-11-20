@@ -67,3 +67,13 @@
  -webkit-border-radius: 100px;
  -moz-border-radius: 100px;
 }
+
+.img-circular-small{
+ width: 25px;
+ height: 25px;
+ background-size: cover;
+ display: block;
+ border-radius: 100px;
+ -webkit-border-radius: 100px;
+ -moz-border-radius: 100px;
+}

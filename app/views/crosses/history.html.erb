@@ -12,8 +12,14 @@ end %>
 
 <% @crosses.each do |cro| %>
 <div class="row">
-<div class="large-2 columns">
+<div class="large-1 columns">
 <h5>F<%= generation %></h5>
+</div>
+<div class="large-1 columns">
+	<% user = User.find(cro.user_id) %>
+	<a href="mailto:<%= user.email %>" alt="<%= user.email %>" title="<%= user.email %>">
+	<%= gravatar_tag user.email, :html => { :class => "img-circular-small" } %>
+	</a>
 </div>
 <div class="large-10 columns">
 	<%= cro.crossdate.strftime("Crossed on %B %d, %Y") %><br />
