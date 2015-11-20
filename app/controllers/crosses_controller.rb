@@ -91,13 +91,19 @@ class CrossesController < ApplicationController
     @lethal = @cross.lethal.split(';')
     @lethal_string = @cross.lethal
 
-    #require 'chunky_png'
+    if File.file?(Rails.root.join('public', 'uploads', @cross.id.to_s + ".png")) != true
+      qr_img = RQRCode::QRCode.new(request.original_url)
+      qr_img = qr_img.to_img.resize(500,500)
+      qr_fly = MiniMagick::Image.read(qr_img.to_blob)
+      fly_img = MiniMagick::Image.open(Rails.root.join('public', 'assets', 'images', 'small.png'))
 
-    #qr_img = RQRCode::QRCode.new(request.original_url).to_img.resize(500, 500)
-    #fly_img = ChunkyPNG::Image.from_file(Rails.root.join('public', 'assets', 'images', 'small.png'))
-    #@qr = qr_img.compose!(fly_img,0,0).to_data_url
+      qr_result = qr_fly.composite(fly_img) do |c|
+        c.compose "Over"    # OverCompositeOp
+        c.geometry "+0+0" # copy second_image onto first_image from (20, 20)
+      end
 
-    @qr = RQRCode::QRCode.new(request.original_url).to_img.resize(500, 500).to_data_url
+      qr_result.write(Rails.root.join('public', 'uploads', @cross.id.to_s + ".png"))
+    end
 
     @current_url = request.original_url
     
