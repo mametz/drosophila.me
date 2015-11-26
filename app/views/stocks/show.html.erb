@@ -1,28 +1,11 @@
-<p id="notice"><%= notice %></p>
-
 <p>
-  <strong>Number:</strong>
+  <strong>Stock number:</strong>
   <%= @stock.number %>
-</p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @stock.name %>
 </p>
 
 <p>
   <strong>Fly:</strong>
   <%= @stock.fly_id %>
-</p>
-
-<p>
-  <strong>Lab:</strong>
-  <%= @stock.lab_id %>
-</p>
-
-<p>
-  <strong>User:</strong>
-  <%= @stock.user_id %>
 </p>
 
 <p>
@@ -36,11 +19,6 @@
 </p>
 
 <p>
-  <strong>Room:</strong>
-  <%= @stock.room_id %>
-</p>
-
-<p>
   <strong>Reference:</strong>
   <%= @stock.reference %>
 </p>
@@ -49,6 +27,3 @@
   <strong>Received from:</strong>
   <%= @stock.received_from %>
 </p>
-
-<%= link_to 'Edit', edit_stock_path(@stock) %> |
-<%= link_to 'Back', stocks_path %>
