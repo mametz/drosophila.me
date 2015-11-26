@@ -1,0 +1,57 @@
+<%= form_for(@stock) do |f| %>
+  <% if @stock.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@stock.errors.count, "error") %> prohibited this stock from being saved:</h2>
+
+      <ul>
+      <% @stock.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :number %><br>
+    <%= f.number_field :number %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :fly_id %><br>
+    <%= f.number_field :fly_id %>
+  </div>
+  <div class="field">
+    <%= f.label :lab_id %><br>
+    <%= f.number_field :lab_id %>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br>
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :comment %><br>
+    <%= f.text_area :comment %>
+  </div>
+  <div class="field">
+    <%= f.label :date_established %><br>
+    <%= f.date_select :date_established %>
+  </div>
+  <div class="field">
+    <%= f.label :room_id %><br>
+    <%= f.number_field :room_id %>
+  </div>
+  <div class="field">
+    <%= f.label :reference %><br>
+    <%= f.text_area :reference %>
+  </div>
+  <div class="field">
+    <%= f.label :received_from %><br>
+    <%= f.text_area :received_from %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @stock.number %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @stock.name %>
+</p>
+
+<p>
+  <strong>Fly:</strong>
+  <%= @stock.fly_id %>
+</p>
+
+<p>
+  <strong>Lab:</strong>
+  <%= @stock.lab_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @stock.user_id %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @stock.comment %>
+</p>
+
+<p>
+  <strong>Date established:</strong>
+  <%= @stock.date_established %>
+</p>
+
+<p>
+  <strong>Room:</strong>
+  <%= @stock.room_id %>
+</p>
+
+<p>
+  <strong>Reference:</strong>
+  <%= @stock.reference %>
+</p>
+
+<p>
+  <strong>Received from:</strong>
+  <%= @stock.received_from %>
+</p>
+
+<%= link_to 'Edit', edit_stock_path(@stock) %> |
+<%= link_to 'Back', stocks_path %>
