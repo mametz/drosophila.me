@@ -1,4 +1,4 @@
-<h1>Listing Stocks</h1>
+<h1>Your fly stocks</h1>
 
 <table>
   <thead>
@@ -11,8 +11,21 @@
   <tbody>
     <% @stocks.each do |stock| %>
       <tr>
-        <td><%= stock.number %></td>
-        <td><%= stock.fly_id %></td>
+        <td>
+          <a href="stocks/<%= stock.id %>">
+            <div style="height:100%;width:100%">
+              <%= stock.number %>
+            </div>
+          </a>
+        </td>
+        <td>
+          <a href="stocks/<%= stock.id %>">
+            <div style="height:100%;width:100%">
+              <% fly = Fly.find(stock.fly_id) %>
+              <%= fly.chr1 %> ; <%= fly.chr2 %> ; <%= fly.chr3 %> ; <%= fly.chr4 %>
+            </div>
+          </a>
+        </td>
       </tr>
     <% end %>
   </tbody>

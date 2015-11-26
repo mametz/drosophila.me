@@ -142,7 +142,7 @@ if g_user.id == current_user.id
 <%= f.radio_button(:male_id, @prog_id[counter], label: false) %>
  | &#x2640;
 <%= f.radio_button(:female_id, @prog_id[counter], label: false) %>
- | <a href="">Stock_it</a>
+ | <a href="<%= request.base_url %>/stocks/n/<%= @prog_id[counter] %>">Stock_it</a>
 <% end 
 end %>
 <% else %>

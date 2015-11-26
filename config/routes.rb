@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :stocks
+  
   captcha_route
   get 'static_pages/home'
   get 'static_pages/team'
@@ -7,12 +7,15 @@ Rails.application.routes.draw do
   devise_for :users
   resources :flies
   resources :crosses
+  resources :stocks
 
   get 'crosses/:id/history' => 'crosses#history'
   get ':id/history' => 'crosses#history'
   get ':id/qr' => 'crosses#qr'
   get '/crosses/:id/qr' => 'crosses#qr'
   get ':id' => 'crosses#show', :as => 'short'
+
+  get '/stocks/n/:fly_to_stock' => 'stocks#create'
 
   get 'copy/:id' => 'crosses#copy', :as => 'copy'
 

@@ -24,14 +24,18 @@ class StocksController < ApplicationController
   # POST /stocks
   # POST /stocks.json
   def create
-    @stock = Stock.new(stock_params)
+    @fly = Fly.find(params[:fly_to_stock])
+
+    @stock = Stock.new(:number => 0, :name => "", :fly_id => @fly.id, :lab_id => "", 
+                       :user_id => "", :comment => "", :date_established => "", 
+                       :room_id => "", :reference => "", :received_from => "")
 
     respond_to do |format|
       if @stock.save
-        format.html { redirect_to @stock, notice: 'Stock was successfully created.' }
+        format.html { redirect_to stocks_path, notice: 'Stock was successfully created.' }
         format.json { render :show, status: :created, location: @stock }
       else
-        format.html { render :new }
+        format.html { redirect_to root_path }
         format.json { render json: @stock.errors, status: :unprocessable_entity }
       end
     end
