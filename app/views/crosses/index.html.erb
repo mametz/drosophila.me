@@ -1,6 +1,22 @@
 <h1>Listing Crosses</h1>
 
+<%
+lastmonth = ""
+lastyear = ""
+%>
+
 <% @crosses.each do |cross| %>
+
+<%
+if lastmonth != cross.crossdate.strftime("%B") or lastyear != lastyear = cross.crossdate.strftime("%Y")
+%>
+	<div class="panel"><h4><%= cross.crossdate.strftime("%B %Y")%></h4></div>
+<%
+end
+
+lastmonth = cross.crossdate.strftime("%B")
+lastyear = cross.crossdate.strftime("%Y")
+%>
 
 <% @flym = Fly.find(cross.male_id) %>
 <% @flyf = Fly.find(cross.female_id) %>
