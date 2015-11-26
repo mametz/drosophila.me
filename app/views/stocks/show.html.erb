@@ -1,8 +1,5 @@
-<p>
-  <strong>Stock number:</strong>
-  <%= @stock.number %>
-</p>
-
+<h1>Stock n. <%= @stock.number %></h1> 
+<div class="panel">
 <p>
   <strong>Fly:</strong>
   <%= @stock.fly_id %>
@@ -27,3 +24,6 @@
   <strong>Received from:</strong>
   <%= @stock.received_from %>
 </p>
+
+<a href="<%= @stock.id %>/edit" class="button small secondary"><i class="fi-page-edit" ></i> Edit</a>
+</div>
