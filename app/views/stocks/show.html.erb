@@ -13,7 +13,7 @@
 
 <p>
   <strong>Date established:</strong>
-  <% if @stock.date_established != "" %>
+  <% if @stock.date_established != nil %>
     <%= @stock.date_established.strftime("%B %d, %Y") %>
   <% end %>
 </p>
