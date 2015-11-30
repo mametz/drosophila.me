@@ -1,5 +1,7 @@
 class StocksController < ApplicationController
   before_action :set_stock, only: [:show, :edit, :update, :destroy]
+  #before_action :correct_user, only: [:edit,:update,:destroy,:show]
+  before_action :logged_user, only: [:index, :new, :create, :show]
 
   # GET /stocks
   # GET /stocks.json
@@ -74,5 +76,21 @@ class StocksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def stock_params
       params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :user_id, :comment, :date_established, :room_id, :reference, :received_from)
+    end
+    def correct_user
+        if user_signed_in?
+            if current_user.id != @stock.user_id
+                redirect_to root_url
+            end
+        else
+           redirect_to root_url
+        end
+    end
+    def logged_user
+        if user_signed_in?
+
+        else
+           redirect_to root_url, notice: 'You need to be logged in.'
+        end
     end
 end
