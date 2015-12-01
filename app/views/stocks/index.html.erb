@@ -1,65 +1,55 @@
 <h1>Your fly stocks</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Stock<br />Number</th>
-      <th>Genotype</th>
-      <th>Cross</th>
-    </tr>
-  </thead>
-
 <%= form_for :cross, :url => {:controller => "crosses", :action => "create"}, :method => "post", auto_labels: false do |f| %>
-<%= f.submit %>
-
-<div class="panel">
-<h5>Date of cross</h5>
-<%= f.date_select :crossdate %>
-</div>
-
-<div class="panel">
-  <h5>Lethal alleles</h5>
-        <label>Alleles separated by semicolon [;]
-          <%= f.text_field :lethal %>
-        </label>
-  <h5>Balancers</h5>
-        <label>Balancers separated by semicolon [;]
-          <%= f.text_field :balancers %>
-        </label>
-  <h5>Comments</h5>
-        <label>Describe this cross
-          <%= f.text_field :description %>
-        </label>       
-</div>
-
-<%= f.hidden_field(:parent, :value => "stock") %>
-
-  <tbody>
-    <% @stocks.each do |stock| %>
+  <table>
+    <thead>
       <tr>
-        <td>
-          <a href="stocks/<%= stock.id %>">
-            <div style="height:100%;width:100%">
-              <%= stock.number %>
-            </div>
-          </a>
-        </td>
-        <td>
-          <a href="stocks/<%= stock.id %>">
-            <div style="height:100%;width:100%">
-              <% fly = Fly.find(stock.fly_id) %>
-              <%= fly.chr1 %> ; <%= fly.chr2 %> ; <%= fly.chr3 %> ; <%= fly.chr4 %>
-            </div>
-          </a>
-        </td>
-        <td>
-          &#x2642;
-          <%= f.radio_button(:male_id, fly.id, label: false) %>
-          | &#x2640;
-          <%= f.radio_button(:female_id, fly.id, label: false) %>
-        </td>
+        <th>Stock
+        <br />Number</th>
+        <th>Genotype</th>
+        <th>Cross</th>
       </tr>
-    <% end %>
-  </tbody>
-  <% end %>
-</table>
+    </thead>
+    <tbody>
+      <% @stocks.each do |stock| %>
+        <tr>
+          <td>
+            <a href="stocks/&lt;%= stock.id %&gt;">
+              <div style="height:100%;width:100%">
+                <%= stock.number %>
+              </div>
+            </a>
+          </td>
+          <td>
+            <a href="stocks/&lt;%= stock.id %&gt;">
+              <div style="height:100%;width:100%"><% fly = Fly.find(stock.fly_id) %><%= fly.chr1 %>; <%= fly.chr2 %>; <%= fly.chr3 %>; <%=  fly. chr4 %></div>
+            </a>
+          </td>
+          <td>
+            &#9794; 
+            <%= f.radio_button(:male_id, fly.id, label: false) %>
+            | &#9792; 
+            <%= f.radio_button(:female_id, fly.id, label: false) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <a href="" data-reveal-id="cross" class="button small secondary">Details</a>
+  <div id="cross" class="reveal-modal" data-reveal="">
+    <div class="panel">
+      <h5>Date of cross</h5><%= f.date_select :crossdate %>
+    </div>
+  <div class="panel">
+    <h5>Lethal alleles</h5>
+    <label>Alleles separated by semicolon [;] <%= f.text_field :lethal %></label>
+    <h5>Balancers</h5>
+    <label>Balancers separated by semicolon [;] <%= f.text_field :balancers %></label>
+    <h5>Comments</h5>
+    <label>Describe this cross <%= f.text_field :description %></label>
+  </div>
+  <%= f.hidden_field(:parent, :value => "stock") %>
+  </div>
+  <%= f.submit %>
+<% end %>
+
+<script>$(document).foundation();</script>
