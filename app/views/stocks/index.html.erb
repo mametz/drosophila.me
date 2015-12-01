@@ -13,14 +13,14 @@
       <% @stocks.each do |stock| %>
         <tr>
           <td>
-            <a href="stocks/&lt;%= stock.id %&gt;">
+            <a href="stocks/<%= stock.id %>">
               <div style="height:100%;width:100%">
                 <%= stock.number %>
               </div>
             </a>
           </td>
           <td>
-            <a href="stocks/&lt;%= stock.id %&gt;">
+            <a href="stocks/<%= stock.id %>">
               <div style="height:100%;width:100%"><% fly = Fly.find(stock.fly_id) %><%= fly.chr1 %>; <%= fly.chr2 %>; <%= fly.chr3 %>; <%=  fly. chr4 %></div>
             </a>
           </td>
