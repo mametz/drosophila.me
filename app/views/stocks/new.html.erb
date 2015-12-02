@@ -1,0 +1,38 @@
+<h1>Add new stock</h1>
+
+<%= form_for :cross, :url => {:controller => "stocks", :action => "add"}, :method => "get", auto_labels: false do |f| %>
+
+<div class="field">
+<div class="panel">
+  <h5>Genotype</h5>
+    <h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
+    <div class="row">
+      <div class="large-6 columns">
+        <label>X chromosome
+          <%= f.text_field :X, :value => "+/+" %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 2
+          <%= f.text_field :II, :value => "+/+" %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 3
+          <%= f.text_field :III, :value => "+/+" %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 4
+          <%= f.text_field :IV, :value => "+/+" %>
+        </label>
+      </div>
+    </div>
+</div>
+
+<div class="actions">
+    <%= f.submit %>
+</div>
+</div>
+
+<% end %>

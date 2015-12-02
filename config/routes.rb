@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get ':id' => 'crosses#show', :as => 'short'
 
   get '/stocks/n/:fly_to_stock' => 'stocks#create'
+  get '/stocks/x/add' => 'stocks#add'
 
   get 'copy/:id' => 'crosses#copy', :as => 'copy'
 
