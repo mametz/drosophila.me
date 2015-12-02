@@ -1,0 +1,35 @@
+<h1>Stock n. <%= @stock.number %></h1> 
+<div class="panel">
+<p>
+  <strong>Genotype:</strong>
+  <% fly = Fly.find(@stock.fly_id) %>
+  <%= fly.chr1 %> ; <%= fly.chr2 %> ; <%= fly.chr3 %> ; <%= fly.chr4 %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @stock.comment %>
+</p>
+
+<p>
+  <strong>Date established:</strong>
+  <% if @stock.date_established != nil %>
+    <%= @stock.date_established.strftime("%B %d, %Y") %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Reference:</strong>
+  <%= @stock.reference %>
+</p>
+
+<p>
+  <strong>Received from:</strong>
+  <%= @stock.received_from %>
+</p>
+
+<a href="<%= @stock.id %>/edit" class="button small secondary"><i class="fi-page-edit" ></i> Edit</a>
+<%= link_to @stock, method: :delete, data: { confirm: "Are you sure?" }, class: "button small alert" do %>
+  <i class="fi-trash" ></i> Delete stock
+<% end %> 
+</div>

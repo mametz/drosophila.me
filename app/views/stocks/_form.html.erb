@@ -1,0 +1,44 @@
+<%= form_for(@stock, auto_labels: false) do |f| %>
+  <% if @stock.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@stock.errors.count, "error") %> prohibited this stock from being saved:</h2>
+
+      <ul>
+      <% @stock.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label "Stock number" %><br>
+    <%= f.number_field :number %>
+  </div>
+  <div class="field">
+    <%= f.label :comment %><br>
+    <%= f.text_area :comment %>
+  </div>
+  <div class="field">
+    <%= f.label :date_established %><br>
+    <%= f.date_select :date_established %>
+  </div>
+  <div class="field">
+    <%= f.label :reference %><br>
+    <%= f.text_area :reference %>
+  </div>
+  <div class="field">
+    <%= f.label :received_from %><br>
+    <%= f.text_area :received_from %>
+  </div>
+
+  <%= f.hidden_field :room_id %>
+  <%= f.hidden_field :user_id %>
+  <%= f.hidden_field :lab_id %>
+  <%= f.hidden_field :fly_id %>
+  <%= f.hidden_field :name %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

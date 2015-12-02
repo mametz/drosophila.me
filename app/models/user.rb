@@ -7,4 +7,5 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :crosses, :dependent => :destroy
+  has_many :stocks, :dependent => :destroy
 end

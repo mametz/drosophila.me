@@ -11,15 +11,13 @@
     <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
 
+    <%= mathjax_tag :config=>'Accessible-full.js' %>
+
   </head>
 
   <body>
 
 <div class="icon-bar five-up">
-  <a class="item" href="<%= root_path %>">
-    <i class="fi-home" ></i>
-    <label>Home</label>
-  </a>
   <a class="item" href="<%= new_cross_path %>">
     <i class="fi-arrows-in" ></i>
     <label>New cross</label>
@@ -27,6 +25,11 @@
   <a class="item" href="<%= crosses_path %>">
     <i class="fi-list-thumbnails" ></i>
     <label>Your crosses</label>
+  </a>
+
+  <a class="item" href="<%= stocks_path %>">
+    <i class="fi-list-thumbnails" ></i>
+    <label>Your stocks</label>
   </a>
 
 <% if user_signed_in? %>
@@ -51,7 +54,6 @@
 
 </div>
 
-<%= mathjax_tag %>
 <%= display_flash_messages %>
 
 <div class="row">
