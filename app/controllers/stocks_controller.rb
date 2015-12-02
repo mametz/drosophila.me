@@ -6,7 +6,7 @@ class StocksController < ApplicationController
   # GET /stocks
   # GET /stocks.json
   def index
-    @stocks = Stock.all
+    @stocks = Stock.where("user_id = ?", current_user.id)
   end
 
   # GET /stocks/1
