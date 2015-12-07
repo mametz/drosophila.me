@@ -1,0 +1,24 @@
+<h1>Your stock rooms</h1>
+
+<a href="<%= new_room_path %>" class="button small secondary">New Stock Room</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Temperature</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @rooms.each do |room| %>
+      <tr>
+        <td><%= room.name %></td>
+        <td><%= room.temperature %></td>
+        <td><%= link_to 'Edit', edit_room_path(room) %></td>
+        <td><%= link_to 'Delete', room, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

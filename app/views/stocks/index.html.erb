@@ -1,9 +1,12 @@
 <h1>Your fly stocks</h1>
 <a href="<%= new_stock_path %>" class="button small secondary">New Stock</a>
+<a href="<%= rooms_path %>" class="button small secondary">Stock rooms</a>
 <%= form_for :cross, :url => {:controller => "crosses", :action => "create"}, :method => "post", auto_labels: false do |f| %>
   <table>
     <thead>
       <tr>
+        <th>Stock
+        <br />Room</th>
         <th>Stock
         <br />Number</th>
         <th>Genotype</th>
@@ -13,6 +16,12 @@
     <tbody>
       <% @stocks.each do |stock| %>
         <tr>
+          <td>
+            <% if stock.room_id != nil %>
+              <% room = Room.find(stock.room_id) %>
+              <%= room.name %>
+            <% end %>
+          </td>
           <td>
             <a href="stocks/<%= stock.id %>">
               <div style="height:100%;width:100%">

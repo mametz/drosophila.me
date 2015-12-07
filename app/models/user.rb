@@ -8,4 +8,5 @@ class User < ActiveRecord::Base
 
   has_many :crosses, :dependent => :destroy
   has_many :stocks, :dependent => :destroy
+  has_many :rooms, :dependent => :destroy
 end

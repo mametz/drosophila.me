@@ -8,6 +8,13 @@
 </p>
 
 <p>
+  <strong>Stock room:</strong>
+  <% if @room != nil %>
+    <%= @room.name %>
+    <% end %>
+</p>
+
+<p>
   <strong>Comment:</strong>
   <%= @stock.comment %>
 </p>

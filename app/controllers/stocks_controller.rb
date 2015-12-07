@@ -12,6 +12,9 @@ class StocksController < ApplicationController
   # GET /stocks/1
   # GET /stocks/1.json
   def show
+    if @stock.room_id != nil
+      @room = Room.find(@stock.room_id)
+    end
   end
 
   # GET /stocks/new
@@ -29,9 +32,9 @@ class StocksController < ApplicationController
   def add
     @fly = Fly.new(:chr1 => cross_params[:X], :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => 0)
     @fly.save
-    @stock = Stock.new(:number => 0, :name => "", :fly_id => @fly.id, :lab_id => "", 
+    @stock = Stock.new(:number => cross_params[:number], :name => "", :fly_id => @fly.id, :lab_id => "", 
                        :user_id => current_user.id, :comment => "", :date_established => "", 
-                       :room_id => "", :reference => "", :received_from => "")
+                       :room_id => cross_params[:room_id], :reference => "", :received_from => "")
     respond_to do |format|
     if @stock.save
         format.html { redirect_to @stock, notice: 'Stock was successfully created.' }
@@ -96,7 +99,7 @@ class StocksController < ApplicationController
     def cross_params
       params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
                                     :parent,:male_id,:female_id,:link,
-                                    :X,:II,:III,:IV,:crossdate)
+                                    :X,:II,:III,:IV,:crossdate,:number,:room_id)
     end
     def correct_user
         if user_signed_in?
