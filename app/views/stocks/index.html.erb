@@ -24,14 +24,34 @@
           </td>
           <td>
             <a href="stocks/<%= stock.id %>">
-              <div style="height:100%;width:100%">
                 <%= stock.number %>
-              </div>
             </a>
           </td>
           <td>
-            <a href="stocks/<%= stock.id %>">
-              <div style="height:100%;width:100%"><% fly = Fly.find(stock.fly_id) %><%= fly.chr1 %>; <%= fly.chr2 %>; <%= fly.chr3 %>; <%=  fly. chr4 %></div>
+            <a href="stocks/<%= stock.id %>" class="button secondary tiny">
+              <% fly = Fly.find(stock.fly_id) %>
+              <% chromosomes = [fly.chr1.split('/').to_set, fly.chr2.split('/').to_set, fly.chr3.split('/').to_set, fly.chr4.split('/').to_set] %>
+
+              \[
+              <% semikolon = 0 %>
+                <% chromosomes.each do |chr| %>
+                  <% if chr.size > 1 %>
+                    <% if semikolon != 0 %>;<% end %>
+                    <% chr %>
+                    \dfrac
+                    <% chr.each do |n| %>
+                      {<%= n %>}
+                    <% end %>
+                  <% else %>
+                    <% if semikolon != 0 %>;<% end %>
+                      <% chr.each do |n| %>
+                        <%= n %>
+                      <% end %>
+                    <% end %> 
+                  <% semikolon = 1 %>
+                <% end %> 
+                \]
+
             </a>
           </td>
           <td>
