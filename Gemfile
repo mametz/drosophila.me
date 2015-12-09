@@ -27,6 +27,10 @@ gem 'lograge', group: :production
 gem 'quiet_assets', group: :production
 #gem 'remote_syslog_logger', group: :production
 
+group :development, :test do
+  gem 'foreman'
+end
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
 # Use sqlite3 as the database for Active Record
