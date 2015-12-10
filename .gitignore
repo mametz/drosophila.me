@@ -1,4 +1,8 @@
 *.rbc
+.DS_Store
+.env
+db/.DS_Store
+db/migrate/.DS_Store
 capybara-*.html
 .rspec
 /log
