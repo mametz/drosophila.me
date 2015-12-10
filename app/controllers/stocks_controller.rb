@@ -30,7 +30,12 @@ class StocksController < ApplicationController
   end
 
   def add
-    @fly = Fly.new(:chr1 => cross_params[:X], :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => 0)
+    chr_X = homozygous_tester(cross_params[:X])
+    chr_II = homozygous_tester(cross_params[:II])
+    chr_III = homozygous_tester(cross_params[:III])
+    chr_IV = homozygous_tester(cross_params[:IV])
+
+    @fly = Fly.new(:chr1 => chr_X, :chr2 => chr_II, :chr3 => chr_III, :chr4 => chr_IV, :cross_id => 0)
     @fly.save
     @stock = Stock.new(:number => cross_params[:number], :name => "", :fly_id => @fly.id, :lab_id => "", 
                        :user_id => current_user.id, :comment => "", :date_established => "", 
@@ -100,6 +105,13 @@ class StocksController < ApplicationController
       params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
                                     :parent,:male_id,:female_id,:link,
                                     :X,:II,:III,:IV,:crossdate,:number,:room_id)
+    end
+    def homozygous_tester(chromosome)
+      if !chromosome.include? "/"
+        return chromosome + "/" + chromosome
+      else
+        return chromosome
+      end
     end
     def correct_user
         if user_signed_in?
