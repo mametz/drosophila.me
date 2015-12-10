@@ -4,6 +4,9 @@ gem 'devise'
 gem 'devise_security_extension'
 gem 'easy_captcha'
 
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+
 gem 'foundation_rails_helper'
 gem 'foundation-rails'
 gem 'foundation-icons-sass-rails'
