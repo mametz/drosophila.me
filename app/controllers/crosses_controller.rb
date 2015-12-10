@@ -168,12 +168,12 @@ class CrossesController < ApplicationController
         if cross_params[:parent].to_i >= 1 or cross_params[:parent] == "stock"
 
           if cross_params[:male_id] == "new"
-            @flyf = Fly.find(cross_params[:female_id])
             if cross_params[:X] == "+/-" && @flyf.chr1 == "+/+"
               m_x = "+/+"
             else
-              m_x = cross_params[:m_X]
+              m_x = cross_params[:X]
             end
+            @flyf = Fly.find(cross_params[:female_id])
             @flym = Fly.new(:chr1 => m_x, :chr2 => cross_params[:II], :chr3 => cross_params[:III], :chr4 => cross_params[:IV], :cross_id => @cross.id)
             @flym.save
           elsif cross_params[:female_id] == "new"
