@@ -26,9 +26,50 @@ lastyear = cross.crossdate.strftime("%Y")
 <a href="<%= short_path(cross.friendly_id) %>">
 <div class="panel">
   <h6>
-  	<%= @flym.chr1 %> ; <%= @flym.chr2 %> ; <%= @flym.chr3 %> ; <%= @flym.chr4 %> <br /> <br />
-  	X <br /> <br />
-  	<%= @flyf.chr1 %> ; <%= @flyf.chr2 %> ; <%= @flyf.chr3 %> ; <%= @flyf.chr4 %>
+              <% chromosomes = [@flym.chr1.split('/').to_set, @flym.chr2.split('/').to_set, @flym.chr3.split('/').to_set, @flym.chr4.split('/').to_set] %>
+
+              \[
+              <% semikolon = 0 %>
+                <% chromosomes.each do |chr| %>
+                  <% if chr.size > 1 %>
+                    <% if semikolon != 0 %>;<% end %>
+                    <% chr %>
+                    \dfrac
+                    <% chr.each do |n| %>
+                      {<%= n %>}
+                    <% end %>
+                  <% else %>
+                    <% if semikolon != 0 %>;<% end %>
+                      <% chr.each do |n| %>
+                        <%= n %>
+                      <% end %>
+                    <% end %> 
+                  <% semikolon = 1 %>
+                <% end %> 
+                
+
+  	\qquad X \qquad
+  	<% chromosomes = [@flyf.chr1.split('/').to_set, @flyf.chr2.split('/').to_set, @flyf.chr3.split('/').to_set, @flyf.chr4.split('/').to_set] %>
+
+              
+              <% semikolon = 0 %>
+                <% chromosomes.each do |chr| %>
+                  <% if chr.size > 1 %>
+                    <% if semikolon != 0 %>;<% end %>
+                    <% chr %>
+                    \dfrac
+                    <% chr.each do |n| %>
+                      {<%= n %>}
+                    <% end %>
+                  <% else %>
+                    <% if semikolon != 0 %>;<% end %>
+                      <% chr.each do |n| %>
+                        <%= n %>
+                      <% end %>
+                    <% end %> 
+                  <% semikolon = 1 %>
+                <% end %> 
+                \]
   </h6>
   <p><%= cross.description %></p>
   <p><%= cross.crossdate.strftime("Crossed on %B %d, %Y") %></p>
