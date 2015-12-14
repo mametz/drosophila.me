@@ -145,6 +145,16 @@ class CrossesController < ApplicationController
       elsif cross_params[:female_id] == nil
         redirect_to @old_cross, notice: 'Not all parents were selected.'
         interrup = 1
+      elsif cross_params[:male_id] == "male_chr_s"
+        if params[:m_X] == nil or params[:m_II] == nil or params[:m_III] == nil or params[:m_IV] == nil
+          redirect_to @old_cross, notice: 'Not all chromosomes were selected.'
+          interrup = 1
+        end
+      elsif cross_params[:female_id] == "female_chr_s"
+        if params[:f_X] == nil or params[:f_II] == nil or params[:f_III] == nil or params[:f_IV] == nil
+          redirect_to @old_cross, notice: 'Not all chromosomes were selected.'
+          interrup = 1
+        end
       end
     end
 
@@ -205,10 +215,30 @@ class CrossesController < ApplicationController
 
             @flyf = Fly.new(:chr1 => chrX, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
             @flyf.save
-          else
+          elsif cross_params[:male_id] != "male_chr_s" and cross_params[:female_id] != "female_chr_s"
             @flym = Fly.find(cross_params[:male_id])
             @flyf = Fly.find(cross_params[:female_id])
           end
+
+          if cross_params[:male_id] == "male_chr_s"
+            m_x = homozygous_tester(params[:m_X])
+            chrII = homozygous_tester(params[:m_II])
+            chrIII = homozygous_tester(params[:m_III])
+            chrIV = homozygous_tester(params[:m_IV])
+
+            @flym = Fly.new(:chr1 => m_x, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
+            @flym.save
+          end
+          if cross_params[:female_id] == "female_chr_s"
+            m_x = homozygous_tester(params[:f_X])
+            chrII = homozygous_tester(params[:f_II])
+            chrIII = homozygous_tester(params[:f_III])
+            chrIV = homozygous_tester(params[:f_IV])
+
+            @flyf = Fly.new(:chr1 => m_x, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
+            @flyf.save
+          end
+
         else
           if cross_params[:m_X] == "+/+"
             m_x = "+/-"

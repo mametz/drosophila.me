@@ -162,6 +162,31 @@ end %>
 	<% counter = counter + 1 %>
 <% end %>
   </div>
+
+<% n_chr = []
+    	@x_chr.each do |input|
+    		input.each do |chr|
+			if chr.size > 1 
+				chr.each do |n|
+					if n == "-"
+						n_chr.append(input)
+					end
+				end
+			else
+				chr.each do |n|
+					if n == "-"
+						n_chr.append(input)
+					end
+				end
+			end
+		end
+        end 
+        @x_chr = @x_chr - n_chr
+        if n_chr.empty?
+        	n_chr = @x_chr
+        end
+        %>
+
   <div class="content" id="panel2">
     	<div class="row">
     		<div class="large-6 columns panel">
@@ -169,13 +194,13 @@ end %>
     		<%= f.radio_button(:male_id, "male_chr_s", label: false) %>
     		</h4>
     		<div class="panel"><h5>Chr. X</h5>
-    			<% @x_chr.each do |chromosomes| %>
-    			<div class="button small secondary">
+    			<% n_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     			    <% if @x_chr.size == 1 %>
-    					<%= radio_button_tag(:m_X, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:m_X, "ToDo") %>
+    					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
@@ -185,50 +210,51 @@ end %>
     			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @II_chr.size == 1 %>
-    					<%= radio_button_tag(:m_II, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:m_II, "ToDo") %>
+    					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
     		</div>
     		<div class="panel"><h5>Chr. III</h5>
     			<% @III_chr.each do |chromosomes| %>
-    			<div class="button small secondary">
+    			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @III_chr.size == 1 %>
-    					<%= radio_button_tag(:m_III, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:m_III, "ToDo") %>
+    					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
     		</div>
     		<div class="panel"><h5>Chr. IV</h5>
     			<% @IV_chr.each do |chromosomes| %>
-    			<div class="button small secondary">
+    			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @IV_chr.size == 1 %>
-    					<%= radio_button_tag(:m_IV, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:m_IV, "ToDo") %>
+    					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
     		</div>
     	</div>
+
     	<div class="large-6 columns panel">
     		<h4>&#x2640;
     		<%= f.radio_button(:female_id, "female_chr_s", label: false) %>
     		</h4>
     		<div class="panel"><h5>Chr. X</h5>
     			<% @x_chr.each do |chromosomes| %>
-    			<div class="button small secondary">
-    				<%= chromosomeMath(chromosomes) %>
+    			<div class="button tiny secondary">
+     				<%= chromosomeMath(chromosomes) %>
     				<% if @x_chr.size == 1 %>
-    					<%= radio_button_tag(:f_X, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:f_X, "ToDo") %>
+    					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
@@ -238,21 +264,21 @@ end %>
     			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @II_chr.size == 1 %>
-    					<%= radio_button_tag(:f_II, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:f_II, "ToDo") %>
+    					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
     		</div>
     		<div class="panel"><h5>Chr. III</h5>
     			<% @III_chr.each do |chromosomes| %>
-    			<div class="button small secondary">
+    			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @III_chr.size == 1 %>
-    					<%= radio_button_tag(:f_III, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:f_III, "ToDo") %>
+    					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
@@ -260,12 +286,12 @@ end %>
     		<div class="panel"><h5>Chr. IV</h5>
     			<% 
     			@IV_chr.each do |chromosomes| %>
-    			<div class="button small secondary">
+    			<div class="button tiny secondary">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @IV_chr.size == 1 %>
-    					<%= radio_button_tag(:f_IV, "ToDo", :checked => true) %>
+    					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes), :checked => true) %>
     				<% else %>
-    					<%= radio_button_tag(:f_IV, "ToDo") %>
+    					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes)) %>
     				<% end %>
     			</div>
     			<% end %>
