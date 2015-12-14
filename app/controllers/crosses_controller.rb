@@ -81,10 +81,23 @@ class CrossesController < ApplicationController
 
     @progeny = []
     @prog_id = []
+    @x_chr = []
+    @II_chr = []
+    @III_chr = []
+    @IV_chr = []
     prog.each do |n|
       @progeny.append([n.chr1.split('/').to_set, n.chr2.split('/').to_set, n.chr3.split('/').to_set, n.chr4.split('/').to_set])
       @prog_id.append(n.id)
+      @x_chr.append([n.chr1.split('/').to_set])
+      @II_chr.append([n.chr2.split('/').to_set])
+      @III_chr.append([n.chr3.split('/').to_set])
+      @IV_chr.append([n.chr4.split('/').to_set])
     end
+
+    @x_chr = @x_chr.uniq
+    @II_chr = @II_chr.uniq
+    @III_chr = @III_chr.uniq
+    @IV_chr = @IV_chr.uniq
 
     @balancers = @cross.balancers.split(';')
     @balancer_string = @cross.balancers
