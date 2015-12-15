@@ -1,4 +1,4 @@
-<%- headers = ['Room', 'Stock number', 'X chromosome', 'II chromosome', 'III chromosome', 'IV chromosome', 'Comment', 'Reference', 'Received from', 'Date established'] -%>
+<%- headers = ['Room|Stock number|X chromosome|II chromosome|III chromosome|IV chromosome|Comment|Reference|Received from|Date established'] -%>
 <%= CSV.generate_line headers %>
 <%- @stocks.each do |stock| -%>
 <%
@@ -20,5 +20,5 @@
 		room = nil
 	end
 %>
-<%= CSV.generate_line([room,stock.number,fly.chr1,fly.chr2,fly.chr3,fly.chr4,stock.comment,stock.reference,stock.received_from,stock.date_established]) -%>
+<%= CSV.generate_line([room,stock.number,fly.chr1,fly.chr2,fly.chr3,fly.chr4,stock.comment,stock.reference,stock.received_from,stock.date_established], :col_sep => "|" ) -%>
 <%- end -%>
