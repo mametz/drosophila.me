@@ -10,7 +10,7 @@ class StocksController < ApplicationController
     respond_to do |format|
     format.html
     format.csv do
-      headers['Content-Disposition'] = "attachment; filename=\"stock-list.csv\""
+      headers['Content-Disposition'] = "attachment; filename=\"stock-list.tsv\""
       headers['Content-Type'] ||= 'text/csv'
     end
   end
