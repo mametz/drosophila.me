@@ -1,0 +1,24 @@
+<%- headers = ['Room', 'Stock number', 'X chromosome', 'II chromosome', 'III chromosome', 'IV chromosome', 'Comment', 'Reference', 'Received from', 'Date established'] -%>
+<%= CSV.generate_line headers %>
+<%- @stocks.each do |stock| -%>
+<%
+	if stock.comment == "" 
+		stock.comment = nil 
+	end
+	if stock.reference == "" 
+		stock.reference = nil 
+	end
+	if stock.received_from == "" 
+		stock.received_from = nil 
+	end
+%>
+<%
+	fly = Fly.find(stock.fly_id)
+	if stock.room_id != nil
+		room = Room.find(stock.room_id).name
+	else
+		room = nil
+	end
+%>
+<%= CSV.generate_line([room,stock.number,fly.chr1,fly.chr2,fly.chr3,fly.chr4,stock.comment,stock.reference,stock.received_from,stock.date_established]) -%>
+<%- end -%>

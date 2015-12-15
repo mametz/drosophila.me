@@ -7,6 +7,13 @@ class StocksController < ApplicationController
   # GET /stocks.json
   def index
     @stocks = Stock.where("user_id = ?", current_user.id)
+    respond_to do |format|
+    format.html
+    format.csv do
+      headers['Content-Disposition'] = "attachment; filename=\"stock-list.csv\""
+      headers['Content-Type'] ||= 'text/csv'
+    end
+  end
   end
 
   # GET /stocks/1

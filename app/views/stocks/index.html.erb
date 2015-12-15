@@ -1,6 +1,7 @@
 <h1>Your fly stocks</h1>
 <a href="<%= new_stock_path %>" class="button small secondary">New Stock</a>
 <a href="<%= rooms_path %>" class="button small secondary">Stock rooms</a>
+<a href="<%= stocks_path(format: :csv) %>" class="button small secondary">Download stocks</a>
 <%= form_for :cross, :url => {:controller => "crosses", :action => "create"}, :method => "post", auto_labels: false do |f| %>
   <table>
     <thead>
