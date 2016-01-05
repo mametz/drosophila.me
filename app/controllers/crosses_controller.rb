@@ -1,5 +1,5 @@
 class CrossesController < ApplicationController
-  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy, :qr]
+  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy, :qr, :chromosome]
   before_action :correct_user, only: [:edit,:update,:destroy]
   before_action :logged_user, only: [:index, :new, :create, :copy]
 
@@ -106,6 +106,46 @@ class CrossesController < ApplicationController
 
     @current_url = request.original_url
     
+  end
+
+  def chromosome
+    require 'securerandom'
+    @random_string = SecureRandom.hex
+
+    flym = Fly.find(@cross.male_id)
+    flyf = Fly.find(@cross.female_id)
+
+    @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
+    @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
+
+    prog = Fly.where("cross_id = ? AND id != ? AND id != ?", @cross.id, @cross.male_id, @cross.female_id)
+
+    @progeny = []
+    @prog_id = []
+    @x_chr = []
+    @II_chr = []
+    @III_chr = []
+    @IV_chr = []
+    prog.each do |n|
+      @progeny.append([n.chr1.split('/').to_set, n.chr2.split('/').to_set, n.chr3.split('/').to_set, n.chr4.split('/').to_set])
+      @prog_id.append(n.id)
+      @x_chr.append([n.chr1.split('/').to_set])
+      @II_chr.append([n.chr2.split('/').to_set])
+      @III_chr.append([n.chr3.split('/').to_set])
+      @IV_chr.append([n.chr4.split('/').to_set])
+    end
+
+    @x_chr = @x_chr.uniq
+    @II_chr = @II_chr.uniq
+    @III_chr = @III_chr.uniq
+    @IV_chr = @IV_chr.uniq
+
+    @balancers = @cross.balancers.split(';')
+    @balancer_string = @cross.balancers
+    @lethal = @cross.lethal.split(';')
+    @lethal_string = @cross.lethal
+
+    @current_url = request.original_url
   end
 
   def qr

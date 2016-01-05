@@ -9,10 +9,10 @@
 </div>
 <div class="large-5 column">
 <% if @cross.parent.to_i >= 1 %>
-<a href="<%= @current_url %>/history"><i class="fi-page-multiple"></i> Cross history</a>
+<a href="<%= short_path %>/history"><i class="fi-page-multiple"></i> Cross history</a>
 <br />
 <% end %>
-<a href="<%= @current_url %>/qr"><i class="fi-camera"></i> QR code</a>
+<a href="<%= short_path %>/qr"><i class="fi-camera"></i> QR code</a>
 <br />
 <% if user_signed_in?
 if g_user.id == current_user.id %>
@@ -83,12 +83,11 @@ if g_user.id == current_user.id %>
 if user_signed_in?
 if g_user.id == current_user.id %>
 
-<ul class="tabs" data-tab>
-  <li class="tab-title active"><a href="#panel1">Fly view</a></li>
-  <li class="tab-title"><a href="#panel2">Chromosome view</a></li>
-</ul>
-<div class="tabs-content">
-  <div class="content active" id="panel1">
+<p>
+  <a href="<%= short_path %>" class="button small disabled">Fly view</a>
+  <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
+</p>
+
     <% counter = 0 %>
 <% @progeny.each do |p| %>
 	<% semikolon = 0 %>
@@ -118,11 +117,9 @@ if g_user.id == current_user.id %>
 		<% end %>
 	<% end %>
 
-	<% if death == 1 %>
-		<div class="button small disabled alert">
-	<% else %>
+	<% if death != 1 %>
+		
 		<div class="button small secondary">
-	<% end %>
 
 		\[
 	<% p.each do |chr| %>
@@ -142,7 +139,6 @@ if g_user.id == current_user.id %>
 	<% end %>
 	\]
 
-<% if death != 1 %>
 <% 
 if user_signed_in?
 if g_user.id == current_user.id
@@ -154,158 +150,12 @@ if g_user.id == current_user.id
  | <a href="<%= request.base_url %>/stocks/n/<%= @prog_id[counter] %>">Stock_it</a>
 <% end 
 end %>
-<% else %>
-<i class="fi-skull size-21"></i>
-<% end %>
 
 </div>
 	<% counter = counter + 1 %>
 <% end %>
-  </div>
+<% end %>
 
-<% n_chr = []
-    	@x_chr.each do |input|
-    		input.each do |chr|
-			if chr.size > 1 
-				chr.each do |n|
-					if n == "-"
-						n_chr.append(input)
-					end
-				end
-			else
-				chr.each do |n|
-					if n == "-"
-						n_chr.append(input)
-					end
-				end
-			end
-		end
-        end 
-        @x_chr = @x_chr - n_chr
-        if n_chr.empty?
-        	n_chr = @x_chr
-        end
-        %>
-
-  <div class="content" id="panel2">
-        <div data-alert class="alert-box warning">
-            If chromosomes are not shown correctly, please reload the page.
-        <a href="#" class="close">&times;</a>
-        </div>
-    	<div class="row">
-    		<div class="large-6 columns panel">
-    			<h4>&#x2642;
-    		<%= f.radio_button(:male_id, "male_chr_s", label: false) %>
-    		</h4>
-    		<div class="panel"><h5>Chr. X</h5>
-    			<% n_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    			    <% if @x_chr.size == 1 %>
-    					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    		<div class="panel"><h5>Chr. II</h5>
-    			<% @II_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    				<% if @II_chr.size == 1 %>
-    					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    		<div class="panel"><h5>Chr. III</h5>
-    			<% @III_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    				<% if @III_chr.size == 1 %>
-    					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    		<div class="panel"><h5>Chr. IV</h5>
-    			<% @IV_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    				<% if @IV_chr.size == 1 %>
-    					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    	</div>
-
-    	<div class="large-6 columns panel">
-    		<h4>&#x2640;
-    		<%= f.radio_button(:female_id, "female_chr_s", label: false) %>
-    		</h4>
-    		<div class="panel"><h5>Chr. X</h5>
-    			<% @x_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-     				<%= chromosomeMath(chromosomes) %>
-    				<% if @x_chr.size == 1 %>
-    					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    		<div class="panel"><h5>Chr. II</h5>
-    			<% @II_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    				<% if @II_chr.size == 1 %>
-    					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    		<div class="panel"><h5>Chr. III</h5>
-    			<% @III_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    				<% if @III_chr.size == 1 %>
-    					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    		<div class="panel"><h5>Chr. IV</h5>
-    			<% 
-    			@IV_chr.each do |chromosomes| %>
-    			<div class="button tiny secondary">
-    				<%= chromosomeMath(chromosomes) %>
-    				<% if @IV_chr.size == 1 %>
-    					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes), :checked => true) %>
-    				<% else %>
-    					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes)) %>
-    				<% end %>
-    			</div>
-    			<% end %>
-    		</div>
-    	</div>
-    	</div>
-    </div>
-    	
-
-</div>
 
 <% end end %>
 
@@ -357,7 +207,9 @@ if g_user.id == current_user.id
     </div>
 </div>
 
-<div class="panel">
+<a class="close-reveal-modal">&#215;</a>
+</div>
+</p>
   <h5>Lethal alleles</h5>
         <label>Alleles separated by semicolon (;)
           <%= f.text_field :lethal %>
@@ -370,13 +222,8 @@ if g_user.id == current_user.id
         <label>Describe this cross
           <%= f.text_field :description %>
         </label>       
-</div>
-
-<a class="close-reveal-modal">&#215;</a>
-</div>
-</p>
 <h5>Date of cross</h5>
-<%= f.date_select :crossdate %>
+<%= f.date_select(:crossdate, selected: Date.today) %>
 
 <%= f.submit 'Cross' %>
 </div>

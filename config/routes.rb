@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get ':id/qr' => 'crosses#qr'
   get '/crosses/:id/qr' => 'crosses#qr'
   get ':id' => 'crosses#show', :as => 'short'
+  get ':id/chr' => 'crosses#chromosome'
 
   get '/stocks/n/:fly_to_stock' => 'stocks#create'
   get '/stocks/x/add' => 'stocks#add'

@@ -1,0 +1,303 @@
+<h1>Show cross</h1>
+<% g_user = User.find(@cross.user_id) %>
+
+<div class="row">
+<div class="large-2 column">
+<a href="mailto:<%= g_user.email %>" alt="<%= g_user.email %>" title="<%= g_user.email %>">
+<%= image_tag g_user.gravatar_url, :class=> "img-circular" %>
+</a>
+</div>
+<div class="large-5 column">
+<% if @cross.parent.to_i >= 1 %>
+<a href="<%= short_path %>/history"><i class="fi-page-multiple"></i> Cross history</a>
+<br />
+<% end %>
+<a href="<%= short_path %>/qr"><i class="fi-camera"></i> QR code</a>
+<br />
+<% if user_signed_in?
+if g_user.id == current_user.id %>
+<%= link_to @cross, method: :delete, data: { confirm: "Are you sure? The cross and all it's derivatives would be deleted." } do %>
+	<i class="fi-trash" ></i> Delete cross
+<% end %> 
+<% else %>
+<%= link_to copy_path do %>
+	<i class="fi-page-copy" ></i> Copy cross
+<% end %>
+<% end %>
+<% end %>
+</div>
+<div class="large-5 column">
+	<p><%= @cross.crossdate.strftime("Crossed on %B %d, %Y") %><br />
+	<%= @cross.description %></p>
+</div>
+</div>
+<br />
+<%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
+
+<div class="panel">
+	\[\underbrace{
+
+&#x2642; \quad 
+
+<% semikolon = 0 %>
+<% @parent_male.each do |chr| %>
+		<% if chr.size > 1 %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr %>
+			\dfrac
+			<% chr.each do |n| %>
+				{<%= n %>}
+			<% end %>
+		<% else %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr.each do |n| %>
+				<%= n %>
+			<% end %>
+		<% end %> 
+		<% semikolon = 1 %>
+	<% end %> 
+
+\qquad X \qquad 
+
+<% semikolon = 0 %>
+<% @parent_female.each do |chr| %>
+		<% if chr.size > 1 %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr %>
+			\dfrac
+			<% chr.each do |n| %>
+				{<%= n %>}
+			<% end %>
+		<% else %>
+			<% if semikolon != 0 %>;<% end %>
+			<% chr.each do |n| %>
+				<%= n %>
+			<% end %>
+		<% end %> 
+		<% semikolon = 1 %>
+	<% end %>
+\quad &#x2640;
+}\]
+
+<% 
+if user_signed_in?
+if g_user.id == current_user.id %>
+<p>
+  <a href="<%= short_path %>" class="button small secondary">Fly view</a>
+  <a href="<%= short_path %>/chr" class="button small disabled">Chromosome view</a>
+</p>
+
+<% n_chr = []
+    	@x_chr.each do |input|
+    		input.each do |chr|
+			if chr.size > 1 
+				chr.each do |n|
+					if n == "-"
+						n_chr.append(input)
+					end
+				end
+			else
+				chr.each do |n|
+					if n == "-"
+						n_chr.append(input)
+					end
+				end
+			end
+		end
+        end 
+        @x_chr = @x_chr - n_chr
+        if n_chr.empty?
+        	n_chr = @x_chr
+        end
+        %>
+
+    	<div class="row">
+    		<div class="large-6 columns">
+    			<h4>&#x2642;
+    		<%= f.hidden_field(:male_id, :value => "male_chr_s") %>
+    		</h4>
+    		<div class="panel"><h5>Chr. X</h5>
+    			<% n_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    			    <% if @x_chr.size == 1 %>
+    					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    		<div class="panel"><h5>Chr. II</h5>
+    			<% @II_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    				<% if @II_chr.size == 1 %>
+    					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    		<div class="panel"><h5>Chr. III</h5>
+    			<% @III_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    				<% if @III_chr.size == 1 %>
+    					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    		<div class="panel"><h5>Chr. IV</h5>
+    			<% @IV_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    				<% if @IV_chr.size == 1 %>
+    					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    	</div>
+
+    	<div class="large-6 columns">
+    		<h4>&#x2640;
+    		<%= f.hidden_field(:female_id, :value => "female_chr_s") %>
+    		</h4>
+    		<div class="panel"><h5>Chr. X</h5>
+    			<% @x_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+     				<%= chromosomeMath(chromosomes) %>
+    				<% if @x_chr.size == 1 %>
+    					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    		<div class="panel"><h5>Chr. II</h5>
+    			<% @II_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    				<% if @II_chr.size == 1 %>
+    					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    		<div class="panel"><h5>Chr. III</h5>
+    			<% @III_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    				<% if @III_chr.size == 1 %>
+    					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    		<div class="panel"><h5>Chr. IV</h5>
+    			<% 
+    			@IV_chr.each do |chromosomes| %>
+    			<div class="button tiny secondary">
+    				<%= chromosomeMath(chromosomes) %>
+    				<% if @IV_chr.size == 1 %>
+    					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes), :checked => true) %>
+    				<% else %>
+    					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes)) %>
+    				<% end %>
+    			</div>
+    			<% end %>
+    		</div>
+    	</div>
+    	</div>
+    </div>
+    	
+
+
+<% end end %>
+
+
+<% 
+if user_signed_in?
+if g_user.id == current_user.id
+	%>
+<h3>Next cross</h3>
+<div class="panel">
+<%= f.hidden_field(:balancers, :value => @balancer_string) %>
+<%= f.hidden_field(:lethal, :value => @lethal_string) %>
+<%= f.hidden_field(:parent, :value => @cross.id) %>
+<%= f.hidden_field(:link, :value => @random_string) %>
+
+<p>
+<a href="#" data-reveal-id="newfly" class="button small secondary">Add new fly to cross</a>
+<div id="newfly" class="reveal-modal" data-reveal>
+
+<div class="panel">
+  <h5>Genotype</h5>
+&#x2642;
+<%= f.radio_button(:male_id, "new", label: false) %>
+ | &#x2640;
+<%= f.radio_button(:female_id, "new", label: false) %>  
+<h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
+    <div class="row">
+      <div class="large-6 columns">
+        <label>X chromosome
+          <%= f.text_field :X, :value => "+/+" %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 2
+          <%= f.text_field :II, :value => "+/+" %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 3
+          <%= f.text_field :III, :value => "+/+" %>
+        </label>
+      </div>
+      <div class="large-6 columns">
+        <label>Chromosome 4
+          <%= f.text_field :IV, :value => "+/+" %>
+          </label>
+      </div>
+    </div>
+</div>
+
+<a class="close-reveal-modal">&#215;</a>
+</div>
+</p>
+
+  <h5>Lethal alleles</h5>
+        <label>Alleles separated by semicolon (;)
+          <%= f.text_field :lethal %>
+        </label>
+  <h5>Balancers</h5>
+        <label>Balancers separated by semicolon (;)
+          <%= f.text_field :balancers %>
+        </label>
+  <h5>Comments</h5>
+        <label>Describe this cross
+          <%= f.text_field :description %>
+        </label>       
+
+<h5>Date of cross</h5>
+
+<%= f.date_select(:crossdate, selected: Date.today) %>
+
+<%= f.submit 'Cross' %>
+</div>
+<% end %>
+
+<% end 
+end%>
