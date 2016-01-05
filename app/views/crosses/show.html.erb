@@ -115,7 +115,28 @@ if g_user.id == current_user.id
 					<% end %>
 				<% end %>
 			<% end %>
-		<% end %>
+		<% else 
+			up = chr.to_a[0].split(',')
+			down = chr.to_a[1].split(',')
+
+			up.each do |u|
+				down.each do |d|
+
+							if u == d
+								@balancers.each do |b|
+									if u == b
+										death = 1
+									end
+								end
+								@lethal.each do |l|
+									if u == l
+										death = 1
+									end
+								end
+							end
+				end
+			end
+	    end %>
 	<% end %>
 
 	<% if death != 1 %>
