@@ -141,9 +141,9 @@ end
 	end end %>
 
 
-	<% if death == 1 %>
-		<a class="button small disabled alert">
-	<% elsif realparent == 1 %>
+	<% if death != 1 %>
+		
+	<% if realparent == 1 %>
 	    <a class="button small success">
 	<% else %>
 		<a class="button small secondary">
@@ -167,14 +167,9 @@ end
 	<% end %>
 	\]
 
-<% if death != 1 %>
-
-<% else %>
-<i class="fi-skull size-21"></i>
-<% end %>
-
 </a>
 	<% counter = counter + 1 %>
+<% end %>
 <% end %>
 </div>
 </div>
@@ -182,6 +177,7 @@ end
 <% generation = generation + 1 %>
 <% end %>
 </div>
+
 
 <script type="text/javascript">
 if (window.MathJax) {
