@@ -81,12 +81,13 @@ if g_user.id == current_user.id %>
 
 <% 
 if user_signed_in?
-if g_user.id == current_user.id %>
-
+if g_user.id == current_user.id
+%>
 <p>
   <a href="<%= short_path %>" class="button small disabled">Fly view</a>
   <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
 </p>
+<% end end %>
 
     <% counter = 0 %>
 <% @progeny.each do |p| %>
@@ -155,9 +156,6 @@ end %>
 	<% counter = counter + 1 %>
 <% end %>
 <% end %>
-
-
-<% end end %>
 
 </div>
 
