@@ -179,23 +179,19 @@ class CrossesController < ApplicationController
 
     if chr_m_I == chr_f_I and chr_m_I[0] == chr_m_I[1] and chr_f_I[0] == chr_f_I[1]
       chr1 = false
-      chr1_x = []
     end
     if chr_m_II == chr_f_II and chr_m_II[0] == chr_m_II[1] and chr_f_II[0] == chr_f_II[1]
       chr2 = false
-      chr2_x = []
     end
     if chr_m_III == chr_f_III and chr_m_III[0] == chr_m_III[1] and chr_f_III[0] == chr_f_III[1]
       chr3 = false
-      chr3_x = []
     end
     if chr_m_IV == chr_f_IV and chr_m_IV[0] == chr_m_IV[1] and chr_f_IV[0] == chr_f_IV[1]
       chr4 = false
-      chr4_x = []
     end
 
-    @male_chr = []
-    @female_chr = []
+    @male_chr = [[]]
+    @female_chr = [[]]
 
     n = 0
 
