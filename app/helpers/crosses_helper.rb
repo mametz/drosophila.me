@@ -79,4 +79,9 @@ module CrossesHelper
 		return death
 
 	end
+
+	def depth(a)
+      return 0 unless a.is_a?(Array)
+      return 1 + depth(a[0])
+    end
 end

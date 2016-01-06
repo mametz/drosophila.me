@@ -1,5 +1,5 @@
 class CrossesController < ApplicationController
-  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy, :qr, :chromosome]
+  before_action :set_cross, only: [:show, :edit, :update, :destroy, :history, :copy, :qr, :chromosome, :punnett]
   before_action :correct_user, only: [:edit,:update,:destroy]
   before_action :logged_user, only: [:index, :new, :create, :copy]
 
@@ -146,6 +146,111 @@ class CrossesController < ApplicationController
     @lethal_string = @cross.lethal
 
     @current_url = request.original_url
+  end
+
+  def punnett
+
+    @balancers = @cross.balancers.split(';')
+    @balancer_string = @cross.balancers
+    @lethal = @cross.lethal.split(';')
+    @lethal_string = @cross.lethal
+
+    flym = Fly.find(@cross.male_id)
+    flyf = Fly.find(@cross.female_id)
+
+    @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
+    @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
+    @current_url = request.original_url
+
+    chr_m_I = flym.chr1.split('/')
+    chr_m_II = flym.chr2.split('/')
+    chr_m_III = flym.chr3.split('/')
+    chr_m_IV = flym.chr4.split('/')
+
+    chr_f_I = flyf.chr1.split('/')
+    chr_f_II = flyf.chr2.split('/')
+    chr_f_III = flyf.chr3.split('/')
+    chr_f_IV = flyf.chr4.split('/')
+
+    chr1 = true
+    chr2 = true
+    chr3 = true
+    chr4 = true
+
+    if chr_m_I == chr_f_I and chr_m_I[0] == chr_m_I[1] and chr_f_I[0] == chr_f_I[1]
+      chr1 = false
+      chr1_x = []
+    end
+    if chr_m_II == chr_f_II and chr_m_II[0] == chr_m_II[1] and chr_f_II[0] == chr_f_II[1]
+      chr2 = false
+      chr2_x = []
+    end
+    if chr_m_III == chr_f_III and chr_m_III[0] == chr_m_III[1] and chr_f_III[0] == chr_f_III[1]
+      chr3 = false
+      chr3_x = []
+    end
+    if chr_m_IV == chr_f_IV and chr_m_IV[0] == chr_m_IV[1] and chr_f_IV[0] == chr_f_IV[1]
+      chr4 = false
+      chr4_x = []
+    end
+
+    @male_chr = []
+    @female_chr = []
+
+    n = 0
+
+    if chr1
+      chrm = chr_m_I
+      chrf = chr_f_I
+      @male_chrs = [chrm[0],chrm[1]]
+      @female_chrs = [chrf[0],chrf[1]]
+      n = n + 1
+    end
+    if chr2
+      chrm = chr_m_II
+      chrf = chr_f_II
+
+      if chr1 == false 
+        @male_chrs = [chrm[0],chrm[1]]
+        @female_chrs = [chrf[0],chrf[1]]
+      else
+        @male_chrs = @male_chrs.product([chrm[0],chrm[1]])
+        @female_chrs = @female_chrs.product([chrf[0],chrf[1]])
+      end
+
+      n = n + 1
+    end
+    if chr3
+      chrm = chr_m_III
+      chrf = chr_f_III
+
+      if chr1 == false and chr2 == false
+        @male_chrs = [chrm[0],chrm[1]]
+        @female_chrs = [chrf[0],chrf[1]]
+      else
+        @male_chrs = @male_chrs.product([chrm[0],chrm[1]])
+        @female_chrs = @female_chrs.product([chrf[0],chrf[1]])
+      end
+
+      n = n + 1
+    end
+    if chr4
+      chrm = chr_m_IV
+      chrf = chr_f_IV
+
+      if chr1 == false and chr2 == false and chr3 == false
+        @male_chrs = [chrm[0],chrm[1]]
+        @female_chrs = [chrf[0],chrf[1]]
+      else
+        @male_chrs = @male_chrs.product([chrm[0],chrm[1]])
+        @female_chrs = @female_chrs.product([chrf[0],chrf[1]])
+      end
+
+      n = n + 1
+    end
+
+    @square = 2**n
+    
   end
 
   def qr
