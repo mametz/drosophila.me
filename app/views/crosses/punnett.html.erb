@@ -95,7 +95,7 @@ if g_user.id == current_user.id
   <tbody>
     <% r = 0 %>
     <% c = 0 %>
-    <td>&#x2642; \ &#x2640;</td>
+    <td>&#x2642; / &#x2640;</td>
     <% @female_chrs.each do |f| %>
       <% if f.is_a? String %>
         <td><small>\[<%= f %>\]</small></td>
@@ -112,13 +112,23 @@ if g_user.id == current_user.id
         <% end %>
         <% @female_chrs.each do |f| %>
       		<td><small>\[
-            <% endp = m.size %>
+            <% if m.flatten.size >= f.flatten.size %>
+              <% endp = m.flatten.size %>
+            <% else %>
+              <% endp = f.flatten.size %>
+            <% end %>
             <% i = 0 %>
             <% if m.is_a? String %>
               \frac{<%= m %>}{<%= f %>}
             <% else %> 
               <% while i < endp %>
-                \frac{<%= m[i] %>}{<%= f[i] %>}
+                <% if m.flatten[i] == nil %>
+                  \frac{+}{<%= f.flatten[i] %>}
+                <% elsif f.flatten[i] == nil %>
+                  \frac{<%= m.flatten[i] %>}{+}
+                <% else %>
+                  \frac{<%= m.flatten[i] %>}{<%= f.flatten[i] %>}
+                <% end %>
                 <% if i < endp - 1 %>
                 ;
                 <% end %>

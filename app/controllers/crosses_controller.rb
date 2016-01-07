@@ -263,6 +263,7 @@ class CrossesController < ApplicationController
 
     @male_chrs = @male_chrs.uniq
     @female_chrs = @female_chrs.uniq
+
   end
 
   def qr
