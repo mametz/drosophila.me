@@ -93,128 +93,43 @@ if g_user.id == current_user.id
 
 <table align="center">
   <tbody>
-
-  	<% c = 0 %>
-  	<% r = 0 %>
-  	<% n = 0 %>
-
-  	<% while c < @square + 1  do %>
+    <% r = 0 %>
+    <% c = 0 %>
+    <td>&#x2642; \ &#x2640;</td>
+    <% @female_chrs.each do |f| %>
+      <% if f.is_a? String %>
+        <td><small>\[<%= f %>\]</small></td>
+      <% else %>
+        <td><small>\[<%= f.join(' ; ') %>\]</small></td>
+      <% end %>
+    <% end %>
+    <% @male_chrs.each do |m| %>
     	<tr>
-    		<% while r < @square + 1 do %>
-    			<% if r == 0 and c == 0 %>
-    				<td>&#x2642; / &#x2640;</td>
-    			<% elsif r == 0 %>
-    				<td><small>\[
-    					<% counter = @male_chrs[c-1].size %>
-              <% if depth(@male_chrs[c-1]) == 0 %>
-                <%= @male_chrs[c-1] %>
-              <% else %>
-    					<% @male_chrs[c-1].each do |single| %>
-    						<%= single %>
-    						<% counter = counter - 1 %>
-    						<% if counter > 0 %>;<% end %>
-    					<% end %>
+        <% if m.is_a? String %>
+          <td><small>\[<%= m %>\]</small></td>
+        <% else %>
+          <td><small>\[<%= m.join(' ; ') %>\]</small></td>
+        <% end %>
+        <% @female_chrs.each do |f| %>
+      		<td><small>\[
+            <% endp = m.size %>
+            <% i = 0 %>
+            <% if m.is_a? String %>
+              \frac{<%= m %>}{<%= f %>}
+            <% else %> 
+              <% while i < endp %>
+                \frac{<%= m[i] %>}{<%= f[i] %>}
+                <% if i < endp - 1 %>
+                ;
+                <% end %>
+                <% i = i + 1 %>
               <% end %>
-    				\]</small></td>
-    			<% elsif c == 0 %>
-    				<td><small>\[
-    					<% counter = @female_chrs[r-1].size %>
-              <% if depth(@female_chrs[r-1]) == 0 %>
-                <%= @female_chrs[r-1] %>
-              <% else %>
-    					<% @female_chrs[r-1].each do |single| %>
-    						<%= single %>
-    						<% counter = counter - 1 %>
-    						<% if counter > 0 %>;<% end %>
-    					<% end %>
-              <% end %>
-    				\]</small></td>
-    			<% else %>
-      				<td><small>\[
-      					<%
-      					counter = @male_chrs[c-1].size
-                if depth(@male_chrs[c-1]) == 0 %>
-                  \dfrac{<%=@female_chrs[r-1]%>}{<%=@male_chrs[c-1]%>}
-                  <% single = @male_chrs[c-1].split(',') %>
-                  <% fem_single = @female_chrs[r-1].split(',') %>
-
-                  <% @balancers.each do |b| %>
-                      <% single.each do |s_m| %>
-                        <% if s_m == b %>
-                          <% fem_single.each do |s_f| %>
-                            <% if s_m == s_f %>
-                              <% death = true %>
-                            <% end %>
-                          <% end %>
-                        <% end %>
-                      <% end %>
-                  <% end %>
-
-                  <% @lethal.each do |b| %>
-                      <% single.each do |s_m| %>
-                        <% if s_m == b %>
-                          <% fem_single.each do |s_f| %>
-                            <% if s_m == s_f %>
-                              <% death = true %>
-                            <% end %>
-                          <% end %>
-                        <% end %>
-                      <% end %>
-                  <% end %>
-
-                <% else
-      					@male_chrs[c-1].each do |single|%>
-      						
-      						\dfrac{<%=@female_chrs[r-1][@male_chrs[c-1].size-counter]%>}{<%=single%>}
-                  <% single = single.split(',') %>
-                  <% fem_single = @female_chrs[r-1][@male_chrs[c-1].size-counter].split(',') %>
-
-                  <% @balancers.each do |b| %>
-                      <% single.each do |s_m| %>
-                        <% if s_m == b %>
-                          <% fem_single.each do |s_f| %>
-                            <% if s_m == s_f %>
-                              <% death = true %>
-                            <% end %>
-                          <% end %>
-                        <% end %>
-                      <% end %>
-                  <% end %>
-
-                  <% @lethal.each do |b| %>
-                      <% single.each do |s_m| %>
-                        <% if s_m == b %>
-                          <% fem_single.each do |s_f| %>
-                            <% if s_m == s_f %>
-                              <% death = true %>
-                            <% end %>
-                          <% end %>
-                        <% end %>
-                      <% end %>
-                  <% end %>
-
-      						<% counter = counter - 1
-    						if counter > 0
-    							%>;<%
-    						end
-      					end
-                end
-      					%>
-      				\] </small>
-
-              <% if death %>
-                <i class="fi-skull"></i>
-                <% death = false %>
-              <% end %>
-
-            </td>
-      				<% n = n + 1 %>
-      			<% end %>
-      			<% r = r + 1 %>
-      		<% end %>
+            <% end %>
+          \]</small></td>
+          <% c += 1 %>
+        <% end %>
     	</tr>
-    	<% r = 0 %>
-    	<% c = c + 1 %>
+      <% r += 1 %>
     <% end %>
   </tbody>
 </table>
