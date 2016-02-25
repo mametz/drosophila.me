@@ -1,3 +1,13 @@
+<nav aria-label="You are here:" role="navigation">
+        <ul class="breadcrumbs">
+          <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
+          <li><a href="<%= request.base_url %>/crosses">Crosses</a></li>
+          <li>
+            <span class="show-for-sr">Current: </span> Chromosome view
+          </li>
+        </ul>
+      </nav>
+
 <h1>Show cross</h1>
 <% g_user = User.find(@cross.user_id) %>
 
@@ -85,7 +95,7 @@ if g_user.id == current_user.id %>
 
 <p>
   <a href="<%= short_path %>" class="button small secondary">Fly view</a>
-  <a href="<%= short_path %>/chr" class="button small disabled">Chromosome view</a>
+  <a href="<%= short_path %>/chr" class="button small primary">Chromosome view</a>
   <a href="<%= short_path %>/pnt" class="button small secondary">Punnett square</a>
 </p>
 
@@ -121,7 +131,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. X</h5>
     			<% n_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     			    <% if @x_chr.size == 1 %>
     					<%= radio_button_tag(:m_X, cleanChromosome(chromosomes), :checked => true) %>
@@ -135,7 +145,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. II</h5>
     			<% @II_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @II_chr.size == 1 %>
     					<%= radio_button_tag(:m_II, cleanChromosome(chromosomes), :checked => true) %>
@@ -149,7 +159,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. III</h5>
     			<% @III_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @III_chr.size == 1 %>
     					<%= radio_button_tag(:m_III, cleanChromosome(chromosomes), :checked => true) %>
@@ -163,7 +173,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. IV</h5>
     			<% @IV_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @IV_chr.size == 1 %>
     					<%= radio_button_tag(:m_IV, cleanChromosome(chromosomes), :checked => true) %>
@@ -183,7 +193,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. X</h5>
     			<% @x_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
      				<%= chromosomeMath(chromosomes) %>
     				<% if @x_chr.size == 1 %>
     					<%= radio_button_tag(:f_X, cleanChromosome(chromosomes), :checked => true) %>
@@ -197,7 +207,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. II</h5>
     			<% @II_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @II_chr.size == 1 %>
     					<%= radio_button_tag(:f_II, cleanChromosome(chromosomes), :checked => true) %>
@@ -211,7 +221,7 @@ if g_user.id == current_user.id %>
     		<div class="panel"><h5>Chr. III</h5>
     			<% @III_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @III_chr.size == 1 %>
     					<%= radio_button_tag(:f_III, cleanChromosome(chromosomes), :checked => true) %>
@@ -226,7 +236,7 @@ if g_user.id == current_user.id %>
     			<% 
     			@IV_chr.each do |chromosomes| %>
                 <% if checkLetality(chromosomes,@balancers,@lethal) == false %>
-    			<div class="button tiny secondary">
+    			<div class="button tiny secondary hollow">
     				<%= chromosomeMath(chromosomes) %>
     				<% if @IV_chr.size == 1 %>
     					<%= radio_button_tag(:f_IV, cleanChromosome(chromosomes), :checked => true) %>

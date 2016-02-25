@@ -1,3 +1,13 @@
+<nav aria-label="You are here:" role="navigation">
+        <ul class="breadcrumbs">
+          <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
+          <li><a href="<%= request.base_url %>/stocks">Stocks</a></li>
+          <li>
+            <span class="show-for-sr">Current: </span> Room list
+          </li>
+        </ul>
+      </nav>
+
 <h1>Your stock rooms</h1>
 
 <a href="<%= new_room_path %>" class="button small secondary">New Stock Room</a>

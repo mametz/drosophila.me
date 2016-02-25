@@ -11,56 +11,87 @@
     <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
 
-    <%= mathjax_tag :config=>'Accessible-full.js' %>
+    <% # mathjax_tag :config=>false %>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   </head>
 
   <body>
 
-<div class="icon-bar five-up">
-  <a class="item" href="<%= root_path %>">
-    <i class="fi-home" ></i>
-    <label>Home</label>
-  </a>
-  <a class="item" href="<%= crosses_path %>">
-    <i class="fi-list-thumbnails" ></i>
-    <label>Your crosses</label>
-  </a>
+<div class="title-bar">
+        <div class="title-bar-left">
+          <button class="menu-icon" type="button" data-open="offCanvasLeft"></button>
+          <span class="title-bar-title">Drosophila.me</span>
+        </div>
+        <div class="title-bar-right">
+        </div>
+      </div>
 
-  <a class="item" href="<%= stocks_path %>">
-    <i class="fi-list-thumbnails" ></i>
-    <label>Your stocks</label>
+<div class="off-canvas-wrapper">
+          <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+            <div class="off-canvas position-left black-back" id="offCanvasLeft" data-off-canvas>
+<ul class="vertical dropdown menu"> 
+  <li>        
+  <a href="<%= root_path %>">
+    <label class="white-text">Home</label>
+  </a>
+</li>
+  <li>
+  <a href="<%= crosses_path %>">
+    <label class="white-text">Your crosses</label>
+  </a>
+  </li>
+  <li>
+  <a href="<%= stocks_path %>">
+    <label class="white-text">Your stocks</label>
   </a>
 
 <% if user_signed_in? %>
-  <%= link_to edit_user_registration_path, :class => 'item' do %>
-    <i class="fi-pencil" ></i>
-    <label>Edit Profile</label>
+<li>
+  <%= link_to edit_user_registration_path, :class => '' do %>
+    <label class="white-text">Edit Profile</label>
+    </li>
   <% end %>
-  <%= link_to destroy_user_session_path, method: :delete, :class => 'item' do %>
-    <i class="fi-power" ></i>
-    <label>Logout</label>
+  <li>
+  <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
+    <label class="white-text">Logout</label>
+    </li>
   <% end %>
 <% else %>
-  <%= link_to new_user_registration_path, :class => 'item' do %>
-    <i class="fi-pencil" ></i>
-    <label>New user</label>
+<li>
+  <%= link_to new_user_registration_path, :class => '' do %>
+    <label class="white-text">New user</label>
+    </li>
   <% end %>
-  <%= link_to new_user_session_path, :class => 'item' do %>
-    <i class="fi-power" ></i>
-    <label>Login</label>
+  <li>
+  <%= link_to new_user_session_path, :class => '' do %>
+    <label class="white-text">Login</label>
+    </li>
   <% end %>
 <% end %>
 
+</ul>
 </div>
 
-<%= display_flash_messages %>
+<div class="off-canvas-content" data-off-canvas-content>
+
+
 
 <div class="row">
   <div class="large-1 columns"></div>
-  <div class="large-10 columns"><%= yield %></div>
+  <div class="large-10 columns">
+<div>
+  <% flash.each do |key, value| %>
+    <div class="callout <%= key %>"><%= value %></div>
+  <% end %>
+</div>
+    <%= yield %></div>
   <div class="large-1 columns"></div>
 </div>
+
+</div>
+          </div>
+        </div>
 
 <script>
  $(document).foundation();

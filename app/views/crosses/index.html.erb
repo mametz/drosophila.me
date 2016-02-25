@@ -1,3 +1,12 @@
+<nav aria-label="You are here:" role="navigation">
+        <ul class="breadcrumbs">
+          <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
+          <li>
+            <span class="show-for-sr">Current: </span> Crosses
+          </li>
+        </ul>
+      </nav>
+
 <h1>Listing Crosses</h1>
 
 <a href="<%= new_cross_path %>" class="button small secondary">New Cross</a>
@@ -24,7 +33,7 @@ lastyear = cross.crossdate.strftime("%Y")
 <% @flyf = Fly.find(cross.female_id) %>
 
 <a href="<%= short_path(cross.friendly_id) %>">
-<div class="panel">
+<div class="callout">
   <h6>
               <% chromosomes = [@flym.chr1.split('/').to_set, @flym.chr2.split('/').to_set, @flym.chr3.split('/').to_set, @flym.chr4.split('/').to_set] %>
 
