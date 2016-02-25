@@ -8,12 +8,12 @@ class StocksController < ApplicationController
   def index
     @stocks = Stock.where("user_id = ?", current_user.id)
     respond_to do |format|
-    format.html
-    format.csv do
-      headers['Content-Disposition'] = "attachment; filename=\"stock-list.tsv\""
-      headers['Content-Type'] ||= 'text/csv'
+      format.html
+      format.csv do
+        headers['Content-Disposition'] = "attachment; filename=\"stock-list.tsv\""
+        headers['Content-Type'] ||= 'text/csv'
+      end
     end
-  end
   end
 
   # GET /stocks/1
@@ -44,14 +44,14 @@ class StocksController < ApplicationController
 
     @fly = Fly.new(:chr1 => chr_X, :chr2 => chr_II, :chr3 => chr_III, :chr4 => chr_IV, :cross_id => 0)
     @fly.save
-    @stock = Stock.new(:number => cross_params[:number], :name => "", :fly_id => @fly.id, :lab_id => "", 
-                       :user_id => current_user.id, :comment => "", :date_established => "", 
+    @stock = Stock.new(:number => cross_params[:number], :name => "", :fly_id => @fly.id, :lab_id => "",
+                       :user_id => current_user.id, :comment => "", :date_established => "",
                        :room_id => cross_params[:room_id], :reference => "", :received_from => "")
     respond_to do |format|
-    if @stock.save
+      if @stock.save
         format.html { redirect_to @stock, notice: 'Stock was successfully created.' }
+      end
     end
-  end
   end
 
   # POST /stocks
@@ -59,8 +59,8 @@ class StocksController < ApplicationController
   def create
     @fly = Fly.find(params[:fly_to_stock])
 
-    @stock = Stock.new(:number => 0, :name => "", :fly_id => @fly.id, :lab_id => "", 
-                       :user_id => current_user.id, :comment => "", :date_established => "", 
+    @stock = Stock.new(:number => 0, :name => "", :fly_id => @fly.id, :lab_id => "",
+                       :user_id => current_user.id, :comment => "", :date_established => "",
                        :room_id => "", :reference => "", :received_from => "")
 
     respond_to do |format|
@@ -99,41 +99,41 @@ class StocksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stock
-      @stock = Stock.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stock
+    @stock = Stock.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def stock_params
-      params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :user_id, :comment, :date_established, :room_id, :reference, :received_from)
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def stock_params
+    params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :user_id, :comment, :date_established, :room_id, :reference, :received_from)
+  end
+  def cross_params
+    params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
+                                  :parent,:male_id,:female_id,:link,
+                                  :X,:II,:III,:IV,:crossdate,:number,:room_id)
+  end
+  def homozygous_tester(chromosome)
+    if !chromosome.include? "/"
+      return chromosome + "/" + chromosome
+    else
+      return chromosome
     end
-    def cross_params
-      params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
-                                    :parent,:male_id,:female_id,:link,
-                                    :X,:II,:III,:IV,:crossdate,:number,:room_id)
-    end
-    def homozygous_tester(chromosome)
-      if !chromosome.include? "/"
-        return chromosome + "/" + chromosome
-      else
-        return chromosome
+  end
+  def correct_user
+    if user_signed_in?
+      if current_user.id != @stock.user_id
+        redirect_to root_url
       end
+    else
+      redirect_to root_url
     end
-    def correct_user
-        if user_signed_in?
-            if current_user.id != @stock.user_id
-                redirect_to root_url
-            end
-        else
-           redirect_to root_url
-        end
-    end
-    def logged_user
-        if user_signed_in?
+  end
+  def logged_user
+    if user_signed_in?
 
-        else
-           redirect_to root_url, notice: 'You need to be logged in.'
-        end
+    else
+      redirect_to root_url, notice: 'You need to be logged in.'
     end
+  end
 end

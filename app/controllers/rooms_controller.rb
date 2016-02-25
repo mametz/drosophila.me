@@ -65,31 +65,31 @@ class RoomsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_room
-      @room = Room.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_room
+    @room = Room.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def room_params
-      params.require(:room).permit(:name, :temperature)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def room_params
+    params.require(:room).permit(:name, :temperature)
+  end
 
-    def correct_user
-        if user_signed_in?
-            if current_user.id != @room.user_id
-                redirect_to root_url
-            end
-        else
-           redirect_to root_url
-        end
+  def correct_user
+    if user_signed_in?
+      if current_user.id != @room.user_id
+        redirect_to root_url
+      end
+    else
+      redirect_to root_url
     end
-    def logged_user
-        if user_signed_in?
+  end
+  def logged_user
+    if user_signed_in?
 
-        else
-           redirect_to root_url, notice: 'You need to be logged in.'
-        end
+    else
+      redirect_to root_url, notice: 'You need to be logged in.'
     end
+  end
 
 end

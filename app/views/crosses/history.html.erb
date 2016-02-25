@@ -1,97 +1,88 @@
 <nav aria-label="You are here:" role="navigation">
-        <ul class="breadcrumbs">
-          <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
-          <li><a href="<%= request.base_url %>/crosses">Crosses</a></li>
-          <li>
-            <span class="show-for-sr">Current: </span> History
+  <ul class="breadcrumbs">
+    <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
+    <li><a href="<%= request.base_url %>/crosses">Crosses</a></li>
+    <li>
+      <span class="show-for-sr">Current: </span> History
           </li>
-        </ul>
-      </nav>
-
+  </ul>
+</nav>
 <h1>History of cross</h1>
-
 <% generation = 1 %>
- 
 <% isparent = [] %>
-
 <div class="panel">
-<% @crosses.each do |cro|
+  <% @crosses.each do |cro|
 	isparent.append(cro.male_id)
 	isparent.append(cro.female_id)
 end %>
-
-<% @crosses.each do |cro| %>
-<div class="row">
-<div class="large-1 columns">
-<h5>F<%= generation %></h5>
-</div>
-<div class="large-1 columns">
-	<% user = User.find(cro.user_id) %>
-	<a href="mailto:<%= user.email %>" alt="<%= user.email %>" title="<%= user.email %>">
-	<%= gravatar_tag user.email, :html => { :class => "img-circular-small" } %>
-	</a>
-</div>
-<div class="large-10 columns">
-	<%= cro.crossdate.strftime("Crossed on %B %d, %Y") %><br />
-	<%= cro.description %>
-</div>
-</div>
-<div>
-\[\underbrace{
+  <% @crosses.each do |cro| %>
+    <div class="row">
+      <div class="large-1 columns">
+        <h5>F<%= generation %></h5>
+      </div>
+      <div class="large-1 columns">
+        <% user = User.find(cro.user_id) %>
+        <a href="mailto:<%= user.email %>" alt="<%= user.email %>" title="<%= user.email %>">
+          <%= gravatar_tag user.email, :html => { :class => "img-circular-small" } %>
+        </a>
+      </div>
+      <div class="large-10 columns">
+        <%= cro.crossdate.strftime("Crossed on %B %d, %Y") %><br />
+        <%= cro.description %>
+      </div>
+    </div>
+    <div>
+      \[\underbrace{
 
 &#x2642; \quad 
 
-<% semikolon = 0 %>
-
-<% 
+      <% semikolon = 0 %>
+      <% 
 flym = Fly.find(cro.male_id)
 flyf = Fly.find(cro.female_id)
 @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
 @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
 %>
+      <% @parent_male.each do |chr| %>
+        <% if chr.size > 1 %>
+          <% if semikolon != 0 %>;<% end %>
+          <% chr %>
+          \dfrac
+			<% chr.each do |n| %>
+            {<%= n %>}
+			<% end %>
+        <% else %>
+          <% if semikolon != 0 %>;<% end %>
+          <% chr.each do |n| %>
+            <%= n %>
+          <% end %>
+        <% end %>
+        <% semikolon = 1 %>
+      <% end %>
+      \qquad X \qquad 
 
-<% @parent_male.each do |chr| %>
-		<% if chr.size > 1 %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr %>
-			\dfrac
+      <% semikolon = 0 %>
+      <% @parent_female.each do |chr| %>
+        <% if chr.size > 1 %>
+          <% if semikolon != 0 %>;<% end %>
+          <% chr %>
+          \dfrac
 			<% chr.each do |n| %>
-				{<%= n %>}
+            {<%= n %>}
 			<% end %>
-		<% else %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr.each do |n| %>
-				<%= n %>
-			<% end %>
-		<% end %> 
-		<% semikolon = 1 %>
-	<% end %> 
-
-\qquad X \qquad 
-
-<% semikolon = 0 %>
-<% @parent_female.each do |chr| %>
-		<% if chr.size > 1 %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr %>
-			\dfrac
-			<% chr.each do |n| %>
-				{<%= n %>}
-			<% end %>
-		<% else %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr.each do |n| %>
-				<%= n %>
-			<% end %>
-		<% end %> 
-		<% semikolon = 1 %>
-	<% end %>
-\quad &#x2640;
+        <% else %>
+          <% if semikolon != 0 %>;<% end %>
+          <% chr.each do |n| %>
+            <%= n %>
+          <% end %>
+        <% end %>
+        <% semikolon = 1 %>
+      <% end %>
+      \quad &#x2640;
 }\]
 
-<div align="center">
-
-<% 
+      <div align="center">
+        <% 
 @progeny = []
 @prog_id = []
 
@@ -113,34 +104,31 @@ end
 @lethal = cro.lethal.split(';')
 @lethal_string = cro.lethal
 %>
-
-<% counter = 0 %>
-<% @progeny.each do |p| %>
-	<% semikolon = 0 %>
-
-<% #Check for lethal and balancers %>
-<% death = 0 %>
-	<% p.each do |chr| %>
-		<% if chr.size == 1 %>
-			<% chr.each do |n| %>
-				<% n = n.split(',') %>
-				<% @balancers.each do |b| %>
-					<% n.each do |g| %>
-					<% if g == b %>
-						<% death = 1 %>
-					<% end %>
-					<% end %>
-				<% end %>
-
-				<% @lethal.each do |l| %>
-					<% n.each do |g| %>
-					<% if g == l %>
-						<% death = 1 %>
-					<% end %>
-					<% end %>
-				<% end %>
-			<% end %>
-		<% else 
+        <% counter = 0 %>
+        <% @progeny.each do |p| %>
+          <% semikolon = 0 %>
+          <% #Check for lethal and balancers %>
+          <% death = 0 %>
+          <% p.each do |chr| %>
+            <% if chr.size == 1 %>
+              <% chr.each do |n| %>
+                <% n = n.split(',') %>
+                <% @balancers.each do |b| %>
+                  <% n.each do |g| %>
+                    <% if g == b %>
+                      <% death = 1 %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <% @lethal.each do |l| %>
+                  <% n.each do |g| %>
+                    <% if g == l %>
+                      <% death = 1 %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% else 
 			up = chr.to_a[0].split(',')
 			down = chr.to_a[1].split(',')
 
@@ -162,61 +150,52 @@ end
 				end
 			end
 	    end %>
-	<% end %>
-
-
-	<% realparent = 0
+          <% end %>
+          <% realparent = 0
 	   isparent.each do |ip| 
 	    if ip == @prog_id[counter]
 	    	realparent = 1
 	end end %>
-
-	<% if death == 1 %>
-		<% counter = counter + 1 %>
-	<% end %>
-
-	<% if death != 1 %>
-		
-	<% if realparent == 1 %>
-	    <a class="button small success">
-	<% else %>
-		<a class="button small secondary">
-	<% end %>
-
-		\[
+          <% if death == 1 %>
+            <% counter = counter + 1 %>
+          <% end %>
+          <% if death != 1 %>
+            <% if realparent == 1 %>
+              <a class="button small success">
+              <% else %>
+                <a class="button small secondary">
+                <% end %>
+                \[
 	<% p.each do |chr| %>
-		<% if chr.size > 1 %>
-			<% if semikolon != 0 %>;<% end %>
-			\dfrac
+                  <% if chr.size > 1 %>
+                    <% if semikolon != 0 %>;<% end %>
+                    \dfrac
 			<% chr.each do |n| %>
-				{<%= n %>}
+                      {<%= n %>}
 			<% end %>
-		<% else %>
-			<% if semikolon != 0 %>;<% end %>
-			<% chr.each do |n| %>
-				<%= n %>
-			<% end %>
-		<% end %> 
-		<% semikolon = 1 %>
-	<% end %>
-	\]
+                  <% else %>
+                    <% if semikolon != 0 %>;<% end %>
+                    <% chr.each do |n| %>
+                      <%= n %>
+                    <% end %>
+                  <% end %>
+                  <% semikolon = 1 %>
+                <% end %>
+                \]
 
-</a>
-	<% counter = counter + 1 %>
-<% end %>
-<% end %>
-</div>
-</div>
-
-<% generation = generation + 1 %>
-<% end %>
-</div>
-
-
-<script type="text/javascript">
-if (window.MathJax) {
-  MathJax.Hub.Queue(
-    ["Typeset",MathJax.Hub]
-  );
-}
-</script>
+              </a>
+              <% counter = counter + 1 %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <% generation = generation + 1 %>
+    <% end %>
+  </div>
+  <script type="text/javascript">
+    if (window.MathJax) {
+      MathJax.Hub.Queue(
+        ["Typeset",MathJax.Hub]
+      );
+    }
+  </script>

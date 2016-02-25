@@ -2,94 +2,87 @@
   <% if @cross.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@cross.errors.count, "error") %> prohibited this cross from being saved:</h2>
-
       <ul>
-      <% @cross.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% @cross.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
-
-<div class="field">
-<div class="panel">
-  <h5>Male genotype</h5>
-    <h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
-    <div class="row">
-      <div class="large-6 columns">
-        <label>X/Y chromosome
+  <div class="field">
+    <div class="panel">
+      <h5>Male genotype</h5>
+      <h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
+      <div class="row">
+        <div class="large-6 columns">
+          <label>X/Y chromosome
           <%= f.text_field :m_X, :value => "+/-" %>
-        </label>
-      </div>
-      <div class="large-6 columns">
-        <label>Chromosome 2
+          </label>
+        </div>
+        <div class="large-6 columns">
+          <label>Chromosome 2
           <%= f.text_field :m_II, :value => "+/+" %>
-        </label>
-      </div>
-      <div class="large-6 columns">
-        <label>Chromosome 3
+          </label>
+        </div>
+        <div class="large-6 columns">
+          <label>Chromosome 3
           <%= f.text_field :m_III, :value => "+/+" %>
-        </label>
-      </div>
-      <div class="large-6 columns">
-        <label>Chromosome 4
+          </label>
+        </div>
+        <div class="large-6 columns">
+          <label>Chromosome 4
           <%= f.text_field :m_IV, :value => "+/+" %>
-        </label>
+          </label>
+        </div>
       </div>
     </div>
-</div>
-
-<div class="panel">
-  <h5>Female genotype</h5>
-  <h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
-    <div class="row">
-      <div class="large-6 columns">
-        <label>X chromosome
+    <div class="panel">
+      <h5>Female genotype</h5>
+      <h6>Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</h6>
+      <div class="row">
+        <div class="large-6 columns">
+          <label>X chromosome
           <%= f.text_field :f_X, :value => "+/+" %>
-        </label>
-      </div>
-      <div class="large-6 columns">
-        <label>Chromosome 2
+          </label>
+        </div>
+        <div class="large-6 columns">
+          <label>Chromosome 2
           <%= f.text_field :f_II, :value => "+/+" %>
-        </label>
-      </div>
-      <div class="large-6 columns">
-        <label>Chromosome 3
+          </label>
+        </div>
+        <div class="large-6 columns">
+          <label>Chromosome 3
           <%= f.text_field :f_III, :value => "+/+" %>
-        </label>
-      </div>
-      <div class="large-6 columns">
-        <label>Chromosome 4
+          </label>
+        </div>
+        <div class="large-6 columns">
+          <label>Chromosome 4
           <%= f.text_field :f_IV, :value => "+/+" %>
           </label>
+        </div>
       </div>
     </div>
-</div>
-
-<div class="panel">
-<h5>Date of cross</h5>
-<%= f.date_select :crossdate %>
-</div>
-
-<div class="panel">
-  <h5>Lethal alleles</h5>
-        <label>Alleles separated by semicolon [;]
+    <div class="panel">
+      <h5>Date of cross</h5>
+      <%= f.date_select :crossdate %>
+    </div>
+    <div class="panel">
+      <h5>Lethal alleles</h5>
+      <label>Alleles separated by semicolon [;]
           <%= f.text_field :lethal %>
-        </label>
-  <h5>Balancers</h5>
-        <label>Balancers separated by semicolon [;]
+      </label>
+      <h5>Balancers</h5>
+      <label>Balancers separated by semicolon [;]
           <%= f.text_field :balancers %>
-        </label>
-  <h5>Comments</h5>
-        <label>Describe this cross
+      </label>
+      <h5>Comments</h5>
+      <label>Describe this cross
           <%= f.text_field :description %>
-        </label>  
-
-        <%= f.hidden_field(:parent, :value => 0) %>
-<div class="actions">
-    <%= f.submit 'Cross' %>
-</div>     
-</div>
-</div>
-
+      </label>
+      <%= f.hidden_field(:parent, :value => 0) %>
+      <div class="actions">
+        <%= f.submit 'Cross' %>
+      </div>
+    </div>
+  </div>
 <% end %>

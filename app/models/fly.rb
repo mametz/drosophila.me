@@ -1,3 +1,3 @@
 class Fly < ActiveRecord::Base
-	belongs_to :cross
+  belongs_to :cross
 end

@@ -63,17 +63,17 @@ class FliesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_fly
-      @fly = Fly.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_fly
+    @fly = Fly.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def fly_params
-      params.require(:fly).permit(:chr1, :chr2, :chr3, :chr4, :cross_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def fly_params
+    params.require(:fly).permit(:chr1, :chr2, :chr3, :chr4, :cross_id)
+  end
 
-    def redir
-      redirect_to root_url
-    end
+  def redir
+    redirect_to root_url
+  end
 end

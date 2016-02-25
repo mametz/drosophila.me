@@ -1,87 +1,77 @@
 <nav aria-label="You are here:" role="navigation">
-        <ul class="breadcrumbs">
-          <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
-          <li>
-            <span class="show-for-sr">Current: </span> Crosses
+  <ul class="breadcrumbs">
+    <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
+    <li>
+      <span class="show-for-sr">Current: </span> Crosses
           </li>
-        </ul>
-      </nav>
-
+  </ul>
+</nav>
 <h1>Listing Crosses</h1>
-
 <a href="<%= new_cross_path %>" class="button small secondary">New Cross</a>
-
 <%
 lastmonth = ""
 lastyear = ""
 %>
-
 <% @crosses.each do |cross| %>
-
-<%
+  <%
 if lastmonth != cross.crossdate.strftime("%B") or lastyear != lastyear = cross.crossdate.strftime("%Y")
 %>
-	<div class="panel"><h4><%= cross.crossdate.strftime("%B %Y")%></h4></div>
-<%
+    <div class="panel">
+      <h4><%= cross.crossdate.strftime("%B %Y")%></h4>
+    </div>
+    <%
 end
 
 lastmonth = cross.crossdate.strftime("%B")
 lastyear = cross.crossdate.strftime("%Y")
 %>
-
-<% @flym = Fly.find(cross.male_id) %>
-<% @flyf = Fly.find(cross.female_id) %>
-
-<a href="<%= short_path(cross.friendly_id) %>">
-<div class="callout">
-  <h6>
-              <% chromosomes = [@flym.chr1.split('/').to_set, @flym.chr2.split('/').to_set, @flym.chr3.split('/').to_set, @flym.chr4.split('/').to_set] %>
-
-              \[
+    <% @flym = Fly.find(cross.male_id) %>
+    <% @flyf = Fly.find(cross.female_id) %>
+    <a href="<%= short_path(cross.friendly_id) %>">
+      <div class="callout">
+        <h6>
+          <% chromosomes = [@flym.chr1.split('/').to_set, @flym.chr2.split('/').to_set, @flym.chr3.split('/').to_set, @flym.chr4.split('/').to_set] %>
+          \[
               <% semikolon = 0 %>
-                <% chromosomes.each do |chr| %>
-                  <% if chr.size > 1 %>
-                    <% if semikolon != 0 %>;<% end %>
-                    <% chr %>
-                    \dfrac
+          <% chromosomes.each do |chr| %>
+            <% if chr.size > 1 %>
+              <% if semikolon != 0 %>;<% end %>
+              <% chr %>
+              \dfrac
                     <% chr.each do |n| %>
-                      {<%= n %>}
+                {<%= n %>}
                     <% end %>
-                  <% else %>
-                    <% if semikolon != 0 %>;<% end %>
-                      <% chr.each do |n| %>
-                        <%= n %>
-                      <% end %>
-                    <% end %> 
-                  <% semikolon = 1 %>
-                <% end %> 
-                
-
-  	\qquad X \qquad
-  	<% chromosomes = [@flyf.chr1.split('/').to_set, @flyf.chr2.split('/').to_set, @flyf.chr3.split('/').to_set, @flyf.chr4.split('/').to_set] %>
-
-              
-              <% semikolon = 0 %>
-                <% chromosomes.each do |chr| %>
-                  <% if chr.size > 1 %>
-                    <% if semikolon != 0 %>;<% end %>
-                    <% chr %>
-                    \dfrac
+            <% else %>
+              <% if semikolon != 0 %>;<% end %>
+              <% chr.each do |n| %>
+                <%= n %>
+              <% end %>
+            <% end %>
+            <% semikolon = 1 %>
+          <% end %>
+          \qquad X \qquad
+    <% chromosomes = [@flyf.chr1.split('/').to_set, @flyf.chr2.split('/').to_set, @flyf.chr3.split('/').to_set, @flyf.chr4.split('/').to_set] %>
+          <% semikolon = 0 %>
+          <% chromosomes.each do |chr| %>
+            <% if chr.size > 1 %>
+              <% if semikolon != 0 %>;<% end %>
+              <% chr %>
+              \dfrac
                     <% chr.each do |n| %>
-                      {<%= n %>}
+                {<%= n %>}
                     <% end %>
-                  <% else %>
-                    <% if semikolon != 0 %>;<% end %>
-                      <% chr.each do |n| %>
-                        <%= n %>
-                      <% end %>
-                    <% end %> 
-                  <% semikolon = 1 %>
-                <% end %> 
-                \]
+            <% else %>
+              <% if semikolon != 0 %>;<% end %>
+              <% chr.each do |n| %>
+                <%= n %>
+              <% end %>
+            <% end %>
+            <% semikolon = 1 %>
+          <% end %>
+          \]
   </h6>
-  <p><%= cross.description %></p>
-  <p><%= cross.crossdate.strftime("Crossed on %B %d, %Y") %></p>
-</div>
-</a>
-<% end %>
+        <p><%= cross.description %></p>
+        <p><%= cross.crossdate.strftime("Crossed on %B %d, %Y") %></p>
+      </div>
+    </a>
+  <% end %>

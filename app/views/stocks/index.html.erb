@@ -1,12 +1,11 @@
 <nav aria-label="You are here:" role="navigation">
-        <ul class="breadcrumbs">
-          <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
-          <li>
-            <span class="show-for-sr">Current: </span> Stocks
+  <ul class="breadcrumbs">
+    <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
+    <li>
+      <span class="show-for-sr">Current: </span> Stocks
           </li>
-        </ul>
-      </nav>
-
+  </ul>
+</nav>
 <h1>Your fly stocks</h1>
 <a href="<%= new_stock_path %>" class="button small secondary">New Stock</a>
 <a href="<%= rooms_path %>" class="button small secondary">Stock rooms</a>
@@ -16,9 +15,11 @@
     <thead>
       <tr>
         <th>Stock
-        <br />Room</th>
+        <br />
+          Room</th>
         <th>Stock
-        <br />Number</th>
+        <br />
+          Number</th>
         <th>Genotype</th>
         <th>Cross</th>
       </tr>
@@ -34,40 +35,40 @@
           </td>
           <td>
             <a href="stocks/<%= stock.id %>">
-                <%= stock.number %>
+              <%= stock.number %>
             </a>
           </td>
           <td>
             <a href="stocks/<%= stock.id %>" class="button secondary tiny hollow">
               <% fly = Fly.find(stock.fly_id) %>
               <% chromosomes = [fly.chr1.split('/').to_set, fly.chr2.split('/').to_set, fly.chr3.split('/').to_set, fly.chr4.split('/').to_set] %>
-
               \[
               <% semikolon = 0 %>
-                <% chromosomes.each do |chr| %>
-                  <% if chr.size > 1 %>
-                    <% if semikolon != 0 %>;<% end %>
-                    <% chr %>
-                    \dfrac
+              <% chromosomes.each do |chr| %>
+                <% if chr.size > 1 %>
+                  <% if semikolon != 0 %>;<% end %>
+                  <% chr %>
+                  \dfrac
                     <% chr.each do |n| %>
-                      {<%= n %>}
+                    {<%= n %>}
                     <% end %>
-                  <% else %>
-                    <% if semikolon != 0 %>;<% end %>
-                      <% chr.each do |n| %>
-                        <%= n %>
-                      <% end %>
-                    <% end %> 
-                  <% semikolon = 1 %>
-                <% end %> 
-                \]
+                <% else %>
+                  <% if semikolon != 0 %>;<% end %>
+                  <% chr.each do |n| %>
+                    <%= n %>
+                  <% end %>
+                <% end %>
+                <% semikolon = 1 %>
+              <% end %>
+              \]
 
             </a>
           </td>
           <td>
             &#9794; 
             <%= f.radio_button(:male_id, fly.id, label: false) %>
-            <br /> &#9792; 
+            <br />
+             &#9792; 
             <%= f.radio_button(:female_id, fly.id, label: false) %>
           </td>
         </tr>
@@ -77,24 +78,25 @@
   <a href="" data-reveal-id="cross" class="button small secondary">Details</a>
   <div id="cross" class="reveal-modal" data-reveal="">
     <div class="panel">
-      <h5>Date of cross</h5><%= f.date_select :crossdate %>
+      <h5>Date of cross</h5>
+      <%= f.date_select :crossdate %>
     </div>
-  <div class="panel">
-    <h5>Lethal alleles</h5>
-    <label>Alleles separated by semicolon [;] <%= f.text_field :lethal %></label>
-    <h5>Balancers</h5>
-    <label>Balancers separated by semicolon [;] <%= f.text_field :balancers %></label>
-    <h5>Comments</h5>
-    <label>Describe this cross <%= f.text_field :description %></label>
-  </div>
-  <div class="row panel">
-    <h5>Add new fly to cross</h5>
+    <div class="panel">
+      <h5>Lethal alleles</h5>
+      <label>Alleles separated by semicolon [;] <%= f.text_field :lethal %></label>
+      <h5>Balancers</h5>
+      <label>Balancers separated by semicolon [;] <%= f.text_field :balancers %></label>
+      <h5>Comments</h5>
+      <label>Describe this cross <%= f.text_field :description %></label>
+    </div>
+    <div class="row panel">
+      <h5>Add new fly to cross</h5>
       <div class="large-12 columns">
-      &#9794; 
+        &#9794; 
             <%= f.radio_button(:male_id, "new", label: false) %>
-            | &#9792; 
+        | &#9792; 
             <%= f.radio_button(:female_id, "new", label: false) %>
-          </div>
+      </div>
       <div class="large-6 columns">
         <label>X chromosome
           <%= f.text_field :X, :value => "+/+" %>
@@ -113,10 +115,10 @@
       <div class="large-6 columns">
         <label>Chromosome 4
           <%= f.text_field :IV, :value => "+/+" %>
-          </label>
+        </label>
       </div>
-  </div>
-  <%= f.hidden_field(:parent, :value => "stock") %>
+    </div>
+    <%= f.hidden_field(:parent, :value => "stock") %>
   </div>
   <%= f.submit %>
 <% end %>
