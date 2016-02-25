@@ -1,50 +1,242 @@
-<h1>Fly management made easy</h1>
-<dl class="sub-nav">
-  <dd class="active"><a href="http://drosophila.me">Home</a></dd>
-  <dd><a href="/static_pages/team">Team</a></dd>
-  <dd><a href="http://ourdisclaimer.com/?i=drosophila.me">Disclaimer</a></dd>
-</dl>
-<div class="panel">
-  <h3>Welcome to Drosophila.me</h3>
-  <p>Drosophila.me was developped to make fly work easier</p>
-  <a href="https://www.statuscake.com" title="Website Uptime Monitoring"><img src="https://www.statuscake.com/App/button/index.php?Track=kSuXRTZojO&Days=30&Design=6" /></a>
 </div>
-<h3>Features</h3>
-<ul class="example-orbit" data-orbit>
-  <li>
-    <img src="/assets/images/1.png" alt="slide 1" />
-    <div class="orbit-caption">
-      See the possible outcomes from your cross.
+</div>
+
+<style media="screen" type="text/css">
+
+body {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif !important;
+  font-weight: 200;
+  font-size: 20px;
+}
+
+.img-circular-grav{
+ width: 180px;
+ height: 180px;
+ background-size: cover;
+ display: block;
+ border-radius: 300px;
+ -webkit-border-radius: 300px;
+ -moz-border-radius: 300px;
+}
+
+  /* Parallax base styles
+  --------------------------------------------- */
+
+  .parallax {
+    height: 500px; /* fallback for older browsers */
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-perspective: 300px;
+    perspective: 300px;
+    -webkit-perspective-origin-x: 100%;
+    perspective-origin-x: 100%;
+  }
+
+  .parallax__group {
+    position: relative;
+    height: 500px; /* fallback for older browsers */
+    height: 100vh;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+  .parallax__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transform-origin-x: 100%;
+    transform-origin-x: 100%;
+  }
+
+  .parallax__layer--fore {
+    -webkit-transform: translateZ(90px) scale(.7);
+    transform: translateZ(90px) scale(.7);
+    z-index: 1;
+  }
+
+  .parallax__layer--base {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    z-index: 4;
+  }
+
+  .parallax__layer--back {
+    -webkit-transform: translateZ(-300px) scale(2);
+    transform: translateZ(-300px) scale(2);
+    z-index: 3;
+  }
+
+  .parallax__layer--deep {
+    -webkit-transform: translateZ(-600px) scale(3);
+    transform: translateZ(-600px) scale(3);
+    z-index: 2;
+  }
+
+
+  /* demo styles
+  --------------------------------------------- */
+
+  body, html {
+    overflow: hidden;
+  }
+
+  body {
+    font: 100% / 1.5 Arial;
+  }
+
+  * {
+    margin:0;
+    padding:0;
+  }
+
+  .parallax {
+    font-size: 200%;
+  }
+
+   /* centre the content in the parallax layers */
+  .title {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+
+
+  /* style the groups
+  --------------------------------------------- */
+
+  #group1 {
+    z-index: 5; /* slide over group 2 */
+  }
+  #group1 .parallax__layer--base {
+   
+  }
+
+  #group2 {
+    z-index: 3; /* slide under groups 1 and 3 */
+  }
+  #group2 .parallax__layer--back {
+    background: rgb(123,210,102);
+  }
+
+  #group3 {
+    z-index: 4; /* slide over group 2 and 4 */
+  }
+  #group3 .parallax__layer--base {
+    background: rgb(153,216,101);
+    background-image: url('http://drosophila.me/assets/bg.png');
+    background-repeat: no-repeat;
+    background-position: left bottom; 
+  }
+
+  #group4 {
+    z-index: 2; /* slide under group 3 and 5 */
+  }
+  #group4 .parallax__layer--deep {
+    background: rgb(123,210,102);
+  }
+
+  #group5 {
+    z-index: 3; /* slide over group 4 and 6 */
+  }
+  #group5 .parallax__layer--base {
+    
+  }
+
+  #group6 {
+    z-index: 2; /* slide under group 5 and 7 */
+  }
+  #group6 .parallax__layer--back {
+    background: rgb(123,210,102);
+  }
+
+  #group7 {
+    z-index: 3; /* slide over group 7 */
+  }
+  #group7 .parallax__layer--base {
+    background: rgb(123,210,102);
+    background-image: image-url('/assets/click.png');
+    background-repeat: no-repeat;
+    background-position: left top; 
+  }
+
+
+  /* misc
+  --------------------------------------------- */
+  .demo__info {
+    position: absolute;
+    z-index:100;
+    bottom: 1vh;
+    top: auto;
+    font-size:80%;
+    text-align:center;
+    width: 100%;
+  }
+
+</style>
+
+<div class="demo__info">
+  Pure CSS parallax scroll demo #3 by Keith Clark. Please read the <a href="../">blog post</a> for more information.
+  </div>
+<div class="parallax">
+  <div id="group1" class="parallax__group">
+    <div class="parallax__layer parallax__layer--base">
+      <div class="title">
+        <h1>Welcome to drosophila.me</h1>
+        <small>scroll down for more informations</small>
+      </div>
     </div>
-  </li>
-  <li class="active">
-    <img src="/assets/images/2.png" alt="slide 2" />
-    <div class="orbit-caption">
-      Select the correct combination for the next cross.
+  </div>
+  <div id="group3" class="parallax__group">
+    <div class="parallax__layer parallax__layer--fore">
+      <div class="title">
+        <h3>Drosophila cross and stock management made easy</div>
+      </div>
+      <div class="parallax__layer parallax__layer--base">
+        <div class="title"></div>
+      </div>
     </div>
-  </li>
-  <li>
-    <img src="/assets/images/3.png" alt="slide 3" />
-    <div class="orbit-caption">
-      Punnett square and frequencies.
+    <div id="group5" class="parallax__group">
+      <div class="parallax__layer parallax__layer--fore">
+        <div>
+          <div class="row">
+            <h3>Contact</h3>
+            <br />
+            <div class="large-4 columns">
+              <%= gravatar_tag "m.metzler@me.com", :size => 200, :html => { :class => "img-circular-grav" } %>
+            </div>
+            <div class="large-8 columns">
+              <h4>Mario Metzler</h4>
+              <p>PhD student at the Biozentrum of the University of Basel, Switzerland.</p>
+              <p>Usual activity: CRISPRing around in the Abd-B regulatory locus.</p>
+              <p><strong>Development, Design, Deployment.</strong></p>
+              <p>E-mail: <a href="mailto:m.metzler@me.com">m.metzler@me.com</a>
+              </div>
+            </div>
+          </div>
+          <div class="title">
+            <small>scroll down to see how to start</small>
+          </div>
+        </div>
+        <div class="parallax__layer parallax__layer--base">
+          <div class="title"></div>
+        </div>
+      </div>
+      <div id="group7" class="parallax__group">
+        <div class="parallax__layer parallax__layer--base">
+          <div class="title white-bg">
+            Just one more step needed: <br /><br />
+            <%= link_to new_user_registration_path, :class => 'button large success hollow' do %>
+                    Register
+                <% end %><br /><br /></div>
+        </div>
+      </div>
     </div>
-  </li>
-  <li>
-    <img src="/assets/images/4.png" alt="slide 3" />
-    <div class="orbit-caption">
-      Share your cross with colleagues and collaborators.
-    </div>
-  </li>
-  <li>
-    <img src="/assets/images/5.png" alt="slide 3" />
-    <div class="orbit-caption">
-      Keep track of your cross history.
-    </div>
-  </li>
-  <li>
-    <img src="/assets/images/6.png" alt="slide 3" />
-    <div class="orbit-caption">
-      Organize your stock collection and cross right away.
-    </div>
-  </li>
-</ul>
+    <div>
+      <div>

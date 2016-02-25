@@ -40,8 +40,20 @@ if g_user.id == current_user.id %>
 </div>
 </div>
 <br />
+        <% 
+if user_signed_in?
+if g_user.id == current_user.id
+%>
+      <p>
+        <a href="<%= short_path %>" class="button small primary">Fly view</a>
+        <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
+        <a href="<%= short_path %>/pnt" class="button small secondary">Punnett square</a>
+      </p>
+    <% end end %>
 <%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
-  <div class="panel">
+  <div class="row">
+    <div class="large-8 column">
+
     \[\underbrace{
 
 &#x2642; \quad 
@@ -85,16 +97,6 @@ if g_user.id == current_user.id %>
     \quad &#x2640;
 }\]
 
-    <% 
-if user_signed_in?
-if g_user.id == current_user.id
-%>
-      <p>
-        <a href="<%= short_path %>" class="button small primary">Fly view</a>
-        <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
-        <a href="<%= short_path %>/pnt" class="button small secondary">Punnett square</a>
-      </p>
-    <% end end %>
     <% counter = 0 %>
     <% @progeny.each do |p| %>
       <% semikolon = 0 %>
@@ -180,7 +182,11 @@ end %>
       <% counter = counter + 1 %>
     <% end %>
   <% end %>
+  <p>
+  <%= f.submit 'Cross', class: 'button success' %>
+</p>
 </div>
+<div class="large-4 column">
 <% 
 if user_signed_in?
 if g_user.id == current_user.id
@@ -192,9 +198,8 @@ if g_user.id == current_user.id
   <%= f.hidden_field(:parent, :value => @cross.id) %>
   <%= f.hidden_field(:link, :value => @random_string) %>
   <p>
-    <a href="#" data-reveal-id="newfly" class="button small secondary">Add new fly to cross</a>
-    <div id="newfly" class="reveal-modal" data-reveal>
-      <div class="panel">
+    <div id="newfly">
+      <div class="callout secondary">
         <h5>Genotype</h5>
         &#x2642;
         <%= f.radio_button(:male_id, "new", label: false) %>
@@ -224,7 +229,6 @@ if g_user.id == current_user.id
           </div>
         </div>
       </div>
-      <a class="close-reveal-modal">&#215;</a>
     </div>
   </p>
   <h5>Lethal alleles</h5>
@@ -241,8 +245,9 @@ if g_user.id == current_user.id
   </label>
   <h5>Date of cross</h5>
   <%= f.date_select(:crossdate, selected: Date.today) %>
-  <%= f.submit 'Cross' %>
 </div>
 <% end %>
+</div>
+</div>
 <% end 
 end%>

@@ -40,6 +40,16 @@
         <%= @cross.description %></p>
       </div>
     </div>
+        <% 
+    if user_signed_in?
+      if g_user.id == current_user.id
+        %><br />
+        <p>
+          <a href="<%= short_path %>" class="button small secondary">Fly view</a>
+          <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
+          <a href="<%= short_path %>/pnt" class="button small primary">Punnett square</a>
+        </p>
+        <% end end %>
     <br />
       \[\underbrace{
 
@@ -84,16 +94,6 @@
       \quad &#x2640;
     }\]
 
-    <% 
-    if user_signed_in?
-      if g_user.id == current_user.id
-        %>
-        <p>
-          <a href="<%= short_path %>" class="button small secondary">Fly view</a>
-          <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
-          <a href="<%= short_path %>/pnt" class="button small primary">Punnett square</a>
-        </p>
-        <% end end %>
         <table align="center">
           <tbody>
             <% r = 0 %>

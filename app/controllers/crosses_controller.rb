@@ -354,7 +354,10 @@ class CrossesController < ApplicationController
                 else
                   m_x = cross_params[:X]
                 end
-                @flyf = Fly.find(cross_params[:female_id])
+
+                if cross_params[:female_id] != "female_chr_s"
+                  @flyf = Fly.find(cross_params[:female_id])
+                end
 
                 m_x = homozygous_tester(m_x)
                 chrII = homozygous_tester(cross_params[:II])
@@ -364,7 +367,9 @@ class CrossesController < ApplicationController
                 @flym = Fly.new(:chr1 => m_x, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
                 @flym.save
               elsif cross_params[:female_id] == "new"
-                @flym = Fly.find(cross_params[:male_id])
+                if cross_params[:male_id] != "male_chr_s"
+                  @flym = Fly.find(cross_params[:male_id])
+                end
 
                 chrX = homozygous_tester(cross_params[:X])
                 chrII = homozygous_tester(cross_params[:II])
