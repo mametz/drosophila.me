@@ -1,0 +1,20 @@
+Wed, 06 Jan 2016 07:52:18 +0100
+README.rdoc	Sat, 31 Oct 2015 07:29:14 +0100
+app/controllers/application_controller.rb	Wed, 06 Jan 2016 07:52:08 +0100
+app/controllers/crosses_controller.rb	Wed, 06 Jan 2016 07:52:08 +0100
+app/controllers/flies_controller.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/controllers/rooms_controller.rb	Wed, 09 Dec 2015 07:43:23 +0100
+app/controllers/static_pages_controller.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/controllers/stocks_controller.rb	Wed, 06 Jan 2016 07:52:08 +0100
+app/helpers/application_helper.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/helpers/crosses_helper.rb	Wed, 06 Jan 2016 07:52:08 +0100
+app/helpers/flies_helper.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/helpers/rooms_helper.rb	Wed, 09 Dec 2015 07:43:23 +0100
+app/helpers/static_pages_helper.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/helpers/stocks_helper.rb	Wed, 09 Dec 2015 07:43:23 +0100
+app/models/cross.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/models/fly.rb	Sat, 31 Oct 2015 07:29:14 +0100
+app/models/room.rb	Wed, 09 Dec 2015 07:43:23 +0100
+app/models/stock.rb	Wed, 09 Dec 2015 07:43:23 +0100
+app/models/user.rb	Thu, 10 Dec 2015 07:52:18 +0100
+lib/core_ext/string.rb	Wed, 09 Dec 2015 13:01:45 +0100
