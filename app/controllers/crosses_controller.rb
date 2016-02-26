@@ -409,6 +409,14 @@ class CrossesController < ApplicationController
                 m_x = cross_params[:m_X]
               end
 
+              male_ytester = m_x.split('/')
+              if male_ytester[0] == "Y"
+                m_x = male_ytester[1] + "/-"
+              end
+              if male_ytester[1] == "Y"
+                m_x = male_ytester[0] + "/-"
+              end
+
               m_x = homozygous_tester(m_x)
               chr_mII = homozygous_tester(cross_params[:m_II])
               chr_mIII = homozygous_tester(cross_params[:m_III])
