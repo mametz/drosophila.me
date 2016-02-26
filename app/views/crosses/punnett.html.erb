@@ -18,131 +18,134 @@
   </div>
   <div class="large-5 column">
     <% if @cross.parent.to_i >= 1 %>
-    <a href="<%= short_path %>/history"><i class="fi-page-multiple"></i> Cross history</a>
-    <br />
+      <a href="<%= short_path %>/history"><i class="fi-page-multiple"></i> Cross history</a>
+      <br />
     <% end %>
     <a href="<%= short_path %>/qr"><i class="fi-camera"></i> QR code</a>
     <br />
     <% if user_signed_in?
       if g_user.id == current_user.id %>
       <%= link_to @cross, method: :delete, data: { confirm: "Are you sure? The cross and all it's derivatives would be deleted." } do %>
-      <i class="fi-trash" ></i> Delete cross
+        <i class="fi-trash" ></i> Delete cross
       <% end %>
-      <% else %>
+    <% else %>
       <%= link_to copy_path do %>
-      <i class="fi-page-copy" ></i> Copy cross
+        <i class="fi-page-copy" ></i> Copy cross
       <% end %>
-      <% end %>
-      <% end %>
-    </div>
-    <div class="large-5 column">
-      <p><%= @cross.crossdate.strftime("Crossed on %B %d, %Y") %><br />
-        <%= @cross.description %></p>
-      </div>
-    </div>
-        <% 
+    <% end %>
+  <% end %>
+</div>
+<div class="large-5 column">
+  <p><%= @cross.crossdate.strftime("Crossed on %B %d, %Y") %><br />
+    <%= @cross.description %></p>
+</div>
+</div>
+<% 
     if user_signed_in?
       if g_user.id == current_user.id
         %><br />
-        <p>
-          <a href="<%= short_path %>" class="button small secondary">Fly view</a>
-          <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
-          <a href="<%= short_path %>/pnt" class="button small primary">Punnett square</a>
-        </p>
-        <% end end %>
-    <br />
-      \[\underbrace{
+<p>
+  <a href="<%= short_path %>" class="button small secondary">Fly view</a>
+  <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
+  <a href="<%= short_path %>/pnt" class="button small primary">Punnett square</a>
+</p>
+<% end end %>
+<br />
+\[\underbrace{
 
       &#x2642; \quad 
 
       <% semikolon = 0 %>
-      <% @parent_male.each do |chr| %>
-      <% if chr.size > 1 %>
-      <% if semikolon != 0 %>;<% end %>
-      <% chr %>
-      \dfrac
+<% @parent_male.each do |chr| %>
+  <% if chr.size > 1 %>
+    <% if semikolon != 0 %>;<% end %>
+    <% chr %>
+    \dfrac
       <% chr.each do |n| %>
       {<%= n %>}
       <% end %>
-      <% else %>
-      <% if semikolon != 0 %>;<% end %>
-      <% chr.each do |n| %>
+  <% else %>
+    <% if semikolon != 0 %>;<% end %>
+    <% chr.each do |n| %>
       <%= n %>
-      <% end %>
-      <% end %>
-      <% semikolon = 1 %>
-      <% end %>
-      \qquad X \qquad 
+    <% end %>
+  <% end %>
+  <% semikolon = 1 %>
+<% end %>
+\qquad X \qquad 
 
       <% semikolon = 0 %>
-      <% @parent_female.each do |chr| %>
-      <% if chr.size > 1 %>
-      <% if semikolon != 0 %>;<% end %>
-      <% chr %>
-      \dfrac
+<% @parent_female.each do |chr| %>
+  <% if chr.size > 1 %>
+    <% if semikolon != 0 %>;<% end %>
+    <% chr %>
+    \dfrac
       <% chr.each do |n| %>
       {<%= n %>}
       <% end %>
-      <% else %>
-      <% if semikolon != 0 %>;<% end %>
-      <% chr.each do |n| %>
+  <% else %>
+    <% if semikolon != 0 %>;<% end %>
+    <% chr.each do |n| %>
       <%= n %>
-      <% end %>
-      <% end %>
-      <% semikolon = 1 %>
-      <% end %>
-      \quad &#x2640;
+    <% end %>
+  <% end %>
+  <% semikolon = 1 %>
+<% end %>
+\quad &#x2640;
     }\]
 
-        <table align="center">
-          <tbody>
-            <% r = 0 %>
-            <% c = 0 %>
-            <td>&#x2642; / &#x2640;</td>
-            <% @female_chrs.each do |f| %>
-            <% if f.is_a? String %>
-            <td><small>\[<%= f %>\]</small></td>
-            <% else %>
-            <td><small>\[<%= f.join(' ; ') %>\]</small></td>
-            <% end %>
-            <% end %>
-            <% @male_chrs.each do |m| %>
-            <tr>
-              <% if m.is_a? String %>
-              <td><small>\[<%= m %>\]</small></td>
-              <% else %>
-              <td><small>\[<%= m.join(' ; ') %>\]</small></td>
-              <% end %>
-              <% @female_chrs.each do |f| %>
-              <td><small>\[
+        
+<table align="center">
+  <tbody>
+    <tr>
+      <% r = 0 %>
+      <% c = 0 %>
+      <th scope="column">&#x2642; / &#x2640;</th>
+      <% @female_chrs.each do |f| %>
+        <% if f.is_a? String %>
+          <th scope="column"><small>\[<%= f %>\]</small></th>
+        <% else %>
+          <th scope="column"><small>\[<%= f.join(' ; ') %>\]</small></th>
+        <% end %>
+      <% end %>
+      <% @male_chrs.each do |m| %>
+      </tr>
+      <tr>
+        <% if m.is_a? String %>
+          <th scope="row"><small>\[<%= m %>\]</small></th>
+        <% else %>
+          <th scope="row"><small>\[<%= m.join(' ; ') %>\]</small></th>
+        <% end %>
+        <% @female_chrs.each do |f| %>
+          <td><small>\[
                 <% if m.flatten.size >= f.flatten.size %>
                 <% endp = m.flatten.size %>
-                <% else %>
+              <% else %>
                 <% endp = f.flatten.size %>
-                <% end %>
-                <% i = 0 %>
-                <% if m.is_a? String %>
+              <% end %>
+              <% i = 0 %>
+              <% if m.is_a? String %>
                 \frac{<%= m %>}{<%= f %>}
                 <% else %>
                 <% while i < endp %>
-                <% if m.flatten[i] == nil %>
-                \frac{+}{<%= f.flatten[i] %>}
+                  <% if m.flatten[i] == nil %>
+                    \frac{+}{<%= f.flatten[i] %>}
                 <% elsif f.flatten[i] == nil %>
-                \frac{<%= m.flatten[i] %>}{+}
+                    \frac{<%= m.flatten[i] %>}{+}
                 <% else %>
-                \frac{<%= m.flatten[i] %>}{<%= f.flatten[i] %>}
+                    \frac{<%= m.flatten[i] %>}{<%= f.flatten[i] %>}
                 <% end %>
-                <% if i < endp - 1 %>
-                ;
+                  <% if i < endp - 1 %>
+                    ;
                 <% end %>
-                <% i = i + 1 %>
+                  <% i = i + 1 %>
                 <% end %>
-                <% end %>
-                \]</small></td>
-                <% c += 1 %>
-                <% end %>
-              </tr>
-              <% r += 1 %>
               <% end %>
-          </tbody>
-        </table>
+              \]</small></td>
+          <% c += 1 %>
+        <% end %>
+      </tr>
+      <% r += 1 %>
+    <% end %>
+  </tbody>
+</table>
