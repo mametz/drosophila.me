@@ -4,6 +4,8 @@ gem 'devise'
 gem 'devise_security_extension'
 gem 'easy_captcha'
 
+gem 'remote_syslog_logger'
+
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 
