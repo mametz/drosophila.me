@@ -48,7 +48,7 @@ if g_user.id == current_user.id %>
 <%= form_for :cross, :url => {:action => "create"}, :method => "post", auto_labels: false do |f| %>
   <div class="row">
     <div class="large-8 column">
-      \[\underbrace{
+      \(\underbrace{
 
 &#x2642; \quad 
 
@@ -89,7 +89,7 @@ if g_user.id == current_user.id %>
         <% semikolon = 1 %>
       <% end %>
       \quad &#x2640;
-}\]
+}\)
 
     <% 
 if user_signed_in?
