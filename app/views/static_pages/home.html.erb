@@ -1,5 +1,24 @@
 </div>
 </div>
+<script>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Usage statistics'
+        },
+        xAxis: {
+            categories: ['Registered users', 'Crosses', 'Stocks']
+        },
+        yAxis: {
+        },
+        series: [{
+            data: [1, 100, 4]
+        }],
+    });
+});</script>
 
 <style media="screen" type="text/css">
 
@@ -197,6 +216,7 @@ body {
     <div class="parallax__layer parallax__layer--fore">
       <div class="title">
         <h3>Drosophila cross and stock management made easy</div>
+	<div align="center"><div id="container" style="width:80%"></div></div></h3>
       </div>
       <div class="parallax__layer parallax__layer--base">
         <div class="title"></div>
@@ -219,9 +239,6 @@ body {
               <p>E-mail: <a href="mailto:m.metzler@me.com">m.metzler@me.com</a>
               </div>
             </div>
-          </div>
-          <div class="title">
-            <small>scroll down to see how to start</small>
           </div>
         </div>
         <div class="parallax__layer parallax__layer--base">
