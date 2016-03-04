@@ -15,7 +15,8 @@ $(function () {
         yAxis: {
         },
         series: [{
-            data: [1, 100, 4]
+            name: 'drosophila.me',
+            data: [<%= @user_n %>, <%= @cross_n %>, <%= @stock_n %>]
         }],
     });
 });</script>
@@ -214,9 +215,10 @@ body {
   </div>
   <div id="group3" class="parallax__group">
     <div class="parallax__layer parallax__layer--fore">
-      <div class="title">
-        <h3>Drosophila cross and stock management made easy</div>
-	<div align="center"><div id="container" style="width:80%"></div></div></h3>
+      
+	<div align="center">
+    <h3>Drosophila cross and stock management made easy</h3>
+      <div id="container" style="width:80%"></div></div>
       </div>
       <div class="parallax__layer parallax__layer--base">
         <div class="title"></div>

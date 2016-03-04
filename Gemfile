@@ -4,8 +4,6 @@ gem 'devise'
 gem 'devise_security_extension'
 gem 'easy_captcha'
 
-gem "google_visualr", ">= 2.5"
-
 gem 'cookies_eu'
 gem 'remote_syslog_logger'
 
