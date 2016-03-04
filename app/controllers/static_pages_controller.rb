@@ -1,7 +1,7 @@
 class StaticPagesController < ApplicationController
   def home
   	@user_n = User.all.count
-  	@crosse_n = Cross.all.count * 2
+  	@cross_n = Cross.all.count * 2
   	@stock_n = Stock.all.count
 
   end
