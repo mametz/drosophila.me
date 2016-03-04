@@ -42,6 +42,14 @@ body {
 	color: white;
 }
 
+.white-text a {
+    color: white;
+}
+
+.white-text a:hover {
+    text-decoration: underline;
+}
+
 tbody, th {
     border: 1px solid black;
 }
