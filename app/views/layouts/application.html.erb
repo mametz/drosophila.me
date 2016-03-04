@@ -10,137 +10,53 @@
     <%= csrf_meta_tags %>
     <% # mathjax_tag :config=>false %>
     <script type="text/javascript" async
-          src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-      </script>
-</head>
+          src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
   <body>
-    <div data-sticky-container> 
-    <div class="title-bar">
-      <div class="title-bar-left">
-        <span class="title-bar-title white-text"><a href="<%= root_path %>">drosophila.me</a></span>
-        <span class="white-text"> <br /> 
-          <a href="<%= crosses_path %>">
-                 Your crosses
-              </a> | 
-           <a href="<%= stocks_path %>">
-                 Your stocks
-              </a>
-          <% if user_signed_in? %> | 
-                  <%= link_to edit_user_registration_path, :class => '' do %>
-                     Edit Profile
-                <% end %> | 
-                  <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
-                     Logout
-                <% end %>
-              <% else %> | 
-                  <%= link_to new_user_registration_path, :class => '' do %>
-                     New user
-                <% end %> | 
-                  <%= link_to new_user_session_path, :class => '' do %>
-                     Login
-                <% end %>
-              <% end %>
-              </span>   
-      </div>
-      <div class="title-bar-right">
-      </div>
-    </div>
-    <div class="title-bar white-text" data-sticky data-options="marginTop:0;" style="width:100%">
+    <div class="title-bar white-text" style="width:100%">
       <div class="title-bar-left">
         <span class="title-bar-title"><a href="<%= root_path %>">drosophila.me</a></span>
-        <span class="white-text"> <br />  
+        <span class="white-text"> <br />
           <a href="<%= crosses_path %>">
-                 Your crosses
+            Your crosses
               </a> | 
            <a href="<%= stocks_path %>">
-                 Your stocks
+            Your stocks
               </a>
           <% if user_signed_in? %> | 
                   <%= link_to edit_user_registration_path, :class => '' do %>
-                     Edit Profile
+              Edit Profile
                 <% end %> | 
                   <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
-                     Logout
+              Logout
                 <% end %>
-              <% else %> | 
+          <% else %> | 
                   <%= link_to new_user_registration_path, :class => '' do %>
-                     New user
+              New user
                 <% end %> | 
                   <%= link_to new_user_session_path, :class => '' do %>
-                     Login
+              Login
                 <% end %>
-              <% end %>
-              </span>   
+          <% end %>
+        </span>
       </div>
       <div class="title-bar-right">
       </div>
     </div>
-    <div class="off-canvas-wrapper">
-      <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-        <div class="off-canvas position-left black-back" id="offCanvasLeft" data-off-canvas>
-          <ul class="vertical dropdown menu">
-            <li>
-              <a href="<%= root_path %>">
-                <label class="white-text">Home</label>
-              </a>
-            </li>
-            <li>
-              <a href="<%= crosses_path %>">
-                <label class="white-text">Your crosses</label>
-              </a>
-            </li>
-            <li>
-              <a href="<%= stocks_path %>">
-                <label class="white-text">Your stocks</label>
-              </a>
-              <% if user_signed_in? %>
-                <li>
-                  <%= link_to edit_user_registration_path, :class => '' do %>
-                    <label class="white-text">Edit Profile</label>
-                  </li>
-                <% end %>
-                <li>
-                  <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
-                    <label class="white-text">Logout</label>
-                  </li>
-                <% end %>
-              <% else %>
-                <li>
-                  <%= link_to new_user_registration_path, :class => '' do %>
-                    <label class="white-text">New user</label>
-                  </li>
-                <% end %>
-                <li>
-                  <%= link_to new_user_session_path, :class => '' do %>
-                    <label class="white-text">Login</label>
-                  </li>
-                <% end %>
-              <% end %>
-            </ul>
-          </div>
-          <div class="off-canvas-content" data-off-canvas-content>
-            <div class="row">
-              <div class="large-12 columns">
-                <div>
-                  <% flash.each do |key, value| %>
-                    <div class="callout <%= key %>"><%= value %></div>
-                  <% end %>
-                </div>
-                <%= yield %></div>
-            </div>
-          </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <div>
+          <% flash.each do |key, value| %>
+            <div class="callout <%= key %>"><%= value %></div>
+          <% end %>
         </div>
-      </div>
-      <script>
-        $(document).foundation();
-      </script>
-      <script type="text/javascript">
-        if (window.MathJax) {
-          MathJax.Hub.Queue(
-            ["Typeset",MathJax.Hub]
-          );
-        }
-      </script>
+        <%= yield %></div>
     </div>
-    </body>
-  </html>
+    <script>
+      $(document).foundation();
+    </script>
+    <script type="text/javascript">
+      if (window.MathJax) {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);}
+    </script>
+  </body>
+</html>
