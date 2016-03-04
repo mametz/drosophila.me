@@ -12,22 +12,71 @@
     <script type="text/javascript" async
           src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
       </script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
 </head>
   <body>
     <div data-sticky-container> 
     <div class="title-bar">
       <div class="title-bar-left">
-        <button class="menu-icon" type="button" data-open="offCanvasLeft"></button>
         <span class="title-bar-title">drosophila.me</span>
+        <span class="white-text"> | 
+          <a href="<%= root_path %>">
+                 Home
+              </a> | 
+          <a href="<%= crosses_path %>">
+                 Your crosses
+              </a> | 
+           <a href="<%= stocks_path %>">
+                 Your stocks
+              </a>
+          <% if user_signed_in? %> | 
+                  <%= link_to edit_user_registration_path, :class => '' do %>
+                     Edit Profile
+                <% end %> | 
+                  <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
+                     Logout
+                <% end %>
+              <% else %> | 
+                  <%= link_to new_user_registration_path, :class => '' do %>
+                     New user
+                <% end %> | 
+                  <%= link_to new_user_session_path, :class => '' do %>
+                     Login
+                <% end %>
+              <% end %>
+              </span>   
       </div>
       <div class="title-bar-right">
       </div>
     </div>
     <div class="title-bar" data-sticky data-options="marginTop:0;" style="width:100%">
       <div class="title-bar-left">
-        <button class="menu-icon" type="button" data-open="offCanvasLeft"></button>
         <span class="title-bar-title">drosophila.me</span>
+        <span class="white-text"> | 
+          <a href="<%= root_path %>">
+                 Home
+              </a> | 
+          <a href="<%= crosses_path %>">
+                 Your crosses
+              </a> | 
+           <a href="<%= stocks_path %>">
+                 Your stocks
+              </a>
+          <% if user_signed_in? %> | 
+                  <%= link_to edit_user_registration_path, :class => '' do %>
+                     Edit Profile
+                <% end %> | 
+                  <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
+                     Logout
+                <% end %>
+              <% else %> | 
+                  <%= link_to new_user_registration_path, :class => '' do %>
+                     New user
+                <% end %> | 
+                  <%= link_to new_user_session_path, :class => '' do %>
+                     Login
+                <% end %>
+              <% end %>
+              </span>   
       </div>
       <div class="title-bar-right">
       </div>
