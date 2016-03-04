@@ -1,25 +1,5 @@
 </div>
 </div>
-<script>
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Usage statistics'
-        },
-        xAxis: {
-            categories: ['Registered users', 'Crosses', 'Stocks']
-        },
-        yAxis: {
-        },
-        series: [{
-            name: 'drosophila.me',
-            data: [<%= @user_n %>, <%= @cross_n %>, <%= @stock_n %>]
-        }],
-    });
-});</script>
 
 <style media="screen" type="text/css">
 
@@ -218,7 +198,7 @@ body {
       
 	<div align="center">
     <h3>Drosophila cross and stock management made easy</h3>
-      <div id="container" style="width:80%"></div></div>
+      <div style="width:80%">Registered users: <%= @user_n %>, Flies crossed: <%= @cross_n %>, Stock established: <%= @stock_n %></div></div>
       </div>
       <div class="parallax__layer parallax__layer--base">
         <div class="title"></div>
