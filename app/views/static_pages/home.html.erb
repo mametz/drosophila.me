@@ -3,7 +3,7 @@
 
 <style media="screen" type="text/css">
 
-.white-bg {
+.whitebg {
     background: white;
     padding: 1em 1em 1em 1em;
   }
@@ -191,8 +191,7 @@
   <div id="group3" class="parallax__group">
     <div class="parallax__layer parallax__layer--fore">
       
-	<div align="center white-bg">
-    <br /><br />
+	<div align="center" class="whitebg">
     <h3>Drosophila cross and stock management made easy</h3>
       <div style="width:80%"><p>Registered users: <%= @user_n %></p><p>Flies crossed: <%= @cross_n %></p><p>Stock established: <%= @stock_n %></p></div></div>
       </div>
@@ -202,7 +201,7 @@
     <div id="group5" class="parallax__group">
       <div class="parallax__layer parallax__layer--fore">
         <div>
-          <div class="row white-bg">
+          <div class="row whitebg">
             <h3>Contact</h3>
             <br />
             <div class="large-4 columns">
@@ -224,7 +223,7 @@
       </div>
       <div id="group7" class="parallax__group">
         <div class="parallax__layer parallax__layer--base">
-          <div class="title white-bg">
+          <div class="title whitebg">
             Just one more step needed: <br /><br />
             <%= link_to new_user_registration_path, :class => 'button large success hollow' do %>
                     Register
