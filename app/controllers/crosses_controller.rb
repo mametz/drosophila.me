@@ -270,7 +270,7 @@ class CrossesController < ApplicationController
       qr_img = RQRCode::QRCode.new("http://drosophila.me/" + @cross.friendly_id.to_s )
       qr_img = qr_img.to_img.resize(500,500)
       qr_fly = MiniMagick::Image.read(qr_img.to_blob)
-      fly_img = MiniMagick::Image.open(Rails.root.join('public', 'assets', 'images', 'small.png'))
+      fly_img = MiniMagick::Image.open("https://aandd.ch/system/comfy/cms/files/files/000/000/045/original/small.png")
 
       qr_result = qr_fly.composite(fly_img) do |c|
         c.compose "Over"    # OverCompositeOp
