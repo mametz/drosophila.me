@@ -3,59 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= content_for?(:title) ? yield(:title) : "drosophila.me" %></title>
+
+    <title><%= content_for?(:title) ? yield(:title) : "Untitled" %></title>
+
     <%= stylesheet_link_tag    "application" %>
-    <%= javascript_include_tag "vendor/modernizr" %>
     <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
-    <% # mathjax_tag :config=>false %>
-    <script type="text/javascript" async
-          src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   </head>
-  <body>
-    <div class="title-bar white-text" style="width:100%">
-      <div class="title-bar-left">
-        <span class="title-bar-title"><a href="<%= root_path %>">drosophila.me</a></span>
-        <span class="white-text"> <br />
-          <a href="<%= crosses_path %>">
-            Your crosses
-              </a> | 
-           <a href="<%= stocks_path %>">
-            Your stocks
-              </a>
-          <% if user_signed_in? %> | 
-                  <%= link_to edit_user_registration_path, :class => '' do %>
-              Edit Profile
-                <% end %> | 
-                  <%= link_to destroy_user_session_path, method: :delete, :class => '' do %>
-              Logout
-                <% end %>
-          <% else %> | 
-                  <%= link_to new_user_registration_path, :class => '' do %>
-              New user
-                <% end %> | 
-                  <%= link_to new_user_session_path, :class => '' do %>
-              Login
-                <% end %>
-          <% end %>
-        </span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="large-12 columns">
-        <div>
-          <% flash.each do |key, value| %>
-            <div class="callout <%= key %>"><%= value %></div>
-          <% end %>
-        </div>
-        <%= yield %></div>
-    </div>
 
-    <script>
-      $(document).foundation();
-    </script>
-    <script type="text/javascript">
-      if (window.MathJax) {MathJax.Hub.Queue(["Typeset",MathJax.Hub]);}
-    </script>
+  <body>
+
+    <%= yield %>
+
   </body>
 </html>

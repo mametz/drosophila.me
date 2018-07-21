@@ -10,7 +10,7 @@ gem 'remote_syslog_logger'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 
-gem 'foundation-rails'
+gem 'foundation-rails', '6.3.0.0'
 gem 'foundation-icons-sass-rails'
 
 gem 'gravatarify', '~> 3.0.0'
@@ -39,8 +39,9 @@ end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.7.1'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', group: :development
-gem 'pg'
+# gem 'sqlite3', group: :development
+# gem 'pg'
+gem 'pg', '~> 0.21'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
