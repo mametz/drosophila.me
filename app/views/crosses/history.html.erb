@@ -89,11 +89,11 @@ flyf = Fly.find(cro.female_id)
 
 prog = Fly.where("cross_id = ?", cro.id)
 
-if cro.male_id == cro.female_id
-    prog = prog.drop(0)
-else
-    prog = prog.drop(2)
-end
+# if cro.male_id == cro.female_id
+#    prog = prog.drop(0)
+# else
+#    prog = prog.drop(2)
+# end
 
 prog.each do |n|
     @progeny.append([n.chr1.split('/').to_set, n.chr2.split('/').to_set, n.chr3.split('/').to_set, n.chr4.split('/').to_set])
