@@ -106,7 +106,7 @@ class StocksController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def stock_params
-    params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :user_id, :comment, :date_established, :room_id, :reference, :received_from)
+    params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :user_id, :comment, :date_established, :room_id, :reference, :received_from, :lethal, :balancers)
   end
   def cross_params
     params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,

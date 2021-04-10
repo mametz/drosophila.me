@@ -37,6 +37,13 @@
         </div>
       </div>
     </div>
+    <div class="panel">
+      <h5>Lethal alleles</h5>
+      <label>Alleles separated by semicolon [;] <%= f.text_field :lethal %></label>
+      <h5>Balancers</h5>
+      <label>Balancers separated by semicolon [;] <%= f.text_field :balancers %></label>
+    </div>
+    <div class="panel">
     <div class="field panel">
       <%= f.label :room_id %><br>
       <%= f.collection_select :room_id, Room.where("user_id = ?", current_user.id), :id, :name, :prompt => "Choose Stock Room" %>

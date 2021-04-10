@@ -5,6 +5,7 @@ gem 'devise_security_extension'
 gem 'easy_captcha'
 
 gem "yard", ">= 0.9.20"
+gem 'rqrcode_png', git: "https://github.com/DCarper/rqrcode_png.git"
 
 gem 'tzinfo-data'
 gem 'omniauth', '~> 1.6', '>= 1.6.1'
@@ -29,7 +30,6 @@ gem 'jquery-ui-rails'
 gem 'foundation-datetimepicker-rails'
 
 gem 'friendly_id', '~> 5.1.0'
-gem 'rqrcode_png'
 gem 'dragonfly', '~> 1.0.12'
 gem 'gravtastic'
 
@@ -43,7 +43,7 @@ group :development, :test do
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-# gem 'rails', '4.2.7.1'
+ gem 'rails', '4.2.11.3'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', group: :development
 # gem 'pg'
