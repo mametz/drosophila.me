@@ -108,6 +108,8 @@
 
   #group1 {
     z-index: 5; /* slide over group 2 */
+    background-image: url('/assets/bg.png');
+    background-repeat:no-repeat;
   }
   #group1 .parallax__layer--base {
    
@@ -125,7 +127,6 @@
   }
   #group3 .parallax__layer--base {
     background: rgb(153,216,101);
-    background-image: url("https://aandd.ch/system/comfy/cms/files/files/000/000/018/original/fly.jpg");
     background-repeat:no-repeat;
     -webkit-background-size:cover;
     -moz-background-size:cover;
@@ -159,7 +160,7 @@
     z-index: 3; /* slide over group 7 */
   }
   #group7 .parallax__layer--base {
-    background: black;
+    background-image: url('/assets/drosophila.jpg');
     background-repeat: no-repeat;
     background-position: left top; 
   }
@@ -209,8 +210,8 @@
             </div>
             <div class="large-8 columns">
               <h4>Mario Metzler</h4>
-              <p>PhD student at the Biozentrum of the University of Basel, Switzerland.</p>
-              <p>Usual activity: CRISPRing around in the Abd-B regulatory locus.</p>
+              <p>Former PhD student at the Biozentrum of the University of Basel, Switzerland.</p>
+              <p>PhD Thesis: CRISPRing around in the Abd-B regulatory locus.</p>
               <p><strong>Development, Design, Deployment.</strong></p>
               <p>E-mail: <a href="mailto:m.metzler@me.com">m.metzler@me.com</a>
               </div>
@@ -223,7 +224,6 @@
       </div>
       <div id="group7" class="parallax__group">
         <div class="parallax__layer parallax__layer--base">
-          <video src="https://aandd.ch/system/comfy/cms/files/files/000/000/044/original/background.mp4" width="100%" height="100%" autoplay loop></video>
           <div class="title whitebg">
             Just one more step needed: <br /><br />
             <%= link_to new_user_registration_path, :class => 'button large success hollow' do %>

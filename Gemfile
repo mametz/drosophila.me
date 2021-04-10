@@ -4,11 +4,14 @@ gem 'devise'
 gem 'devise_security_extension'
 gem 'easy_captcha'
 
+gem 'tzinfo-data'
+gem 'omniauth', '~> 1.6', '>= 1.6.1'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-github'
+
 gem 'cookies_eu'
 gem 'remote_syslog_logger'
-
-gem 'omniauth-facebook'
-gem 'omniauth-twitter'
 
 gem 'foundation-rails', '6.3.0.0'
 gem 'foundation-icons-sass-rails'
@@ -37,7 +40,7 @@ group :development, :test do
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.7.1'
+# gem 'rails', '4.2.7.1'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', group: :development
 # gem 'pg'
@@ -82,4 +85,4 @@ group :development, :test do
   gem 'spring'
 end
 
-ruby "2.2.2"
+ruby "2.5.1"

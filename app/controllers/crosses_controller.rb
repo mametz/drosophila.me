@@ -270,14 +270,14 @@ class CrossesController < ApplicationController
       qr_img = RQRCode::QRCode.new("http://drosophila.me/" + @cross.friendly_id.to_s )
       qr_img = qr_img.to_img.resize(500,500)
       qr_fly = MiniMagick::Image.read(qr_img.to_blob)
-      fly_img = MiniMagick::Image.open("https://aandd.ch/system/comfy/cms/files/files/000/000/045/original/small.png")
+      fly_img = MiniMagick::Image.open("app/assets/images/small.png")
 
       qr_result = qr_fly.composite(fly_img) do |c|
         c.compose "Over"    # OverCompositeOp
         c.geometry "+0+0" # copy second_image onto first_image from (20, 20)
       end
 
-      send_data qr_result.to_blob ,type: "image/png" , disposition: "attachment"
+      @qr_code = qr_result.to_blob
     end
 
     # GET /crosses/new
