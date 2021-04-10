@@ -1,14 +1,17 @@
 source 'https://rubygems.org'
 
-gem 'devise'
+gem "devise", ">= 4.7.1"
 gem 'devise_security_extension'
 gem 'easy_captcha'
+
+gem "yard", ">= 0.9.20"
 
 gem 'tzinfo-data'
 gem 'omniauth', '~> 1.6', '>= 1.6.1'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
+gem 'omniauth-rails_csrf_protection'
 
 gem 'cookies_eu'
 gem 'remote_syslog_logger'
@@ -18,7 +21,7 @@ gem 'foundation-icons-sass-rails'
 
 gem 'gravatarify', '~> 3.0.0'
 
-gem "mini_magick"
+gem "mini_magick", ">= 4.9.4"
 
 gem 'mathjax-rails'
 
@@ -60,8 +63,9 @@ gem 'jquery-rails'
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
+gem "json", ">= 2.3.0"
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+# gem 'sdoc', group: :doc
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -69,7 +73,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 #gem 'unicorn'
 
-gem 'puma'
+gem "puma", ">= 3.12.6"
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
