@@ -108,7 +108,7 @@
 
   #group1 {
     z-index: 5; /* slide over group 2 */
-    background-image: url(<%= image_tag 'bg.png' %>);
+    background-image: url(<%= "#{ asset_url "bg.png"}" %>);
     background-repeat:no-repeat;
   }
   #group1 .parallax__layer--base {
@@ -160,7 +160,7 @@
     z-index: 3; /* slide over group 7 */
   }
   #group7 .parallax__layer--base {
-    background-image: url(<%= image_tag 'drosophila.jpg' %>);
+    background-image: url(<%= "#{ asset_url "drosophila.jpg"}" %>);
     background-repeat: no-repeat;
     background-position: left top; 
   }
