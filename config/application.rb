@@ -6,8 +6,6 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-config.serve_static_assets = true
-
 module Drosophila
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -24,6 +22,7 @@ module Drosophila
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    config.serve_static_assets = true
     Dir[File.join(Rails.root, "lib", "core_ext", "*.rb")].each {|l| require l }
   end
 end
