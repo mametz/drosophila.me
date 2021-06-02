@@ -30,7 +30,7 @@ gem 'jquery-ui-rails'
 gem 'foundation-datetimepicker-rails'
 
 gem 'friendly_id', '~> 5.1.0'
-gem 'dragonfly', '~> 1.0.12'
+gem 'dragonfly', '~> 1.4.0'
 gem 'gravtastic'
 
 gem 'rails_12factor', group: :production
