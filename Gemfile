@@ -8,7 +8,7 @@ gem "yard", ">= 0.9.20"
 gem 'rqrcode_png', git: "https://github.com/DCarper/rqrcode_png.git"
 
 gem 'tzinfo-data'
-gem 'omniauth', '~> 1.6', '>= 1.6.1'
+gem 'omniauth', '~> 1.9'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
