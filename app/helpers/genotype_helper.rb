@@ -20,12 +20,6 @@ module GenotypeHelper
     "\\[#{chromosome_tex(alleles)}\\]"
   end
 
-  def cross_math(cross)
-    male = genotype_tex(cross.male_fly.genotype.allele_sets)
-    female = genotype_tex(cross.female_fly.genotype.allele_sets)
-    "\\[\\underbrace{\\unicode{x2642} \\quad #{male} \\qquad X \\qquad #{female} \\quad \\unicode{x2640}}\\]"
-  end
-
   def chromosome_string(alleles)
     alleles.to_a.join("/")
   end

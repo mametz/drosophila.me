@@ -1,12 +1,14 @@
 <% content_for(:title) { "Team · drosophila.me" } %>
-<h1>drosophila.me Team</h1>
-<div class="panel cross-meta">
-  <%= image_tag "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest("m.metzler@me.com")}?s=200&d=mp", class: "avatar", alt: "" %>
-  <div>
-    <h2>Mario Metzler</h2>
-    <p>Former PhD student at the Biozentrum of the University of Basel, Switzerland.</p>
-    <p>PhD thesis: CRISPRing around in the Abd-B regulatory locus.</p>
-    <p>Drosophila.me: development, design, deployment.</p>
-    <p>E-mail: <%= mail_to "m.metzler@me.com" %></p>
+<div class="page-narrow">
+  <div class="page-head"><h1>Team and contact</h1></div>
+  <div class="panel owner" style="align-items: flex-start">
+    <%= image_tag "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest("m.metzler@me.com")}?s=200&d=mp", class: "avatar", alt: "" %>
+    <div>
+      <h2 style="margin-bottom: .35rem">Mario Metzler</h2>
+      <p>Former PhD student at the Biozentrum of the University of Basel, Switzerland.</p>
+      <p>PhD thesis: CRISPRing around in the Abd-B regulatory locus.</p>
+      <p>Drosophila.me: development, design, deployment.</p>
+      <p style="margin: 0"><%= mail_to "m.metzler@me.com" %></p>
+    </div>
   </div>
 </div>

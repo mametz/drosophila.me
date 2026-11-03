@@ -4,6 +4,7 @@
     <title><%= content_for(:title) || "drosophila.me" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="application-name" content="drosophila.me">
+    <meta name="description" content="Drosophila cross and stock management.">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
@@ -11,33 +12,66 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <script>
-      window.MathJax = { loader: { load: ["ui/safe"] } };
-      document.addEventListener("turbo:load", function () {
-        if (window.MathJax && MathJax.typesetPromise) { MathJax.typesetPromise(); }
-      });
+      // Genotypes stay hidden until MathJax has drawn them, so raw TeX never shows.
+      (function () {
+        var root = document.documentElement;
+        var timer;
+        function hide() {
+          root.classList.add("math-pending");
+          clearTimeout(timer);
+          timer = setTimeout(show, 4000);
+        }
+        function show() {
+          clearTimeout(timer);
+          root.classList.remove("math-pending");
+        }
+        hide();
+        window.MathJax = {
+          loader: { load: ["ui/safe"] },
+          startup: {
+            pageReady: function () {
+              return MathJax.startup.defaultPageReady().then(show);
+            }
+          }
+        };
+        document.addEventListener("turbo:before-render", hide);
+        document.addEventListener("turbo:load", function () {
+          if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise().then(show);
+          }
+        });
+      })();
     </script>
     <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
   </head>
   <body>
     <header class="site-header">
-      <%= link_to "drosophila.me", root_path, class: "brand" %>
-      <nav>
-        <%= link_to "Your crosses", crosses_path %>
-        <%= link_to "Your stocks", stocks_path %>
-        <% if authenticated? %>
-          <%= link_to "Edit profile", edit_account_path %>
-          <%= button_to "Logout", session_path, method: :delete, class: "link-button" %>
-        <% else %>
-          <%= link_to "New user", new_registration_path %>
-          <%= link_to "Login", new_session_path %>
+      <div class="site-header-inner">
+        <%= link_to root_path, class: "brand" do %>
+          <span class="brand-mark"><%= image_tag "small.png", alt: "" %></span>
+          drosophila.me
         <% end %>
-      </nav>
+        <nav class="site-nav" aria-label="Main">
+          <%= nav_link "Crosses", crosses_path, section: "crosses" %>
+          <%= nav_link "Stocks", stocks_path, section: "stocks" %>
+          <% if authenticated? %>
+            <%= nav_link "Profile", edit_account_path, section: "accounts" %>
+            <%= button_to "Log out", session_path, method: :delete %>
+          <% else %>
+            <%= nav_link "Log in", new_session_path, section: "sessions" %>
+            <%= nav_link "Sign up", new_registration_path, section: "registrations" %>
+          <% end %>
+        </nav>
+      </div>
     </header>
     <main class="page">
       <% flash.each do |kind, message| %>
-        <p class="flash flash-<%= kind %>" role="status"><%= message %></p>
+        <div class="flash flash-<%= kind %>" role="status"><%= message %></div>
       <% end %>
       <%= yield %>
     </main>
+    <footer class="site-footer">
+      <%= link_to "Team and contact", team_path %>
+    </footer>
   </body>
 </html>

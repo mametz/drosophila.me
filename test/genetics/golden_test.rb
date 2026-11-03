@@ -36,8 +36,18 @@ class GoldenTest < ActiveSupport::TestCase
     chromosomes[3] != "+/+"
   end
 
+  # The old app kept males such as "w/w" as typed. CrossBuilder now corrects them
+  # before the calculator runs, so this replays what the recordings were given.
+  def old_male_x(chromosome)
+    x = chromosome == "+/+" ? "+/-" : chromosome
+    alleles = x.split("/")
+    x = alleles[1] + "/-" if alleles[0] == "Y"
+    x = alleles[0] + "/-" if alleles[1] == "Y"
+    x
+  end
+
   def founder_chromosomes(male, female)
-    x = Genotype.homozygous(Genotype.founder_male_x(male[0]))
+    x = Genotype.homozygous(old_male_x(male[0]))
     [ [ x, *male[1..].map { |c| Genotype.homozygous(c) } ], female.map { |c| Genotype.homozygous(c) } ]
   end
 

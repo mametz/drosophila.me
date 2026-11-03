@@ -1,7 +1,5 @@
-<% if cross.owned_by?(Current.user) %>
-  <div class="tabs">
-    <%= link_to "Fly view", short_path(cross), class: "button #{"button-quiet" unless current == :fly}" %>
-    <%= link_to "Chromosome view", chromosome_path(cross), class: "button #{"button-quiet" unless current == :chromosome}" %>
-    <%= link_to "Punnett square", punnett_path(cross), class: "button #{"button-quiet" unless current == :punnett}" %>
-  </div>
-<% end %>
+<nav class="tabs" aria-label="Cross views">
+  <%= tab_link "Offspring", short_path(cross), current == :fly %>
+  <%= tab_link "Chromosomes", chromosome_path(cross), current == :chromosome %>
+  <%= tab_link "Punnett square", punnett_path(cross), current == :punnett %>
+</nav>

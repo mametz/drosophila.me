@@ -96,6 +96,22 @@ dokku letsencrypt:set drosophila email you@example.com && dokku letsencrypt:enab
 dokku letsencrypt:cron-job --add
 ```
 
+Dokku's nginx sets its own HTTPS rule for browsers. Keep it short for now, to match the app, so a return to the old server stays possible during the first weeks:
+
+```bash
+dokku nginx:set drosophila hsts-max-age 3600 && dokku nginx:set drosophila hsts-include-subdomains false
+```
+
+```bash
+dokku proxy:build-config drosophila
+```
+
+Check the result. Each `strict-transport-security` line should say `max-age=3600`:
+
+```bash
+curl -sI https://new.drosophila.me/ | grep -i strict-transport
+```
+
 ## 4. Import a test copy
 
 Copy a dump from the old droplet to the new one, then restore it into a temporary database:
@@ -169,10 +185,12 @@ Set up backups:
 dokku postgres:backup-schedule drosophila "0 3 * * *" your-backup-bucket
 ```
 
-That also needs `dokku postgres:backup-auth`, with storage credentials. Don't remove `drosophila` from the old droplet until the new site has run well for a week or two.
+That also needs `dokku postgres:backup-auth`, with storage credentials. Test a restore once, because a backup you haven't restored isn't proven.
+
+Once you're sure you won't go back to the old server, raise the HTTPS rule to a year: `expires` in `config/environments/production.rb` and `dokku nginx:set drosophila hsts-max-age 31536000`, then rebuild and deploy. Don't remove `drosophila` from the old droplet until the new site has run well for a week or two.
 
 ## If it goes wrong
 
 Before DNS has changed, restart the old app with `dokku ps:start drosophila` on the old droplet.
 
-After DNS has changed, rolling back is much harder. The new site tells browsers to use only HTTPS and they remember that for up to two years, so visitors can't reach the old HTTP-only server until it has HTTPS too. Data entered on the new site after the switch won't be on the old one. Fix problems on the new site if you can, which is why the test on `new.drosophila.me` matters.
+After DNS has changed, point DNS back as well. The new site tells browsers to use only HTTPS, but while that rule is set to one hour, visitors can reach the old HTTP-only server again soon after. Data entered on the new site after the switch won't be on the old one. Fix problems on the new site if you can, which is why the test on `new.drosophila.me` matters.

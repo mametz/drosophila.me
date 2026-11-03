@@ -1,18 +1,20 @@
-<% content_for(:title) { "New user · drosophila.me" } %>
-<h1>New user</h1>
-<%= form_with model: @user, url: registration_path do |f| %>
-  <% @user.errors.full_messages.each do |message| %>
-    <p class="flash flash-alert" role="alert"><%= message %></p>
+<% content_for(:title) { "Sign up · drosophila.me" } %>
+<div class="auth">
+  <h1>Create your account</h1>
+  <%= form_with model: @user, url: registration_path do |f| %>
+    <% @user.errors.full_messages.each do |message| %>
+      <div class="flash flash-alert" role="alert"><%= message %></div>
+    <% end %>
+    <%= hidden_field_tag :form_started, form_started_token, id: nil %>
+    <div class="website-field" aria-hidden="true">
+      <label>Leave this empty<%= text_field_tag :website, nil, id: nil, tabindex: -1, autocomplete: "off" %></label>
+    </div>
+    <div class="panel">
+      <label>Email<%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "email" %></label>
+      <label>Password, at least 8 characters<%= f.password_field :password, required: true, autocomplete: "new-password" %></label>
+      <label>Repeat password<%= f.password_field :password_confirmation, required: true, autocomplete: "new-password" %></label>
+      <%= f.submit "Create account", class: "button-wide" %>
+    </div>
   <% end %>
-  <%= hidden_field_tag :form_started, form_started_token, id: nil %>
-  <div class="website-field" aria-hidden="true">
-    <label>Leave this empty<%= text_field_tag :website, nil, id: nil, tabindex: -1, autocomplete: "off" %></label>
-  </div>
-  <div class="panel">
-    <label>Email<%= f.email_field :email_address, required: true, autocomplete: "email" %></label>
-    <label>Password (at least 8 characters)<%= f.password_field :password, required: true, autocomplete: "new-password" %></label>
-    <label>Repeat password<%= f.password_field :password_confirmation, required: true, autocomplete: "new-password" %></label>
-    <p><%= f.submit "Create account" %></p>
-  </div>
-<% end %>
-<p><%= link_to "Already registered? Log in", new_session_path %></p>
+  <p class="auth-links">Already registered? <%= link_to "Log in", new_session_path %></p>
+</div>

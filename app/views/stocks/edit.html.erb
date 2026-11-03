@@ -1,10 +1,14 @@
 <% content_for(:title) { "Edit stock · drosophila.me" } %>
-<h1>Edit stock</h1>
-<%= render "errors", stock: @stock %>
-<%= form_with model: @stock do |f| %>
-  <div class="panel">
-    <%= render "fields", form: f %>
-    <p><%= f.submit "Update stock" %></p>
+<div class="page-narrow">
+  <div class="page-head">
+    <h1>Edit stock</h1>
+    <div class="actions"><%= link_to "Cancel", stock_path(@stock), class: "button button-quiet" %></div>
   </div>
-<% end %>
-<p><%= link_to "Back to stock", stock_path(@stock) %></p>
+  <%= render "errors", stock: @stock %>
+  <%= form_with model: @stock do |f| %>
+    <section class="panel">
+      <%= render "fields", form: f %>
+      <p style="margin: 1rem 0 0"><%= f.submit "Save changes" %></p>
+    </section>
+  <% end %>
+</div>

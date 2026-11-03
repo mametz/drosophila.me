@@ -1,6 +1,8 @@
-<h3>New genotype</h3>
-<label class="radio-inline"><%= form.radio_button :male_id, "new" %> &#x2642; use as male</label>
-<label class="radio-inline"><%= form.radio_button :female_id, "new" %> &#x2640; use as female</label>
-<%= render "crosses/genotype_fields", form: form, fields: [
-      [ :X, "X chromosome", "+/+" ], [ :II, "Chromosome 2", "+/+" ],
-      [ :III, "Chromosome 3", "+/+" ], [ :IV, "Chromosome 4", "+/+" ] ] %>
+<details class="more">
+  <summary>Or enter a new genotype</summary>
+  <label class="choice"><%= form.radio_button :male_id, "new" %> Use it as the male</label>
+  <label class="choice"><%= form.radio_button :female_id, "new" %> Use it as the female</label>
+  <p class="hint">A male has one X: enter it as w/- or w/Y.</p>
+  <%= render "crosses/genotype_fields", form: form, fields: [
+        [ :X, "X", "+/+" ], [ :II, "II", "+/+" ], [ :III, "III", "+/+" ], [ :IV, "IV", "+/+" ] ] %>
+</details>

@@ -1,8 +1,14 @@
 <% content_for(:title) { "QR code · drosophila.me" } %>
-<h1>QR code for your cross</h1>
-<p class="muted">Use it at conferences for your posters ;)</p>
+<div class="page-head">
+  <div>
+    <div class="eyebrow">Share</div>
+    <h1>QR code for your cross</h1>
+    <p>Print it on vial labels, or use it at conferences for your posters.</p>
+  </div>
+  <div class="actions"><%= link_to "Back to the cross", short_path(@cross), class: "button button-quiet" %></div>
+</div>
 <div class="qr">
   <%= @qr_svg.html_safe %>
   <%= image_tag "small.png", alt: "" %>
 </div>
-<p><%= link_to "Back to the cross", short_path(@cross) %></p>
+<p class="muted small"><%= short_url(@cross) %></p>

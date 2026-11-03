@@ -7,15 +7,62 @@ class GenotypeTest < Minitest::Test
     assert_equal "w/+", Genotype.homozygous("w/+")
   end
 
-  def test_wild_type_male_x_is_hemizygous
-    assert_equal "+/-", Genotype.male_x("+/+")
-    assert_equal "w/w", Genotype.male_x("w/w")
+  def test_a_male_has_one_x
+    { "+/+" => "+/-", "w/w" => "w/-", "w" => "w/-", "w/Y" => "w/-", "Y/w" => "w/-",
+      "w/-" => "w/-", "-/w" => "-/w", "/w" => "w/-" }.each do |typed, stored|
+      assert Genotype.valid_male_x?(typed), typed
+      assert_equal stored, Genotype.male_x(typed), typed
+    end
   end
 
-  def test_founder_male_x_replaces_a_written_y
-    assert_equal "w/-", Genotype.founder_male_x("w/Y")
-    assert_equal "w/-", Genotype.founder_male_x("Y/w")
-    assert_equal "+/-", Genotype.founder_male_x("+/+")
+  def test_a_male_cannot_have_two_different_x
+    [ "w/+", "a/b/c", "Y", "Y/Y", "-/-", "-/Y", "" ].each { |x| refute Genotype.valid_male_x?(x), x }
+  end
+
+  def test_a_female_has_no_y
+    %w[w w/w w/+ /w].each { |x| assert Genotype.valid_female_x?(x), x }
+    %w[-/w w/- w/Y Y -].each { |x| refute Genotype.valid_female_x?(x), x }
+  end
+
+  def test_sons_take_one_x_from_their_mother
+    assert_equal [ Set["w", "-"], Set["+", "-"] ], Genotype.sons_x("w/+")
+    assert_equal [ Set["w", "-"] ], Genotype.sons_x("w/w")
+  end
+
+  def test_homozygous_lethal_and_balancer_die
+    assert Genotype.lethal_chromosome?(Set["jig"], [], [ "jig" ])
+    assert Genotype.lethal_chromosome?(Set["CyO"], [ "CyO" ], [])
+    refute Genotype.lethal_chromosome?(Set["jig", "+"], [], [ "jig" ])
+  end
+
+  def test_alleles_on_one_chromosome_match_with_or_without_spaces
+    assert Genotype.lethal_chromosome?(Set["TM6B, Tb"], [], [ "Tb" ])
+    assert Genotype.lethal_chromosome?(Set["TM6B, Tb", "Sb,Tb"], [], [ "Tb" ])
+    refute Genotype.lethal_chromosome?(Set["CyO"], [ "Cyo" ], []), "symbols stay case-sensitive"
+  end
+
+  def test_no_x_at_all_dies
+    assert Genotype.lethal_chromosome?(Set["-"], [], [])
+    assert Genotype.lethal_chromosome?(Set["-", "Y"], [], [])
+  end
+
+  def test_a_son_dies_of_a_lethal_on_his_x_but_not_of_a_balancer
+    assert Genotype.lethal_chromosome?(Set["l", "-"], [], [ "l" ])
+    assert Genotype.lethal_chromosome?(Set["-", "a,l"], [], [ "l" ])
+    refute Genotype.lethal_chromosome?(Set["FM7", "-"], [ "FM7" ], [])
+    refute Genotype.lethal_chromosome?(Set["w", "-"], [], [ "l" ])
+  end
+
+  def test_which_role_a_fly_can_fill
+    son = Genotype.new([ "-/w", "+/+", "+/+", "+/+" ])
+    daughter = Genotype.new([ "w/+", "+/+", "+/+", "+/+" ])
+    written_as_homozygous = Genotype.new([ "w/w", "+/+", "+/+", "+/+" ])
+    assert son.can_be_male?
+    refute son.can_be_female?
+    refute daughter.can_be_male?
+    assert daughter.can_be_female?
+    assert written_as_homozygous.can_be_male?
+    assert written_as_homozygous.can_be_female?
   end
 
   def test_allele_sets_collapse_duplicates

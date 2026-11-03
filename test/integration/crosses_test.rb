@@ -56,7 +56,7 @@ class CrossesTest < ActionDispatch::IntegrationTest
     picked_m = { m_X: "w/-", m_II: "Cy", m_III: "+/+", m_IV: "+/+" }
     picked_f = { f_X: "w", f_II: "+/+", f_III: "Sb/+", f_IV: "+/+" }
 
-    { "new male" => [ { male_id: "new", female_id: female }.merge(typed), [ "w/w", "Cy/Cy", "+/+", "+/+" ] ],
+    { "new male" => [ { male_id: "new", female_id: female }.merge(typed), [ "w/-", "Cy/Cy", "+/+", "+/+" ] ],
       "new wild male" => [ { male_id: "new", female_id: female }.merge(typed).merge(X: "+/+"), [ "+/-", "Cy/Cy", "+/+", "+/+" ] ],
       "existing flies" => [ { male_id: male, female_id: female }, source.male_fly.chromosomes ],
       "both picked" => [ { male_id: "male_chr_s", female_id: "female_chr_s" }.merge(picked_m).merge(picked_f), [ "w/-", "Cy/Cy", "+/+", "+/+" ] ],
@@ -147,9 +147,118 @@ class CrossesTest < ActionDispatch::IntegrationTest
     sign_in_as @owner
     cross = create_founder
     get short_path(cross)
-    assert_includes response.body, "\\underbrace"
+    assert_select ".parent", 2
     assert_includes response.body, "\\dfrac{w}{-}"
     assert_includes response.body, "mathjax@3.2.2"
+  end
+
+  test "a male typed with two identical X chromosomes has sons" do
+    sign_in_as @owner
+    %w[w/w w w/Y Y/w w/-].each do |typed|
+      cross = create_founder(male: [ typed, "+/+", "+/+", "+/+" ], female: %w[+/+ +/+ +/+ +/+])
+      assert_equal "w/-", cross.male_fly.chr1, typed
+      assert_equal %w[w/+ -/+], cross.progeny.map(&:chr1), typed
+    end
+  end
+
+  test "a male with two different X chromosomes is refused with a reason" do
+    sign_in_as @owner
+    assert_no_difference([ "Cross.count", "Fly.count" ]) do
+      post crosses_path, params: founder(male: %w[w/+ +/+ +/+ +/+])
+    end
+    assert_response :unprocessable_entity
+    assert_includes response.body, "A male has one X chromosome"
+  end
+
+  test "a female carrying a Y is refused with a reason" do
+    sign_in_as @owner
+    [ "w/Y", "w/-" ].each do |x|
+      assert_no_difference("Cross.count") { post crosses_path, params: founder(female: [ x, "+/+", "+/+", "+/+" ]) }
+      assert_includes response.body, "A female has two X chromosomes"
+    end
+  end
+
+  test "follow-on crosses hold to the same rules in every path" do
+    sign_in_as @owner
+    source = create_founder
+    son = source.progeny.find { |fly| fly.chr1.include?("-") }
+    daughter = source.progeny.find { |fly| !fly.chr1.include?("-") }
+    wild = { X: "+/+", II: "+/+", III: "+/+", IV: "+/+" }
+
+    { "son as female" => { male_id: source.male_fly_id.to_s, female_id: son.id.to_s },
+      "daughter as male" => { male_id: Fly.create!(chr1: "w/+", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: source).id.to_s, female_id: daughter.id.to_s },
+      "typed Y on a new female" => { male_id: son.id.to_s, female_id: "new" }.merge(wild).merge(X: "w/Y"),
+      "typed two X on a new male" => { male_id: "new", female_id: daughter.id.to_s }.merge(wild).merge(X: "w/+"),
+      "picked Y for the female" => { male_id: son.id.to_s, female_id: "female_chr_s", f_X: "-/w", f_II: "+", f_III: "+", f_IV: "+" },
+      "picked two X for the male" => { male_id: "male_chr_s", female_id: daughter.id.to_s, m_X: "w/+", m_II: "+", m_III: "+", m_IV: "+" } }.each do |name, fields|
+      assert_no_difference("Cross.count", name) { follow_on(source.id, **fields) }
+      assert_redirected_to short_path(source), name
+    end
+
+    assert_difference("Cross.count", 1) { follow_on(source.id, male_id: "new", female_id: daughter.id.to_s, **wild.merge(X: "w/Y")) }
+    assert_equal "w/-", Cross.order(:id).last.male_fly.chr1
+  end
+
+  test "an old fly written as w/w can father a cross through a corrected copy" do
+    sign_in_as @owner
+    cross = create_founder
+    old = Fly.create!(chr1: "w/w", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    daughter = cross.progeny.find { |fly| !fly.chr1.include?("-") }
+    follow_on(cross.id, male_id: old.id.to_s, female_id: daughter.id.to_s)
+    child = Cross.order(:id).last
+    assert_equal "w/-", child.male_fly.chr1
+    assert_not_equal old.id, child.male_fly_id
+    assert_equal "w/w", old.reload.chr1
+    assert child.progeny.any? { |fly| fly.chr1.include?("-") }, "has sons"
+  end
+
+  test "the fly view offers each fly only in the role it can fill" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/- +/+ +/+ +/+], female: %w[+/+ +/+ +/+ +/+])
+    son = cross.progeny.find { |fly| fly.chr1.include?("-") }
+    daughter = cross.progeny.find { |fly| !fly.chr1.include?("-") }
+    get short_path(cross)
+    assert_select "input[name='cross[male_id]'][value='#{son.id}']"
+    assert_select "input[name='cross[female_id]'][value='#{son.id}']", 0
+    assert_select "input[name='cross[female_id]'][value='#{daughter.id}']"
+    assert_select "input[name='cross[male_id]'][value='#{daughter.id}']", 0
+  end
+
+  test "a homozygous daughter is only offered as a female when the cross has sons" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/- +/+ +/+ +/+], female: %w[w/w +/+ +/+ +/+])
+    daughter = cross.progeny.find { |fly| fly.chr1 == "w/w" }
+    get short_path(cross)
+    assert_select "input[name='cross[female_id]'][value='#{daughter.id}']"
+    assert_select "input[name='cross[male_id]'][value='#{daughter.id}']", 0
+  end
+
+  test "imported Y/Y flies and sons with a lethal X are hidden, and the data is kept" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[+/- +/+ +/+ +/+], female: %w[l/+ +/+ +/+ +/+])
+    cross.update!(lethal: "l")
+    no_x = Fly.new(chr1: "-/-", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    no_x.save!(validate: false)
+    visible = cross.viable_progeny.map(&:chr1)
+    assert_not_includes visible, "-/-"
+    assert_not_includes visible, "-/l"
+    assert_includes visible, "-/+"
+    assert_includes visible, "+/l"
+    assert Fly.exists?(no_x.id)
+  end
+
+  test "chromosome view works out sons for an old cross that stored none" do
+    sign_in_as @owner
+    cross = @owner.crosses.create!(crossdate: Date.current)
+    male = Fly.create!(chr1: "w/w", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    female = Fly.create!(chr1: "y/y", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    Fly.create!(chr1: "w/y", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    cross.update!(male_fly: male, female_fly: female)
+    get chromosome_path(cross)
+    assert_response :success
+    assert_select "input[name='cross[m_X]'][value='y/-']"
+    assert_select "input[name='cross[f_X]'][value='w/y']"
+    assert_select "input[name='cross[m_X]'][value='w/y']", 0
   end
 
   test "lethal homozygotes are hidden from the fly view" do
@@ -293,7 +402,8 @@ class CrossesTest < ActionDispatch::IntegrationTest
     end
 
     assert_difference("Cross.count", 1) { follow_on(cross.id, male_id: male.id.to_s, female_id: progeny.id.to_s) }
-    assert_equal "/w", Cross.order(:id).last.male_fly.chr1
+    assert_equal "w/-", Cross.order(:id).last.male_fly.chr1
+    assert_equal "/w", male.reload.chr1, "the old record stays as it was"
 
     assert_difference("Cross.count", 1) do
       follow_on(cross.id, male_id: "male_chr_s", female_id: progeny.id.to_s, m_X: "/w", m_II: "a/+", m_III: "+", m_IV: "+")

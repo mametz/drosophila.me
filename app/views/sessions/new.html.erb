@@ -1,11 +1,15 @@
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-<%= tag.div(flash[:notice], style: "color:green") if flash[:notice] %>
-
-<%= form_with url: session_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %><br>
-  <%= form.submit "Sign in" %>
-<% end %>
-<br>
-
-<%= link_to "Forgot password?", new_password_path %>
+<% content_for(:title) { "Log in · drosophila.me" } %>
+<div class="auth">
+  <h1>Log in</h1>
+  <%= form_with url: session_path do |form| %>
+    <div class="panel">
+      <label>Email<%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address] %></label>
+      <label>Password<%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %></label>
+      <%= form.submit "Log in", class: "button-wide" %>
+    </div>
+  <% end %>
+  <p class="auth-links">
+    <%= link_to "Forgot your password?", new_password_path %> &middot;
+    <%= link_to "Create an account", new_registration_path %>
+  </p>
+</div>

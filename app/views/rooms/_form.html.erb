@@ -1,12 +1,12 @@
 <%= form_with model: room do |f| %>
   <% room.errors.full_messages.each do |message| %>
-    <p class="flash flash-alert" role="alert"><%= message %></p>
+    <div class="flash flash-alert" role="alert"><%= message %></div>
   <% end %>
-  <div class="panel">
+  <section class="panel">
     <div class="field-grid">
       <label>Name<%= f.text_field :name %></label>
-      <label>Temperature<%= f.number_field :temperature %></label>
+      <label>Temperature (°C)<%= f.number_field :temperature %></label>
     </div>
-    <p><%= f.submit %></p>
-  </div>
+    <p style="margin: .5rem 0 0"><%= f.submit "Save room" %></p>
+  </section>
 <% end %>

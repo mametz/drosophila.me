@@ -1,14 +1,39 @@
-<div class="hero panel">
-  <h1>Welcome to drosophila.me</h1>
-  <p>Drosophila cross and stock management made easy</p>
-  <% unless authenticated? %>
-    <p><%= link_to "Register", new_registration_path, class: "button" %></p>
-  <% end %>
+<section class="home-hero">
+  <div class="home-hero-copy">
+    <div class="eyebrow">Drosophila melanogaster</div>
+    <h1>Plan your crosses. Keep your stocks in order.</h1>
+    <p>Enter two parents and see every genotype their offspring can have, then follow the line from one generation to the next.</p>
+    <div class="actions">
+      <% if authenticated? %>
+        <%= link_to "Go to your crosses", crosses_path, class: "button" %>
+      <% else %>
+        <%= link_to "Create a free account", new_registration_path, class: "button" %>
+        <%= link_to "Log in", new_session_path, class: "button button-quiet" %>
+      <% end %>
+    </div>
+  </div>
+  <%= image_tag "drosophila.jpeg", alt: "Close-up of a fruit fly's red compound eye" %>
+</section>
+<div class="features">
+  <div class="feature">
+    <h2>Every possible offspring</h2>
+    <p>Genotypes appear as soon as you set up a cross, with lethal combinations left out.</p>
+  </div>
+  <div class="feature">
+    <h2>Generation by generation</h2>
+    <p>Pick the next parents from the offspring and look back through the full history at any time.</p>
+  </div>
+  <div class="feature">
+    <h2>Your stock list</h2>
+    <p>Track numbers, rooms and sources, and download the whole list when you need it.</p>
+  </div>
+  <div class="feature">
+    <h2>Share with a QR code</h2>
+    <p>Every cross has a short link and a code to print on labels or posters.</p>
+  </div>
 </div>
-<%= image_tag "drosophila.jpeg", class: "hero-photo", alt: "A Drosophila melanogaster fruit fly" %>
 <div class="panel counts">
-  <div><span class="count"><%= @user_count %></span> registered users</div>
-  <div><span class="count"><%= @cross_count %></span> flies crossed</div>
-  <div><span class="count"><%= @stock_count %></span> stocks established</div>
+  <div><span class="count"><%= number_with_delimiter(@cross_count) %></span> crosses</div>
+  <div><span class="count"><%= number_with_delimiter(@stock_count) %></span> stocks</div>
+  <div><span class="count"><%= number_with_delimiter(@user_count) %></span> researchers</div>
 </div>
-<p><%= link_to "Team and contact", team_path %></p>

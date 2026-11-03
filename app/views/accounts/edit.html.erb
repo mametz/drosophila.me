@@ -1,20 +1,22 @@
-<% content_for(:title) { "Edit profile · drosophila.me" } %>
-<h1>Edit profile</h1>
-<%= form_with model: @user, url: account_path, method: :patch do |f| %>
-  <% @user.errors.full_messages.each do |message| %>
-    <p class="flash flash-alert" role="alert"><%= message %></p>
+<% content_for(:title) { "Profile · drosophila.me" } %>
+<div class="page-narrow">
+  <div class="page-head"><h1>Your profile</h1></div>
+  <%= form_with model: @user, url: account_path, method: :patch do |f| %>
+    <% @user.errors.full_messages.each do |message| %>
+      <div class="flash flash-alert" role="alert"><%= message %></div>
+    <% end %>
+    <section class="panel">
+      <label>Email<%= f.email_field :email_address, required: true, autocomplete: "email" %></label>
+      <label>New password, leave blank to keep the current one<%= f.password_field :password, autocomplete: "new-password" %></label>
+      <label>Repeat new password<%= f.password_field :password_confirmation, autocomplete: "new-password" %></label>
+      <label>Current password, to confirm changes<%= f.password_field :password_challenge, required: true, autocomplete: "current-password" %></label>
+      <%= f.submit "Save changes" %>
+    </section>
   <% end %>
-  <div class="panel">
-    <label>Email<%= f.email_field :email_address, required: true, autocomplete: "email" %></label>
-    <label>New password (leave blank to keep it)<%= f.password_field :password, autocomplete: "new-password" %></label>
-    <label>Repeat new password<%= f.password_field :password_confirmation, autocomplete: "new-password" %></label>
-    <label>Current password<%= f.password_field :password_challenge, required: true, autocomplete: "current-password" %></label>
-    <p><%= f.submit "Save" %></p>
-  </div>
-<% end %>
-<div class="panel">
-  <h2>Delete account</h2>
-  <p class="muted">This deletes your crosses, stocks and rooms.</p>
-  <%= button_to "Delete my account", account_path, method: :delete, class: "button button-danger",
-                form: { data: { turbo_confirm: "Delete your account and all your data?" } } %>
+  <section class="panel">
+    <h2>Delete account</h2>
+    <p class="muted">This deletes your crosses, stocks and rooms.</p>
+    <%= button_to "Delete my account", account_path, method: :delete, class: "button button-danger",
+                  form: { data: { turbo_confirm: "Delete your account and all your data?" } } %>
+  </section>
 </div>

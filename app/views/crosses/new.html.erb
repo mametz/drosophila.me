@@ -1,20 +1,21 @@
 <% content_for(:title) { "New cross · drosophila.me" } %>
-<h1>New cross</h1>
-<%= form_with url: crosses_path, scope: :cross do |f| %>
-  <div class="panel">
-    <h2>Male genotype</h2>
-    <%= render "genotype_fields", form: f, fields: [
-          [ :m_X, "X/Y chromosome", "+/-" ], [ :m_II, "Chromosome 2", "+/+" ],
-          [ :m_III, "Chromosome 3", "+/+" ], [ :m_IV, "Chromosome 4", "+/+" ] ] %>
-  </div>
-  <div class="panel">
-    <h2>Female genotype</h2>
-    <%= render "genotype_fields", form: f, fields: [
-          [ :f_X, "X chromosome", "+/+" ], [ :f_II, "Chromosome 2", "+/+" ],
-          [ :f_III, "Chromosome 3", "+/+" ], [ :f_IV, "Chromosome 4", "+/+" ] ] %>
-  </div>
-  <div class="panel">
-    <%= render "next_cross_fields", form: f %>
-    <p><%= f.submit "Cross" %></p>
-  </div>
-<% end %>
+<div class="page-narrow">
+  <div class="page-head"><h1>New cross</h1></div>
+  <%= form_with url: crosses_path, scope: :cross do |f| %>
+    <section class="panel">
+      <h2>&#x2642; Male</h2>
+      <%= render "genotype_fields", form: f, male: true, fields: [
+            [ :m_X, "X", "+/-" ], [ :m_II, "II", "+/+" ], [ :m_III, "III", "+/+" ], [ :m_IV, "IV", "+/+" ] ] %>
+    </section>
+    <section class="panel">
+      <h2>&#x2640; Female</h2>
+      <%= render "genotype_fields", form: f, fields: [
+            [ :f_X, "X", "+/+" ], [ :f_II, "II", "+/+" ], [ :f_III, "III", "+/+" ], [ :f_IV, "IV", "+/+" ] ] %>
+    </section>
+    <section class="panel">
+      <h2>Details</h2>
+      <%= render "next_cross_fields", form: f %>
+      <p style="margin: 1rem 0 0"><%= f.submit "Set up cross" %></p>
+    </section>
+  <% end %>
+</div>

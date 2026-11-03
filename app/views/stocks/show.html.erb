@@ -1,17 +1,26 @@
-<% content_for(:title) { "Stock · drosophila.me" } %>
-<h1>Stock <%= @stock.number %></h1>
-<div class="panel">
-  <p><strong>Genotype:</strong> <%= @stock.fly.chromosomes.join(" ; ") %></p>
-  <%= genotype_math(@stock.fly) %>
-  <p><strong>Stock room:</strong> <%= @stock.room&.name %></p>
-  <p><strong>Comment:</strong> <%= @stock.comment %></p>
-  <p><strong>Date established:</strong> <%= @stock.date_established&.strftime("%B %d, %Y") %></p>
-  <p><strong>Reference:</strong> <%= @stock.reference %></p>
-  <p><strong>Received from:</strong> <%= @stock.received_from %></p>
-  <div class="cross-actions">
-    <%= link_to "Edit", edit_stock_path(@stock), class: "button button-quiet" %>
-    <%= button_to "Delete stock", stock_path(@stock), method: :delete, class: "button button-danger",
-                  form: { data: { turbo_confirm: "Delete this stock?" } } %>
+<% content_for(:title) { "Stock #{@stock.number} · drosophila.me" } %>
+<div class="page-narrow">
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Stock</div>
+      <h1>Number <%= @stock.number %></h1>
+    </div>
+    <div class="actions">
+      <%= link_to "Edit", edit_stock_path(@stock), class: "button button-quiet" %>
+      <%= button_to "Delete", stock_path(@stock), method: :delete, class: "button button-danger",
+                    form: { data: { turbo_confirm: "Delete this stock?" } } %>
+    </div>
   </div>
+  <div class="panel">
+    <div class="genotype genotype-left"><%= genotype_math(@stock.fly) %></div>
+    <dl class="details">
+      <dt>Genotype</dt><dd><%= @stock.fly.chromosomes.join(" ; ") %></dd>
+      <dt>Room</dt><dd><%= @stock.room&.name || "None" %></dd>
+      <dt>Established</dt><dd><%= @stock.date_established&.strftime("%B %-d, %Y") || "Not recorded" %></dd>
+      <dt>Reference</dt><dd><%= @stock.reference.presence || "None" %></dd>
+      <dt>Received from</dt><dd><%= @stock.received_from.presence || "Not recorded" %></dd>
+      <dt>Comment</dt><dd><%= @stock.comment.presence || "None" %></dd>
+    </dl>
+  </div>
+  <p><%= link_to "Back to stocks", stocks_path %></p>
 </div>
-<p><%= link_to "Back to stocks", stocks_path %></p>

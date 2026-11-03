@@ -1,10 +1,9 @@
 <% content_for(:title) { "Punnett square · drosophila.me" } %>
-<h1>Show cross</h1>
-<%= render "summary", cross: @cross %>
+<%= render "header", cross: @cross %>
+<%= render "parents", cross: @cross %>
 <%= render "tabs", cross: @cross, current: :punnett %>
-<div class="panel"><%= cross_math(@cross) %></div>
-<div class="table-wrap">
-  <table class="punnett">
+<div class="panel table-wrap">
+  <table class="punnett genotype">
     <thead>
       <tr>
         <th scope="col">&#x2642; / &#x2640;</th>
@@ -25,3 +24,4 @@
     </tbody>
   </table>
 </div>
+<p class="hint">Chromosomes that are wild type in both parents are left out.</p>

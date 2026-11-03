@@ -28,7 +28,9 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  # Browsers only remember the HTTPS rule briefly while the move from the old
+  # HTTP-only server settles. Raise this once a return to it is no longer possible.
+  config.ssl_options = { hsts: { expires: 1.hour, subdomains: false } }
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]

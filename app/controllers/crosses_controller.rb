@@ -12,14 +12,17 @@ class CrossesController < ApplicationController
 
   def show
     @progeny = @cross.viable_progeny
+    # Old crosses with a male written as "w/w" stored no sons, so "w/w" could be either sex.
+    @sons_recorded = @progeny.any? { |fly| Genotype.y_marker?(fly.chr1) }
   end
 
   def chromosome
     sets = @cross.progeny.map { |fly| fly.genotype.allele_sets }
     @chromosome_lists = (0..3).map { |index| chromosome_list(sets.map { |fly_sets| fly_sets[index] }.uniq) }
-    @male_x = @chromosome_lists[0].select { |alleles| alleles.include?("-") }
+    @male_x = @chromosome_lists[0].select { |alleles| alleles.intersect?(Genotype::Y_MARKERS.to_set) }
     @female_x = @chromosome_lists[0] - @male_x
-    @male_x, @female_x = @chromosome_lists[0], @chromosome_lists[0] if @male_x.empty?
+    # Old crosses with a male written as "w/w" stored no sons, so work out what they would be.
+    @male_x = chromosome_list(Genotype.sons_x(@cross.female_fly.chr1)) if @male_x.empty?
   end
 
   def punnett

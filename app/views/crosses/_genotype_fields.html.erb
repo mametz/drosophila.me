@@ -1,6 +1,12 @@
-<p class="hint">Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</p>
+<p class="hint">
+  <% if local_assigns[:male] %>
+    A male has one X: enter it as w/- or w/Y.
+  <% else %>
+    Separate sister chromosomes with a slash and alleles on one chromosome with a comma.
+  <% end %>
+</p>
 <div class="field-grid">
   <% fields.each do |name, label, value| %>
-    <label><%= label %><%= form.text_field name, value: value %></label>
+    <label><%= label %><%= form.text_field name, value: value, autocomplete: "off", spellcheck: false %></label>
   <% end %>
 </div>

@@ -1,18 +1,21 @@
 <% content_for(:title) { "New stock · drosophila.me" } %>
-<h1>Add new stock</h1>
-<%= render "errors", stock: @stock %>
-<%= form_with model: @stock do |f| %>
-  <div class="panel">
-    <h2>Genotype</h2>
-    <p class="hint">Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</p>
-    <div class="field-grid">
-      <% [ [ :X, "X chromosome" ], [ :II, "Chromosome 2" ], [ :III, "Chromosome 3" ], [ :IV, "Chromosome 4" ] ].each do |name, label| %>
-        <label><%= label %><%= text_field_tag "genotype[#{name}]", params.dig(:genotype, name) || "+/+" %></label>
-      <% end %>
-    </div>
-  </div>
-  <div class="panel">
-    <%= render "fields", form: f %>
-    <p><%= f.submit "Create stock" %></p>
-  </div>
-<% end %>
+<div class="page-narrow">
+  <div class="page-head"><h1>New stock</h1></div>
+  <%= render "errors", stock: @stock %>
+  <%= form_with model: @stock do |f| %>
+    <section class="panel">
+      <h2>Genotype</h2>
+      <p class="hint">Separate sister chromosomes with a slash and alleles on one chromosome with a comma.</p>
+      <div class="field-grid">
+        <% [ [ :X, "X" ], [ :II, "II" ], [ :III, "III" ], [ :IV, "IV" ] ].each do |name, label| %>
+          <label><%= label %><%= text_field_tag "genotype[#{name}]", params.dig(:genotype, name) || "+/+", autocomplete: "off", spellcheck: false %></label>
+        <% end %>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Details</h2>
+      <%= render "fields", form: f %>
+      <p style="margin: 1rem 0 0"><%= f.submit "Create stock" %></p>
+    </section>
+  <% end %>
+</div>

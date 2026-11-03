@@ -1,37 +1,54 @@
 <% content_for(:title) { "Your stocks · drosophila.me" } %>
-<h1>Your stocks</h1>
-<p class="cross-actions">
-  <%= link_to "New stock", new_stock_path, class: "button" %>
-  <%= link_to "Stock rooms", rooms_path, class: "button button-quiet" %>
-  <%= link_to "Download stocks", stocks_path(format: :csv), class: "button button-quiet", data: { turbo: false } %>
-</p>
-<%= form_with url: crosses_path, scope: :cross do |f| %>
-  <%= f.hidden_field :parent, value: "stock" %>
-  <div class="columns">
-    <div class="panel table-wrap">
-      <table>
-        <thead>
-          <tr><th>Room</th><th>Number</th><th>Genotype</th><th>Cross</th></tr>
-        </thead>
-        <tbody>
-          <% @stocks.each do |stock| %>
-            <tr>
-              <td><%= stock.room&.name %></td>
-              <td><%= link_to stock.number.to_s, stock_path(stock) %></td>
-              <td><%= link_to genotype_math(stock.fly), stock_path(stock), class: "cross-card" %></td>
-              <td>
-                <label>&#x2642; <%= f.radio_button :male_id, stock.fly_id %></label>
-                <label>&#x2640; <%= f.radio_button :female_id, stock.fly_id %></label>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    <div class="panel">
-      <h2>Cross two stocks</h2>
-      <%= render "crosses/next_cross_fields", form: f %>
-      <p><%= f.submit "Cross" %></p>
-    </div>
+<div class="page-head">
+  <h1>Your stocks</h1>
+  <div class="actions">
+    <%= link_to "Rooms", rooms_path, class: "button button-quiet" %>
+    <%= link_to "Download", stocks_path(format: :csv), class: "button button-quiet", data: { turbo: false } %>
+    <%= link_to "New stock", new_stock_path, class: "button" %>
   </div>
+</div>
+<% if @stocks.empty? %>
+  <div class="empty">
+    <h2>No stocks yet</h2>
+    <p>Add a stock here, or use "Stock it" on any fly in a cross.</p>
+    <p><%= link_to "Add your first stock", new_stock_path, class: "button" %></p>
+  </div>
+<% else %>
+  <%= form_with url: crosses_path, scope: :cross do |f| %>
+    <%= f.hidden_field :parent, value: "stock" %>
+    <div class="layout-side">
+      <div class="panel table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Number</th><th scope="col">Genotype</th><th scope="col">Room</th><th scope="col">Cross</th></tr>
+          </thead>
+          <tbody>
+            <% @stocks.each do |stock| %>
+              <tr>
+                <td><%= link_to stock.number.to_s, stock_path(stock) %></td>
+                <td><%= link_to stock_path(stock), class: "genotype genotype-left", style: "display: block; color: inherit; text-decoration: none" do %><%= genotype_math(stock.fly) %><% end %></td>
+                <td><%= stock.room&.name %></td>
+                <td>
+                  <div class="cell-actions">
+                    <% if stock.fly.genotype.can_be_male? %>
+                      <label class="pick"><%= f.radio_button :male_id, stock.fly_id %><span>&#x2642; Male</span></label>
+                    <% end %>
+                    <% if stock.fly.genotype.can_be_female? %>
+                      <label class="pick"><%= f.radio_button :female_id, stock.fly_id %><span>&#x2640; Female</span></label>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <aside class="panel sticky-panel">
+        <h2>Cross two stocks</h2>
+        <p class="hint">Pick a male and a female from the list.</p>
+        <%= render "crosses/next_cross_fields", form: f %>
+        <p style="margin: 1rem 0 0"><%= f.submit "Set up cross", class: "button-wide" %></p>
+      </aside>
+    </div>
+  <% end %>
 <% end %>

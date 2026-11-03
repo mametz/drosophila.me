@@ -27,7 +27,8 @@ class CrossBuilder
       male = save_parent(male)
       female = save_parent(female)
       # Parents from the old app can hold chromosomes such as "/w", so the
-      # progeny they produce can't pass the check for typed genotypes.
+      # progeny they produce can't pass the check for typed genotypes. The
+      # parents' X chromosomes were checked above, so no Y/Y fly can come out.
       CrossCalculator.progeny(male.chromosomes, female.chromosomes).each do |chromosomes|
         Fly.from_chromosomes(chromosomes, cross: @cross).save!(validate: false)
       end
@@ -51,24 +52,24 @@ class CrossBuilder
 
   def parents
     if follow_on?
-      [ selected_parent(:male_id, "male_chr_s", "m"), selected_parent(:female_id, "female_chr_s", "f") ]
+      [ selected_parent(:male_id, "male_chr_s", "m", :male), selected_parent(:female_id, "female_chr_s", "f", :female) ]
     else
-      [ typed(names("m"), founder_male: true), typed(names("f")) ]
+      [ typed(names("m"), :male), typed(names("f"), :female) ]
     end
   end
 
-  def selected_parent(key, chromosomes_choice, prefix)
+  def selected_parent(key, chromosomes_choice, prefix, sex)
     choice = @params[key].presence
     case choice
     when nil
       @errors << "Not all parents were selected."
       nil
     when "new"
-      typed(CHROMOSOME_NAMES, male: prefix == "m")
+      typed(CHROMOSOME_NAMES, sex)
     when chromosomes_choice
-      picked(names(prefix))
+      picked(names(prefix), sex)
     else
-      existing_fly(choice)
+      existing_fly(choice, sex)
     end
   end
 
@@ -76,45 +77,66 @@ class CrossBuilder
     CHROMOSOME_NAMES.map { |name| :"#{prefix}_#{name}" }
   end
 
-  def typed(fields, founder_male: false, male: false)
+  def typed(fields, sex)
     values = fields.map { |field| @params[field].to_s.strip }
     unless values.all? { |value| value.match?(ALLELES) }
       @errors << "Genotypes need one or two alleles per chromosome, separated by a slash."
       return nil
     end
-    if founder_male && values[0] == "Y"
-      @errors << "A male X chromosome needs an allele next to the Y."
-      return nil
-    end
 
-    values[0] = Genotype.founder_male_x(values[0]) if founder_male
-    values[0] = Genotype.male_x(values[0]) if male
-    Fly.from_chromosomes(values.map { |value| Genotype.homozygous(value) })
+    build_fly(values, sex)
   end
 
   # Picked from the chromosomes of a previous cross, so old notation is allowed.
-  def picked(fields)
+  def picked(fields, sex)
     values = fields.map { |field| @params[field].to_s }
     if values.any?(&:blank?)
       @errors << "Not all chromosomes were selected."
       return nil
     end
 
-    Fly.from_chromosomes(values.map { |value| Genotype.homozygous(value) })
+    build_fly(values, sex)
+  end
+
+  def build_fly(values, sex)
+    x = checked_x(values[0], sex)
+    return nil unless x
+
+    Fly.from_chromosomes([ x, *values[1..] ].map { |value| Genotype.homozygous(value) })
   end
 
   # Only flies the user can reach through their own crosses or stocks.
-  def existing_fly(id)
+  def existing_fly(id, sex)
     fly = Fly.find_by(id: id)
     unless fly && @user.can_use_fly?(fly)
       @errors << "That fly was not found."
       return nil
     end
-    unless fly.chromosomes.all? { |chromosome| chromosome.split("/").size >= 2 }
+
+    x = checked_x(fly.chr1, sex)
+    return nil unless x
+
+    unless fly.chromosomes[1..].all? { |chromosome| chromosome.split("/").size >= 2 } && x.split("/").size >= 2
       @errors << "That fly has an incomplete genotype. Enter it as a new genotype to cross it."
       return nil
     end
-    fly
+
+    # Old records can hold a male written as "w/w". Keep the record and use a
+    # corrected copy of the fly for this cross.
+    x == fly.chr1 ? fly : Fly.from_chromosomes([ x, *fly.chromosomes[1..] ])
+  end
+
+  def checked_x(x, sex)
+    if sex == :male
+      return Genotype.male_x(x) if Genotype.valid_male_x?(x)
+
+      @errors << "A male has one X chromosome, such as w/- or w/Y. #{x} doesn't fit, so choose a son or enter the male again."
+    else
+      return x if Genotype.valid_female_x?(x)
+
+      @errors << "A female has two X chromosomes and no Y. #{x} doesn't fit, so choose a daughter or enter the female again."
+    end
+    nil
   end
 
   def save_parent(fly)

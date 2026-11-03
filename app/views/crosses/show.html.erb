@@ -1,47 +1,47 @@
-<% content_for(:title) { "Cross · drosophila.me" } %>
-<h1>Show cross</h1>
-<%= render "summary", cross: @cross %>
-<%= render "tabs", cross: @cross, current: :fly %>
+<% content_for(:title) { "#{@cross.description.presence || "Cross"} · drosophila.me" } %>
 <% owner = @cross.owned_by?(Current.user) %>
+<%= render "header", cross: @cross %>
+<%= render "parents", cross: @cross %>
+<%= render "tabs", cross: @cross, current: :fly %>
 <%= form_with url: crosses_path, scope: :cross do |f| %>
-  <div class="<%= "columns" if owner %>">
-    <div>
-      <div class="panel"><%= cross_math(@cross) %></div>
+  <%# Pressing Enter in a field should create the cross, not stock the first fly. %>
+  <%= f.submit "Cross", class: "visually-hidden", tabindex: -1, "aria-hidden": true %>
+  <div class="<%= "layout-side" if owner %>">
+    <section>
+      <div class="section-head">
+        <h2>Offspring</h2>
+        <span class="muted small"><%= pluralize(@progeny.size, "viable genotype") %></span>
+      </div>
+      <% if owner %>
+        <p class="hint">Pick a male and a female to set up the next cross.</p>
+      <% end %>
       <div class="fly-list">
         <% @progeny.each do |fly| %>
           <div class="fly">
-            <%= genotype_math(fly) %>
+            <div class="genotype"><%= genotype_math(fly) %></div>
             <% if owner %>
-              <label>&#x2642; <%= f.radio_button :male_id, fly.id %></label>
-              <label>&#x2640; <%= f.radio_button :female_id, fly.id %></label>
+              <div class="fly-actions">
+                <% if fly.genotype.can_be_male? && (!@sons_recorded || Genotype.y_marker?(fly.chr1)) %>
+                  <label class="pick"><%= f.radio_button :male_id, fly.id %><span>&#x2642; Male</span></label>
+                <% end %>
+                <% if fly.genotype.can_be_female? %>
+                  <label class="pick"><%= f.radio_button :female_id, fly.id %><span>&#x2640; Female</span></label>
+                <% end %>
+                <button type="submit" class="button-text" formaction="<%= stock_from_fly_path(fly) %>" formmethod="post" formnovalidate>Stock it</button>
+              </div>
             <% end %>
           </div>
         <% end %>
       </div>
-      <% if owner %>
-        <p><%= f.submit "Cross" %></p>
-      <% end %>
-    </div>
+    </section>
     <% if owner %>
-      <div class="panel">
+      <aside class="panel sticky-panel">
         <h2>Next cross</h2>
         <%= f.hidden_field :parent, value: @cross.id %>
-        <%= render "new_fly_fields", form: f %>
         <%= render "next_cross_fields", form: f %>
-      </div>
+        <%= render "new_fly_fields", form: f %>
+        <p style="margin: 1rem 0 0"><%= f.submit "Set up cross", class: "button-wide" %></p>
+      </aside>
     <% end %>
-  </div>
-<% end %>
-<% if owner %>
-  <div class="panel">
-    <h2>Keep a fly as a stock</h2>
-    <div class="fly-list">
-      <% @progeny.each do |fly| %>
-        <div class="fly">
-          <%= genotype_math(fly) %>
-          <%= button_to "Stock it", stock_from_fly_path(fly), class: "button button-quiet" %>
-        </div>
-      <% end %>
-    </div>
   </div>
 <% end %>

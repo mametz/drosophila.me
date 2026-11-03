@@ -1,16 +1,24 @@
 <% content_for(:title) { "Your crosses · drosophila.me" } %>
-<h1>Your crosses</h1>
-<p><%= link_to "New cross", new_cross_path, class: "button" %></p>
+<div class="page-head">
+  <h1>Your crosses</h1>
+  <div class="actions"><%= link_to "New cross", new_cross_path, class: "button" %></div>
+</div>
 <% if @crosses.empty? %>
-  <p class="muted">No crosses yet.</p>
+  <div class="empty">
+    <h2>No crosses yet</h2>
+    <p>Enter two parents to see every genotype their offspring can have.</p>
+    <p><%= link_to "Set up your first cross", new_cross_path, class: "button" %></p>
+  </div>
 <% end %>
 <% @crosses.group_by { |cross| cross.crossdate.strftime("%B %Y") }.each do |month, crosses| %>
-  <h2><%= month %></h2>
+  <h2 class="month"><%= month %></h2>
   <% crosses.each do |cross| %>
-    <%= link_to short_path(cross), class: "panel cross-card" do %>
-      <%= "\\[#{genotype_tex(cross.male_fly.genotype.allele_sets)} \\qquad X \\qquad #{genotype_tex(cross.female_fly.genotype.allele_sets)}\\]" %>
-      <p><%= cross.description %></p>
-      <p class="muted"><%= cross.crossdate.strftime("Crossed on %B %d, %Y") %></p>
+    <%= link_to short_path(cross), class: "cross-row" do %>
+      <div class="genotype genotype-left"><%= "\\[#{genotype_tex(cross.male_fly.genotype.allele_sets)} \\quad \\times \\quad #{genotype_tex(cross.female_fly.genotype.allele_sets)}\\]" %></div>
+      <div class="cross-row-meta">
+        <span><%= cross.description %></span>
+        <span class="muted"><%= cross.crossdate.strftime("%B %-d") %></span>
+      </div>
     <% end %>
   <% end %>
 <% end %>

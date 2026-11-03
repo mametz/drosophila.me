@@ -1,8 +1,12 @@
-<h1>Forgot your password?</h1>
-
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-
-<%= form_with url: passwords_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.submit "Email reset instructions" %>
-<% end %>
+<% content_for(:title) { "Forgot password · drosophila.me" } %>
+<div class="auth">
+  <h1>Forgot your password?</h1>
+  <%= form_with url: passwords_path do |form| %>
+    <div class="panel">
+      <p class="hint">Enter your email address and we'll send you a link to set a new one.</p>
+      <label>Email<%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address] %></label>
+      <%= form.submit "Email reset instructions", class: "button-wide" %>
+    </div>
+  <% end %>
+  <p class="auth-links"><%= link_to "Back to log in", new_session_path %></p>
+</div>

@@ -1,22 +1,31 @@
 <% content_for(:title) { "Cross history · drosophila.me" } %>
-<h1>History of cross</h1>
+<div class="page-head">
+  <div>
+    <div class="eyebrow">Lineage</div>
+    <h1>History of this cross</h1>
+    <p>Highlighted flies went on to become parents in a later generation.</p>
+  </div>
+  <div class="actions"><%= link_to "Back to the cross", short_path(@cross), class: "button button-quiet" %></div>
+</div>
 <% @crosses.each.with_index(1) do |cross, generation| %>
-  <div class="panel">
-    <div class="cross-meta">
+  <section class="panel">
+    <div class="section-head">
       <h2>F<%= generation %></h2>
-      <%= mail_to cross.user.email_address, title: cross.user.email_address do %>
-        <%= image_tag cross.user.gravatar_url(size: 32), class: "avatar-small", alt: "" %>
-      <% end %>
-      <div>
-        <%= link_to cross.crossdate.strftime("Crossed on %B %d, %Y"), short_path(cross) %><br>
-        <%= cross.description %>
+      <div class="owner small">
+        <%= link_to cross.description.presence || cross.crossdate.strftime("Crossed %B %-d, %Y"), short_path(cross) %>
+        <span class="muted"><%= cross.crossdate.strftime("%b %-d, %Y") if cross.description.present? %></span>
+        <%= mail_to cross.user.email_address, title: cross.user.email_address do %>
+          <%= image_tag cross.user.gravatar_url(size: 32), class: "avatar-small", alt: cross.user.email_address %>
+        <% end %>
       </div>
     </div>
-    <%= cross_math(cross) %>
+    <%= render "parents", cross: cross %>
     <div class="fly-list">
       <% cross.viable_progeny.each do |fly| %>
-        <div class="fly <%= "fly-parent" if @parent_fly_ids.include?(fly.id) %>"><%= genotype_math(fly) %></div>
+        <div class="fly <%= "fly-parent" if @parent_fly_ids.include?(fly.id) %>">
+          <div class="genotype"><%= genotype_math(fly) %></div>
+        </div>
       <% end %>
     </div>
-  </div>
+  </section>
 <% end %>
