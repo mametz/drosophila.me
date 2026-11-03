@@ -3,6 +3,15 @@ require "test_helper"
 class AccountsTest < ActionDispatch::IntegrationTest
   setup { @user = users(:one) }
 
+  def form_started(seconds_ago = 10)
+    Rails.application.message_verifier(:signup_form).generate(seconds_ago.seconds.ago.to_i)
+  end
+
+  def signup(**user)
+    { form_started: form_started,
+      user: { password: "password123", password_confirmation: "password123" }.merge(user) }
+  end
+
   test "public pages render logged out" do
     [ root_path, team_path, new_session_path, new_registration_path ].each do |path|
       get path
@@ -19,7 +28,7 @@ class AccountsTest < ActionDispatch::IntegrationTest
 
   test "signing up logs you in" do
     assert_difference("User.count", 1) do
-      post registration_path, params: { user: { email_address: "New@Example.com", password: "password123", password_confirmation: "password123" } }
+      post registration_path, params: signup(email_address: "New@Example.com")
     end
     assert_redirected_to crosses_path
     follow_redirect!
@@ -27,13 +36,34 @@ class AccountsTest < ActionDispatch::IntegrationTest
     assert User.exists?(email_address: "new@example.com")
   end
 
+  test "signup form carries the bot checks and a person gets through" do
+    get new_registration_path
+    assert_select "input[name=website][tabindex='-1']"
+    token = css_select("input[name=form_started]").first["value"]
+    travel 5.seconds do
+      assert_difference("User.count", 1) do
+        post registration_path, params: signup(email_address: "person@example.com").merge(form_started: token, website: "")
+      end
+    end
+  end
+
+  test "bots are turned away" do
+    [ { website: "http://spam.example" }, { form_started: form_started(0) },
+      { form_started: "forged" }, { form_started: nil } ].each do |bot|
+      assert_no_difference("User.count", bot.to_s) do
+        post registration_path, params: signup(email_address: "bot@example.com").merge(bot)
+      end
+      assert_redirected_to new_registration_path
+    end
+  end
+
   test "weak or duplicate sign-ups are refused" do
     assert_no_difference("User.count") do
-      post registration_path, params: { user: { email_address: "a@example.com", password: "short", password_confirmation: "short" } }
+      post registration_path, params: signup(email_address: "a@example.com", password: "short", password_confirmation: "short")
     end
     assert_response :unprocessable_entity
     assert_no_difference("User.count") do
-      post registration_path, params: { user: { email_address: @user.email_address, password: "password123", password_confirmation: "password123" } }
+      post registration_path, params: signup(email_address: @user.email_address)
     end
     assert_response :unprocessable_entity
   end

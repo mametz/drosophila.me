@@ -4,6 +4,10 @@
   <% @user.errors.full_messages.each do |message| %>
     <p class="flash flash-alert" role="alert"><%= message %></p>
   <% end %>
+  <%= hidden_field_tag :form_started, form_started_token, id: nil %>
+  <div class="website-field" aria-hidden="true">
+    <label>Leave this empty<%= text_field_tag :website, nil, id: nil, tabindex: -1, autocomplete: "off" %></label>
+  </div>
   <div class="panel">
     <label>Email<%= f.email_field :email_address, required: true, autocomplete: "email" %></label>
     <label>Password (at least 8 characters)<%= f.password_field :password, required: true, autocomplete: "new-password" %></label>

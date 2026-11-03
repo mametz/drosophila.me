@@ -1,5 +1,6 @@
 # Copies data from a restored dump of the old Rails 4.2 database into this schema,
 # keeping ids and slugs. Rows the old app could not display are skipped and listed.
+# So are accounts that never created a cross, stock or room, which are mostly signup spam.
 class LegacyImport
   class Source < ActiveRecord::Base
     self.abstract_class = true
@@ -94,8 +95,13 @@ class LegacyImport
 
     kept_flies = flies_to_keep(flies, usable_fly_ids, kept_crosses, kept_stocks, kept_cross_ids)
 
-    import_users(users)
-    import_rooms(rooms, user_ids)
+    # Counts every cross, so an account whose crosses are all skipped can still log in.
+    active_user_ids = (crosses + stocks + rooms).map { |row| row["user_id"] }.to_set
+    kept_users = users.select { |row| active_user_ids.include?(row["id"]) }
+    @counts[:accounts_without_any_data] = users.size - kept_users.size
+
+    import_users(kept_users)
+    import_rooms(rooms, active_user_ids)
     import_crosses(kept_crosses)
     import_flies(kept_flies, kept_cross_ids)
     link_crosses(kept_crosses, kept_cross_ids)
@@ -199,7 +205,7 @@ class LegacyImport
     %i[users rooms crosses flies stocks].each { |key| @out.puts "  #{key}: #{@counts[key]}" }
     @out.puts "Skipped or changed:"
     @out.puts "  crosses without usable parents: #{@skipped_cross_ids.size}"
-    %i[parents_cleared flies_without_chromosomes unreachable_flies_skipped stocks_skipped rooms_skipped stock_rooms_cleared].each do |key|
+    %i[accounts_without_any_data parents_cleared flies_without_chromosomes unreachable_flies_skipped stocks_skipped rooms_skipped stock_rooms_cleared].each do |key|
       @out.puts "  #{key.to_s.tr("_", " ")}: #{@counts[key]}"
     end
     @out.puts "Skipped cross ids: #{@skipped_cross_ids.join(", ")}" if @skipped_cross_ids.any?

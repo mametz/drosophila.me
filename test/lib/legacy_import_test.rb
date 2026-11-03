@@ -67,6 +67,29 @@ class LegacyImportTest < ActiveSupport::TestCase
     assert cross.shared?
   end
 
+  test "leaves out only accounts that never created anything" do
+    @conn.execute(<<~SQL)
+      INSERT INTO legacy.users VALUES
+        (10, 'stock-only@example.com', '#{HASH}', '2020-01-01', '2020-01-01'),
+        (11, 'broken-cross-only@example.com', '#{HASH}', '2020-01-01', '2020-01-01'),
+        (12, 'nothing@example.com', '#{HASH}', '2020-01-01', '2020-01-01');
+      INSERT INTO legacy.stocks VALUES (5, 1, 'x', 100, 10, NULL, NULL, NULL, NULL, NULL, '2020-01-01', '2020-01-01');
+      INSERT INTO legacy.crosses VALUES (57, NULL, NULL, 'q', 'slug-q', 'crashed', '', '', NULL, 11, '2016-06-07', '2020-01-01', '2020-01-01');
+    SQL
+    importer, output = import
+
+    assert User.exists?(7)
+    assert User.exists?(10)
+    assert User.exists?(9), "has a room"
+    assert Room.exists?(4)
+    assert User.exists?(11), "has a cross, even though it can't be imported"
+    assert_not Cross.exists?(57)
+    assert_not User.exists?(12)
+    assert_equal 1, importer.counts[:accounts_without_any_data]
+    assert_equal 0, importer.counts[:rooms_skipped]
+    assert_includes output, "accounts without any data: 1"
+  end
+
   test "imported users log in with their old password" do
     import
     assert User.authenticate_by(email_address: "lab@example.com", password: "old-password")

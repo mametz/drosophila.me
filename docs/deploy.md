@@ -52,22 +52,38 @@ Generate the secret on the droplet, so it never appears in chat or the repo:
 dokku config:set --no-restart drosophila SECRET_KEY_BASE="$(openssl rand -hex 64)" APP_HOST=new.drosophila.me
 ```
 
-Set mail too, or password reset emails will fail. Type this one directly on the droplet:
+Set mail too, or password reset emails will fail. DigitalOcean blocks the usual mail ports, so use port 2525, and allow the droplet's IP in the provider's settings if it restricts them. This reads the key without showing it or saving it in your shell history:
 
 ```bash
-dokku config:set --no-restart drosophila SMTP_ADDRESS=smtp.example.com SMTP_USERNAME=user SMTP_PASSWORD=secret
+read -rs SMTP_PASSWORD
+```
+
+```bash
+dokku config:set --no-restart drosophila SMTP_ADDRESS=smtp-relay.brevo.com SMTP_PORT=2525 SMTP_USERNAME=your-login SMTP_PASSWORD="$SMTP_PASSWORD" && unset SMTP_PASSWORD
 ```
 
 ## 3. First deploy
 
-On your Mac, from this repository:
+Dokku needs your Mac's public SSH key. On your Mac, print it:
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+
+Then on the droplet, replacing `PUBLIC_KEY` with that line:
+
+```bash
+echo "PUBLIC_KEY" | dokku ssh-keys:add admin
+```
+
+Back on your Mac, from this repository. Dokku deploys what is pushed to its `master` branch:
 
 ```bash
 git remote add dokku dokku@NEW_IP:drosophila
 ```
 
 ```bash
-git push dokku rails-8-rewrite:main
+git push dokku rails-8-rewrite:master
 ```
 
 Then on the droplet:
@@ -107,6 +123,8 @@ dokku run drosophila env DRY_RUN=1 bin/rails legacy:import
 ```bash
 dokku run drosophila bin/rails legacy:import
 ```
+
+The import leaves out accounts that never created a cross, stock or room. Those people can sign up again. Keep the dump until you're sure nothing else is needed from it.
 
 The import refuses to run on a database with data. To repeat it, destroy and recreate the database, which also removes the old link:
 
@@ -155,4 +173,6 @@ That also needs `dokku postgres:backup-auth`, with storage credentials. Don't re
 
 ## If it goes wrong
 
-Before DNS has changed, restart the old app with `dokku ps:start drosophila` on the old droplet. After it has changed, point DNS back as well. Data entered on the new site after the switch won't be on the old one.
+Before DNS has changed, restart the old app with `dokku ps:start drosophila` on the old droplet.
+
+After DNS has changed, rolling back is much harder. The new site tells browsers to use only HTTPS and they remember that for up to two years, so visitors can't reach the old HTTP-only server until it has HTTPS too. Data entered on the new site after the switch won't be on the old one. Fix problems on the new site if you can, which is why the test on `new.drosophila.me` matters.
