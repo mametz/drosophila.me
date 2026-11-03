@@ -71,38 +71,8 @@ class CrossesController < ApplicationController
     require 'securerandom'
     @random_string = SecureRandom.hex
 
-    flym = Fly.find(@cross.male_id)
-    flyf = Fly.find(@cross.female_id)
-
-    @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
-    @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
-
-    prog = Fly.where("cross_id = ? AND id != ? AND id != ?", @cross.id, @cross.male_id, @cross.female_id)
-
-    @progeny = []
-    @prog_id = []
-    @x_chr = []
-    @II_chr = []
-    @III_chr = []
-    @IV_chr = []
-    prog.each do |n|
-      @progeny.append([n.chr1.split('/').to_set, n.chr2.split('/').to_set, n.chr3.split('/').to_set, n.chr4.split('/').to_set])
-      @prog_id.append(n.id)
-      @x_chr.append([n.chr1.split('/').to_set])
-      @II_chr.append([n.chr2.split('/').to_set])
-      @III_chr.append([n.chr3.split('/').to_set])
-      @IV_chr.append([n.chr4.split('/').to_set])
-    end
-
-    @x_chr = @x_chr.uniq
-    @II_chr = @II_chr.uniq
-    @III_chr = @III_chr.uniq
-    @IV_chr = @IV_chr.uniq
-
-    @balancers = @cross.balancers.split(';')
-    @balancer_string = @cross.balancers
-    @lethal = @cross.lethal.split(';')
-    @lethal_string = @cross.lethal
+    set_genotypes
+    set_balancers
 
     @current_url = request.original_url
 
@@ -112,159 +82,32 @@ class CrossesController < ApplicationController
     require 'securerandom'
     @random_string = SecureRandom.hex
 
-    flym = Fly.find(@cross.male_id)
-    flyf = Fly.find(@cross.female_id)
-
-    @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
-    @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
-
-    prog = Fly.where("cross_id = ? AND id != ? AND id != ?", @cross.id, @cross.male_id, @cross.female_id)
-
-    @progeny = []
-    @prog_id = []
-    @x_chr = []
-    @II_chr = []
-    @III_chr = []
-    @IV_chr = []
-    prog.each do |n|
-      @progeny.append([n.chr1.split('/').to_set, n.chr2.split('/').to_set, n.chr3.split('/').to_set, n.chr4.split('/').to_set])
-      @prog_id.append(n.id)
-      @x_chr.append([n.chr1.split('/').to_set])
-      @II_chr.append([n.chr2.split('/').to_set])
-      @III_chr.append([n.chr3.split('/').to_set])
-      @IV_chr.append([n.chr4.split('/').to_set])
-    end
-
-    @x_chr = @x_chr.uniq
-    @II_chr = @II_chr.uniq
-    @III_chr = @III_chr.uniq
-    @IV_chr = @IV_chr.uniq
-
-    @balancers = @cross.balancers.split(';')
-    @balancer_string = @cross.balancers
-    @lethal = @cross.lethal.split(';')
-    @lethal_string = @cross.lethal
+    set_genotypes
+    set_balancers
 
     @current_url = request.original_url
   end
 
   def punnett
 
-    @balancers = @cross.balancers.split(';')
-    @balancer_string = @cross.balancers
-    @lethal = @cross.lethal.split(';')
-    @lethal_string = @cross.lethal
+    set_balancers
 
-    flym = Fly.find(@cross.male_id)
-    flyf = Fly.find(@cross.female_id)
+    male = Genotype.of(Fly.find(@cross.male_id))
+    female = Genotype.of(Fly.find(@cross.female_id))
 
-    chr1_m = flym.chr1.split('/')
-    if depth(chr1_m) == 0
-      chr1_m = [flym.chr1,flym.chr1]
-    end
-    chr2_m = flym.chr2.split('/')
-    if depth(chr2_m) == 0
-      chr2_m = [flym.chr2,flym.chr2]
-    end
-    chr3_m = flym.chr3.split('/')
-    if depth(chr3_m) == 0
-      chr3_m = [flym.chr3,flym.chr3]
-    end
-    chr4_m = flym.chr4.split('/')
-    if depth(chr4_m) == 0
-      chr4_m = [flym.chr4,flym.chr4]
-    end
-    chr1_f = flyf.chr1.split('/')
-    if depth(chr1_f) == 0
-      chr1_f = [flyf.chr1,flyf.chr1]
-    end
-    chr2_f = flyf.chr2.split('/')
-    if depth(chr2_f) == 0
-      chr2_f = [flyf.chr2,flyf.chr2]
-    end
-    chr3_f = flyf.chr3.split('/')
-    if depth(chr3_f) == 0
-      chr3_f = [flyf.chr3,flyf.chr3]
-    end
-    chr4_f = flyf.chr4.split('/')
-    if depth(chr4_f) == 0
-      chr4_f = [flyf.chr4,flyf.chr4]
-    end
+    square = PunnettSquare.new(male.chromosomes, female.chromosomes)
+    @par_male = square.par_male
+    @par_female = square.par_female
+    @p_mal = square.p_mal
+    @p_femal = square.p_femal
+    @male_chrs = square.male_chrs
+    @female_chrs = square.female_chrs
 
-    @par_male = [chr1_m,chr2_m,chr3_m,chr4_m]
-    @par_female = [chr1_f,chr2_f,chr3_f,chr4_f]
-
-    @parent_male = [flym.chr1.split('/').to_set, flym.chr2.split('/').to_set, flym.chr3.split('/').to_set, flym.chr4.split('/').to_set]
-    @parent_female = [flyf.chr1.split('/').to_set, flyf.chr2.split('/').to_set, flyf.chr3.split('/').to_set, flyf.chr4.split('/').to_set]
+    @parent_male = male.allele_sets
+    @parent_female = female.allele_sets
     @current_url = request.original_url
 
-    @p_mal = [0,0,0,0]
-    @p_femal = [0,0,0,0]
-
-    if chr1_m[0] == "+" and chr1_m[1] == "-" and chr1_f[0] == "+" and chr1_f[1] == "+"
-      chr1_m[1] = "+"
-    end
-    if chr1_m[1] == "+" and chr1_m[0] == "-" and chr1_f[0] == "+" and chr1_f[1] == "+"
-      chr1_m[0] = "+"
-    end
-
-    chr_n = 0
-    @par_male.each do |m|
-      if m[0] != "+" or m[1] != "+"
-        @p_mal[chr_n] = m
-      end
-      chr_n = chr_n + 1
-    end
-
-    chr_n = 0
-    @par_female.each do |f|
-      if f[0] != "+" or f[1] != "+"
-        @p_femal[chr_n] = f.to_a
-      end
-      chr_n = chr_n + 1
-    end
-
-    i = 0
-    while i < 3 do
-        if @p_mal[i] == 0 and @p_femal[i] != 0
-          @p_mal[i] = ["+","+"]
-        end
-        if @p_mal[i] != 0 and @p_femal[i] == 0
-          @p_femal[i] = ["+","+"]
-        end
-        i = i + 1
-      end
-
-      @p_mal = @p_mal - [0]
-      @p_femal = @p_femal - [0]
-
-      @male_chrs = @p_mal[0]
-      @female_chrs = @p_femal[0]
-
-      notfirst = false
-      @p_mal.each do |p|
-        if notfirst
-          @male_chrs = @male_chrs.product(p)
-        end
-        notfirst = true
-      end
-      notfirst = false
-      @p_femal.each do |p|
-        if notfirst
-          @female_chrs = @female_chrs.product(p)
-        end
-        notfirst = true
-      end
-
-      if @p_mal.size == 0
-        @male_chrs = [["+"]]
-        @female_chrs = [["+"]]
-      end
-
-      @male_chrs = @male_chrs.uniq
-      @female_chrs = @female_chrs.uniq
-
-    end
+  end
 
     def qr
       qr_img = RQRCode::QRCode.new("http://drosophila.me/" + @cross.friendly_id.to_s )
@@ -349,20 +192,16 @@ class CrossesController < ApplicationController
             if cross_params[:parent].to_i >= 1 or cross_params[:parent] == "stock"
 
               if cross_params[:male_id] == "new"
-                if cross_params[:X] == "+/+"
-                  m_x = "+/-"
-                else
-                  m_x = cross_params[:X]
-                end
+                m_x = Genotype.male_x(cross_params[:X])
 
                 if cross_params[:female_id] != "female_chr_s"
                   @flyf = Fly.find(cross_params[:female_id])
                 end
 
-                m_x = homozygous_tester(m_x)
-                chrII = homozygous_tester(cross_params[:II])
-                chrIII = homozygous_tester(cross_params[:III])
-                chrIV = homozygous_tester(cross_params[:IV])
+                m_x = Genotype.homozygous(m_x)
+                chrII = Genotype.homozygous(cross_params[:II])
+                chrIII = Genotype.homozygous(cross_params[:III])
+                chrIV = Genotype.homozygous(cross_params[:IV])
 
                 @flym = Fly.new(:chr1 => m_x, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
                 @flym.save
@@ -371,10 +210,10 @@ class CrossesController < ApplicationController
                   @flym = Fly.find(cross_params[:male_id])
                 end
 
-                chrX = homozygous_tester(cross_params[:X])
-                chrII = homozygous_tester(cross_params[:II])
-                chrIII = homozygous_tester(cross_params[:III])
-                chrIV = homozygous_tester(cross_params[:IV])
+                chrX = Genotype.homozygous(cross_params[:X])
+                chrII = Genotype.homozygous(cross_params[:II])
+                chrIII = Genotype.homozygous(cross_params[:III])
+                chrIV = Genotype.homozygous(cross_params[:IV])
 
                 @flyf = Fly.new(:chr1 => chrX, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
                 @flyf.save
@@ -384,80 +223,44 @@ class CrossesController < ApplicationController
               end
 
               if cross_params[:male_id] == "male_chr_s"
-                m_x = homozygous_tester(params[:m_X])
-                chrII = homozygous_tester(params[:m_II])
-                chrIII = homozygous_tester(params[:m_III])
-                chrIV = homozygous_tester(params[:m_IV])
+                m_x = Genotype.homozygous(params[:m_X])
+                chrII = Genotype.homozygous(params[:m_II])
+                chrIII = Genotype.homozygous(params[:m_III])
+                chrIV = Genotype.homozygous(params[:m_IV])
 
                 @flym = Fly.new(:chr1 => m_x, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
                 @flym.save
               end
               if cross_params[:female_id] == "female_chr_s"
-                m_x = homozygous_tester(params[:f_X])
-                chrII = homozygous_tester(params[:f_II])
-                chrIII = homozygous_tester(params[:f_III])
-                chrIV = homozygous_tester(params[:f_IV])
+                m_x = Genotype.homozygous(params[:f_X])
+                chrII = Genotype.homozygous(params[:f_II])
+                chrIII = Genotype.homozygous(params[:f_III])
+                chrIV = Genotype.homozygous(params[:f_IV])
 
                 @flyf = Fly.new(:chr1 => m_x, :chr2 => chrII, :chr3 => chrIII, :chr4 => chrIV, :cross_id => @cross.id)
                 @flyf.save
               end
 
             else
-              if cross_params[:m_X] == "+/+"
-                m_x = "+/-"
-              else
-                m_x = cross_params[:m_X]
-              end
+              m_x = Genotype.founder_male_x(cross_params[:m_X])
 
-              male_ytester = m_x.split('/')
-              if male_ytester[0] == "Y"
-                m_x = male_ytester[1] + "/-"
-              end
-              if male_ytester[1] == "Y"
-                m_x = male_ytester[0] + "/-"
-              end
-
-              m_x = homozygous_tester(m_x)
-              chr_mII = homozygous_tester(cross_params[:m_II])
-              chr_mIII = homozygous_tester(cross_params[:m_III])
-              chr_mIV = homozygous_tester(cross_params[:m_IV])
-              chr_fX = homozygous_tester(cross_params[:f_X])
-              chr_fII = homozygous_tester(cross_params[:f_II])
-              chr_fIII = homozygous_tester(cross_params[:f_III])
-              chr_fIV = homozygous_tester(cross_params[:f_IV])
+              m_x = Genotype.homozygous(m_x)
+              chr_mII = Genotype.homozygous(cross_params[:m_II])
+              chr_mIII = Genotype.homozygous(cross_params[:m_III])
+              chr_mIV = Genotype.homozygous(cross_params[:m_IV])
+              chr_fX = Genotype.homozygous(cross_params[:f_X])
+              chr_fII = Genotype.homozygous(cross_params[:f_II])
+              chr_fIII = Genotype.homozygous(cross_params[:f_III])
+              chr_fIV = Genotype.homozygous(cross_params[:f_IV])
 
               @flym = Fly.new(:chr1 => m_x, :chr2 => chr_mII, :chr3 => chr_mIII, :chr4 => chr_mIV, :cross_id => @cross.id)
               @flyf = Fly.new(:chr1 => chr_fX, :chr2 => chr_fII, :chr3 => chr_fIII, :chr4 => chr_fIV, :cross_id => @cross.id)
               @flym.save and @flyf.save
             end
 
-            chrm = @flym.chr1.split('/')
-            chrf = @flyf.chr1.split('/')
-            chr1 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
+            progeny = CrossCalculator.progeny(Genotype.of(@flym).chromosomes, Genotype.of(@flyf).chromosomes)
 
-            chrm = @flym.chr2.split('/')
-            chrf = @flyf.chr2.split('/')
-            chr2 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
-
-            chrm = @flym.chr3.split('/')
-            chrf = @flyf.chr3.split('/')
-            chr3 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
-
-            chrm = @flym.chr4.split('/')
-            chrf = @flyf.chr4.split('/')
-            chr4 = [Set[chrm[0],chrf[0]],Set[chrm[0],chrf[1]],Set[chrm[1],chrf[0]],Set[chrm[1],chrf[1]]]
-
-            progeny = chr1.product(chr2,chr3,chr4).uniq
-
-            progeny.each do |p|
-              out = []
-              p.each do |n|
-                if n.size == 1
-                  out.append(n.to_a[0]+"/"+n.to_a[0])
-                else
-                  out.append(n.to_a.join('/'))
-                end
-              end
+            progeny.each do |out|
               flyp = Fly.new(:chr1 => out[0], :chr2 => out[1], :chr3 => out[2], :chr4 => out[3], :cross_id => @cross.id)
               flyp.save
             end
@@ -513,12 +316,24 @@ class CrossesController < ApplicationController
                                     :parent,:male_id,:female_id,:link,
                                     :X,:II,:III,:IV,:crossdate)
     end
-    def homozygous_tester(chromosome)
-      if !chromosome.include? "/"
-        return chromosome + "/" + chromosome
-      else
-        return chromosome
-      end
+    def set_genotypes
+      @parent_male = Genotype.of(Fly.find(@cross.male_id)).allele_sets
+      @parent_female = Genotype.of(Fly.find(@cross.female_id)).allele_sets
+
+      prog = Fly.where("cross_id = ? AND id != ? AND id != ?", @cross.id, @cross.male_id, @cross.female_id)
+
+      @progeny = prog.map { |fly| Genotype.of(fly).allele_sets }
+      @prog_id = prog.map(&:id)
+      @x_chr = @progeny.map { |sets| [sets[0]] }.uniq
+      @II_chr = @progeny.map { |sets| [sets[1]] }.uniq
+      @III_chr = @progeny.map { |sets| [sets[2]] }.uniq
+      @IV_chr = @progeny.map { |sets| [sets[3]] }.uniq
+    end
+    def set_balancers
+      @balancers = @cross.balancers.split(';')
+      @balancer_string = @cross.balancers
+      @lethal = @cross.lethal.split(';')
+      @lethal_string = @cross.lethal
     end
     def correct_user
       if user_signed_in?
@@ -535,9 +350,5 @@ class CrossesController < ApplicationController
       else
         redirect_to root_url, notice: 'You need to be logged in.'
       end
-    end
-    def depth(a)
-      return 0 unless a.is_a?(Array)
-      return 1 + depth(a[0])
     end
   end
