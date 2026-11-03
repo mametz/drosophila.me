@@ -18,8 +18,8 @@ Rails.application.routes.draw do
   get ':id/chr' => 'crosses#chromosome'
   get ':id/pnt' => 'crosses#punnett'
 
-  get '/stocks/n/:fly_to_stock' => 'stocks#create'
-  get '/stocks/x/add' => 'stocks#add'
+  post '/stocks/n/:fly_to_stock' => 'stocks#create'
+  post '/stocks/x/add' => 'stocks#add'
 
   get 'copy/:id' => 'crosses#copy', :as => 'copy'
 
