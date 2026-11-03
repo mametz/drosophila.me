@@ -1,0 +1,7 @@
+<% if stock.errors.any? %>
+  <div class="flash flash-alert" role="alert">
+    <% stock.errors.full_messages.each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+<% end %>

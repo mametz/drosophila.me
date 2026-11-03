@@ -1,0 +1,8 @@
+<h3>Lethal alleles</h3>
+<label>Alleles separated by semicolon [;]<%= form.text_field :lethal %></label>
+<h3>Balancers</h3>
+<label>Balancers separated by semicolon [;]<%= form.text_field :balancers %></label>
+<h3>Comments</h3>
+<label>Describe this cross<%= form.text_field :description, value: "" %></label>
+<h3>Date of cross</h3>
+<%= form.date_select :crossdate, selected: Date.current %>

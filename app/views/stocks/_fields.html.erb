@@ -1,0 +1,8 @@
+<div class="field-grid">
+  <label>Stock number<%= form.number_field :number %></label>
+  <label>Stock room<br><%= form.collection_select :room_id, Current.user.rooms.order(:name), :id, :name, include_blank: "Choose stock room" %></label>
+</div>
+<label>Comment<%= form.text_area :comment %></label>
+<label>Date established<br><%= form.date_select :date_established, include_blank: true %></label>
+<label>Reference<%= form.text_area :reference %></label>
+<label>Received from<%= form.text_area :received_from %></label>

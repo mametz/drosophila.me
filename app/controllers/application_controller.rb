@@ -1,10 +1,8 @@
 class ApplicationController < ActionController::Base
-  # reset captcha code after each request for security
-  after_filter :reset_last_captcha_code!
+  include Authentication
+  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  allow_browser versions: :modern
 
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
-
-  require 'csv'
+  # Changes to the importmap will invalidate the etag for HTML responses
+  stale_when_importmap_changes
 end

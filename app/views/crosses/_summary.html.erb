@@ -1,0 +1,29 @@
+<% owner = cross.user %>
+<div class="cross-meta">
+  <%= mail_to owner.email_address, title: owner.email_address do %>
+    <%= image_tag owner.gravatar_url, class: "avatar", alt: "" %>
+  <% end %>
+  <div>
+    <% if cross.parent_id %>
+      <%= link_to "Cross history", history_path(cross) %><br>
+    <% end %>
+    <%= link_to "QR code", qr_path(cross) %>
+  </div>
+  <div>
+    <%= cross.crossdate.strftime("Crossed on %B %d, %Y") %><br>
+    <%= cross.description %>
+  </div>
+</div>
+<% if authenticated? %>
+  <div class="cross-actions">
+    <% if cross.owned_by?(Current.user) %>
+      <%= button_to cross.shared? ? "Make private" : "Share by link", cross_path(cross), method: :patch,
+                    params: { cross: { shared: !cross.shared? } }, class: "button button-quiet" %>
+      <%= button_to "Delete cross", cross_path(cross), method: :delete, class: "button button-danger",
+                    form: { data: { turbo_confirm: "Delete this cross? Crosses derived from it are kept." } } %>
+    <% else %>
+      <%= button_to "Copy cross", copy_cross_path(cross), class: "button button-quiet" %>
+    <% end %>
+  </div>
+  <br>
+<% end %>

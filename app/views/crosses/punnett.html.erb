@@ -1,156 +1,27 @@
-<div class="white-bg">
-<nav aria-label="You are here:" role="navigation">
-  <ul class="breadcrumbs">
-    <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
-    <li><a href="<%= request.base_url %>/crosses">Crosses</a></li>
-    <li>
-      <span class="show-for-sr">Current: </span> Punnett square
-    </li>
-  </ul>
-</nav>
+<% content_for(:title) { "Punnett square · drosophila.me" } %>
 <h1>Show cross</h1>
-<% g_user = User.find(@cross.user_id) %>
-<% death = false %>
-<div class="row">
-  <div class="large-2 column">
-    <a href="mailto:<%= g_user.email %>" alt="<%= g_user.email %>" title="<%= g_user.email %>">
-      <%= image_tag g_user.gravatar_url, :class=> "img-circular" %>
-    </a>
-  </div>
-  <div class="large-5 column">
-    <% if @cross.parent.to_i >= 1 %>
-      <a href="<%= short_path %>/history"><i class="fi-page-multiple"></i> Cross history</a>
-      <br />
-    <% end %>
-    <a href="<%= short_path %>/qr"><i class="fi-camera"></i> QR code</a>
-    <br />
-    <% if user_signed_in?
-      if g_user.id == current_user.id %>
-      <%= link_to @cross, method: :delete, data: { confirm: "Are you sure? The cross and all it's derivatives would be deleted." } do %>
-        <i class="fi-trash" ></i> Delete cross
-      <% end %>
-    <% else %>
-      <%= link_to copy_path do %>
-        <i class="fi-page-copy" ></i> Copy cross
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
-<div class="large-5 column">
-  <p><%= @cross.crossdate.strftime("Crossed on %B %d, %Y") %><br />
-    <%= @cross.description %></p>
-</div>
-</div>
-<% 
-    if user_signed_in?
-      if g_user.id == current_user.id
-        %><br />
-<p>
-  <a href="<%= short_path %>" class="button small secondary">Fly view</a>
-  <a href="<%= short_path %>/chr" class="button small secondary">Chromosome view</a>
-  <a href="<%= short_path %>/pnt" class="button small primary">Punnett square</a>
-</p>
-<% end end %>
-<br />
-\[\underbrace{
-
-      &#x2642; \quad 
-
-      <% semikolon = 0 %>
-<% @parent_male.each do |chr| %>
-  <% if chr.size > 1 %>
-    <% if semikolon != 0 %>;<% end %>
-    <% chr %>
-    \dfrac
-      <% chr.each do |n| %>
-      {<%= n %>}
-      <% end %>
-  <% else %>
-    <% if semikolon != 0 %>;<% end %>
-    <% chr.each do |n| %>
-      <%= n %>
-    <% end %>
-  <% end %>
-  <% semikolon = 1 %>
-<% end %>
-\qquad X \qquad 
-
-      <% semikolon = 0 %>
-<% @parent_female.each do |chr| %>
-  <% if chr.size > 1 %>
-    <% if semikolon != 0 %>;<% end %>
-    <% chr %>
-    \dfrac
-      <% chr.each do |n| %>
-      {<%= n %>}
-      <% end %>
-  <% else %>
-    <% if semikolon != 0 %>;<% end %>
-    <% chr.each do |n| %>
-      <%= n %>
-    <% end %>
-  <% end %>
-  <% semikolon = 1 %>
-<% end %>
-\quad &#x2640;
-    }\]
-
-        
-<table align="center">
-  <tbody>
-    <tr>
-      <% r = 0 %>
-      <% c = 0 %>
-      <th scope="column">&#x2642; / &#x2640;</th>
-      <% @female_chrs.each do |f| %>
-        <% if f.is_a? String %>
-          <th scope="column"><small>\[<%= f %>\]</small></th>
-        <% else %>
-          <th scope="column"><small>\[<%= f.join(' ; ') %>\]</small></th>
-        <% end %>
-      <% end %>
-      <% @male_chrs.each do |m| %>
-      </tr>
+<%= render "summary", cross: @cross %>
+<%= render "tabs", cross: @cross, current: :punnett %>
+<div class="panel"><%= cross_math(@cross) %></div>
+<div class="table-wrap">
+  <table class="punnett">
+    <thead>
       <tr>
-        <% if m.is_a? String %>
-          <th scope="row"><small>\[<%= m %>\]</small></th>
-        <% else %>
-          <th scope="row"><small>\[<%= m.join(' ; ') %>\]</small></th>
-        <% end %>
-        <% @female_chrs.each do |f| %>
-          
-          <td><small>\[
-              <% if m.class == Hash and f.class == Hash %>
-              <% if m.flatten.size >= f.flatten.size %>
-                <% endp = m.flatten.size %>
-              <% else %>
-                <% endp = f.flatten.size %>
-              <% end %>
-              <% else endp = 1 end %>
-              <% i = 0 %>
-              <% if m.is_a? String %>
-                \frac{<%= m %>}{<%= f %>}
-                <% else %>
-                <% while i < endp %>
-                  <% if m.flatten[i] == nil %>
-                    \frac{+}{<%= f.flatten[i] %>}
-                <% elsif f.flatten[i] == nil %>
-                    \frac{<%= m.flatten[i] %>}{+}
-                <% else %>
-                    \frac{<%= m.flatten[i] %>}{<%= f.flatten[i] %>}
-                <% end %>
-                  <% if i < endp - 1 %>
-                    ;
-                <% end %>
-                  <% i = i + 1 %>
-                <% end %>
-              <% end %>
-              \]</small></td>
-          <% c += 1 %>
+        <th scope="col">&#x2642; / &#x2640;</th>
+        <% @square.female_chrs.each do |female| %>
+          <th scope="col"><%= punnett_header(female) %></th>
         <% end %>
       </tr>
-      <% r += 1 %>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @square.male_chrs.each do |male| %>
+        <tr>
+          <th scope="row"><%= punnett_header(male) %></th>
+          <% @square.female_chrs.each do |female| %>
+            <td><%= punnett_cell(male, female) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

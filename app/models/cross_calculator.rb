@@ -1,4 +1,4 @@
-require 'set'
+require "set"
 
 # Works out which offspring genotypes a cross can produce.
 class CrossCalculator
@@ -7,7 +7,7 @@ class CrossCalculator
   # so "a/b" and "b/a" count as the same chromosome.
   def self.progeny(male_chromosomes, female_chromosomes)
     pairings = male_chromosomes.zip(female_chromosomes).map do |male, female|
-      pairings_for(male.split('/'), female.split('/'))
+      pairings_for(male.split("/"), female.split("/"))
     end
 
     pairings[0].product(*pairings[1..-1]).uniq.map do |offspring|
@@ -16,7 +16,7 @@ class CrossCalculator
   end
 
   def self.pairings_for(m, f)
-    [Set[m[0], f[0]], Set[m[0], f[1]], Set[m[1], f[0]], Set[m[1], f[1]]]
+    [ Set[m[0], f[0]], Set[m[0], f[1]], Set[m[1], f[0]], Set[m[1], f[1]] ]
   end
   private_class_method :pairings_for
 
@@ -24,7 +24,7 @@ class CrossCalculator
     if pairing.size == 1
       pairing.to_a[0] + "/" + pairing.to_a[0]
     else
-      pairing.to_a.join('/')
+      pairing.to_a.join("/")
     end
   end
   private_class_method :chromosome_string

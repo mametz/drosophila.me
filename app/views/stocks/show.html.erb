@@ -1,48 +1,17 @@
-<div class="white-bg">
-<nav aria-label="You are here:" role="navigation">
-  <ul class="breadcrumbs">
-    <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
-    <li><a href="<%= request.base_url %>/stocks">Stocks</a></li>
-    <li>
-      <span class="show-for-sr">Current: </span> Show stock
-          </li>
-  </ul>
-</nav>
-<h1>Stock n. <%= @stock.number %></h1>
-<a href="<%= new_stock_path %>" class="button small secondary">New Stock</a>
+<% content_for(:title) { "Stock · drosophila.me" } %>
+<h1>Stock <%= @stock.number %></h1>
 <div class="panel">
-  <p>
-    <strong>Genotype:</strong>
-    <% fly = Fly.find(@stock.fly_id) %>
-    <%= fly.chr1 %> ; <%= fly.chr2 %> ; <%= fly.chr3 %> ; <%= fly.chr4 %>
-  </p>
-  <p>
-    <strong>Stock room:</strong>
-    <% if @room != nil %>
-      <%= @room.name %>
-    <% end %>
-  </p>
-  <p>
-    <strong>Comment:</strong>
-    <%= @stock.comment %>
-  </p>
-  <p>
-    <strong>Date established:</strong>
-    <% if @stock.date_established != nil %>
-      <%= @stock.date_established.strftime("%B %d, %Y") %>
-    <% end %>
-  </p>
-  <p>
-    <strong>Reference:</strong>
-    <%= @stock.reference %>
-  </p>
-  <p>
-    <strong>Received from:</strong>
-    <%= @stock.received_from %>
-  </p>
-  <a href="<%= @stock.id %>/edit" class="button small secondary"><i class="fi-page-edit" ></i> Edit</a>
-  <%= link_to @stock, method: :delete, data: { confirm: "Are you sure?" }, class: "button small alert" do %>
-    <i class="fi-trash" ></i> Delete stock
-  <% end %>
+  <p><strong>Genotype:</strong> <%= @stock.fly.chromosomes.join(" ; ") %></p>
+  <%= genotype_math(@stock.fly) %>
+  <p><strong>Stock room:</strong> <%= @stock.room&.name %></p>
+  <p><strong>Comment:</strong> <%= @stock.comment %></p>
+  <p><strong>Date established:</strong> <%= @stock.date_established&.strftime("%B %d, %Y") %></p>
+  <p><strong>Reference:</strong> <%= @stock.reference %></p>
+  <p><strong>Received from:</strong> <%= @stock.received_from %></p>
+  <div class="cross-actions">
+    <%= link_to "Edit", edit_stock_path(@stock), class: "button button-quiet" %>
+    <%= button_to "Delete stock", stock_path(@stock), method: :delete, class: "button button-danger",
+                  form: { data: { turbo_confirm: "Delete this stock?" } } %>
+  </div>
 </div>
-</div>
+<p><%= link_to "Back to stocks", stocks_path %></p>

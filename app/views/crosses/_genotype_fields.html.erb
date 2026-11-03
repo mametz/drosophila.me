@@ -1,0 +1,6 @@
+<p class="hint">Separate sister chromosomes with a slash [/] and alleles on the same chromosome with a comma [,]</p>
+<div class="field-grid">
+  <% fields.each do |name, label, value| %>
+    <label><%= label %><%= form.text_field name, value: value %></label>
+  <% end %>
+</div>

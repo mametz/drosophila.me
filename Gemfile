@@ -1,92 +1,54 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem "devise", ">= 4.7.1"
-gem 'devise_security_extension'
-gem 'easy_captcha'
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 8.1.4"
+# The modern asset pipeline for Rails [https://github.com/rails/propshaft]
+gem "propshaft"
+# Use postgresql as the database for Active Record
+gem "pg", "~> 1.1"
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails"
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+gem "jbuilder"
 
-gem "yard", ">= 0.9.20"
-gem 'rqrcode_png', git: "https://github.com/DCarper/rqrcode_png.git"
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+gem "bcrypt", "~> 3.1.7"
+gem "csv"
+gem "rqrcode"
 
-gem 'tzinfo-data'
-gem 'omniauth', '~> 1.6', '>= 1.6.1'
-gem 'omniauth-twitter'
-gem 'omniauth-facebook'
-gem 'omniauth-github'
-gem 'omniauth-rails_csrf_protection'
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-gem 'cookies_eu'
-gem 'remote_syslog_logger'
-
-gem 'foundation-rails', '6.3.0.0'
-gem 'foundation-icons-sass-rails'
-
-gem 'gravatarify', '~> 3.0.0'
-
-gem "mini_magick", ">= 4.9.4"
-
-gem 'mathjax-rails'
-
-gem 'jquery-ui-rails'
-gem 'foundation-datetimepicker-rails'
-
-gem 'friendly_id', '~> 5.1.0'
-gem 'dragonfly', '~> 1.0.12'
-gem 'gravtastic'
-
-gem 'rails_12factor', group: :production
-gem 'lograge', group: :production
-gem 'quiet_assets', group: :production
-#gem 'remote_syslog_logger', group: :production
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
 
 group :development, :test do
-  gem 'foreman'
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # Audits gems for known security defects (use config/bundler-audit.yml to ignore issues)
+  gem "bundler-audit", require: false
+
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem "brakeman", require: false
+
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
 end
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
- gem 'rails', '4.2.11.3'
-# Use sqlite3 as the database for Active Record
-# gem 'sqlite3', group: :development
-# gem 'pg'
-gem 'pg', '~> 0.21'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-gem "json", ">= 2.3.0"
-# bundle exec rake doc:rails generates the API under doc/api.
-# gem 'sdoc', group: :doc
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Unicorn as the app server
-#gem 'unicorn'
-
-gem "puma", ">= 3.12.6"
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
-group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+group :development do
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
 end
 
-ruby "2.5.1"
+group :test do
+  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "capybara"
+  gem "selenium-webdriver"
+end

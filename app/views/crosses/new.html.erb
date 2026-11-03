@@ -1,13 +1,20 @@
-<div class="white-bg">
-<nav aria-label="You are here:" role="navigation">
-  <ul class="breadcrumbs">
-    <li><a href="<%= request.base_url %>">Drosophila.me</a></li>
-    <li><a href="<%= request.base_url %>/crosses">Crosses</a></li>
-    <li>
-      <span class="show-for-sr">Current: </span> New cross
-          </li>
-  </ul>
-</nav>
-<h1>New Cross</h1>
-<%= render 'form' %>
-</div>
+<% content_for(:title) { "New cross · drosophila.me" } %>
+<h1>New cross</h1>
+<%= form_with url: crosses_path, scope: :cross do |f| %>
+  <div class="panel">
+    <h2>Male genotype</h2>
+    <%= render "genotype_fields", form: f, fields: [
+          [ :m_X, "X/Y chromosome", "+/-" ], [ :m_II, "Chromosome 2", "+/+" ],
+          [ :m_III, "Chromosome 3", "+/+" ], [ :m_IV, "Chromosome 4", "+/+" ] ] %>
+  </div>
+  <div class="panel">
+    <h2>Female genotype</h2>
+    <%= render "genotype_fields", form: f, fields: [
+          [ :f_X, "X chromosome", "+/+" ], [ :f_II, "Chromosome 2", "+/+" ],
+          [ :f_III, "Chromosome 3", "+/+" ], [ :f_IV, "Chromosome 4", "+/+" ] ] %>
+  </div>
+  <div class="panel">
+    <%= render "next_cross_fields", form: f %>
+    <p><%= f.submit "Cross" %></p>
+  </div>
+<% end %>

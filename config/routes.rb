@@ -1,84 +1,34 @@
 Rails.application.routes.draw do
-  
-  resources :rooms
-  captcha_route
-  get 'static_pages/home'
-  get 'static_pages/team'
+  resource :session
+  resources :passwords, param: :token
+  resource :registration, only: %i[new create]
+  resource :account, only: %i[edit update destroy]
 
-  devise_for :users
-  resources :flies
-  resources :crosses
+  # Devise paths people may have bookmarked
+  get "/users/sign_in", to: redirect("/session/new")
+  get "/users/sign_up", to: redirect("/registration/new")
+
+  get "static_pages/home", to: redirect("/")
+  get "static_pages/team", to: "static_pages#team", as: :team
+
+  resources :rooms, except: :show
   resources :stocks
+  post "stocks/n/:fly_id", to: "stocks#from_fly", as: :stock_from_fly
 
-  get 'crosses/:id/history' => 'crosses#history'
-  get ':id/history' => 'crosses#history'
-  get ':id/qr' => 'crosses#qr'
-  get '/crosses/:id/qr' => 'crosses#qr'
-  get ':id' => 'crosses#show', :as => 'short'
-  get ':id/chr' => 'crosses#chromosome'
-  get ':id/pnt' => 'crosses#punnett'
+  post "copy/:id", to: "crosses#copy", as: :copy_cross
+  resources :crosses, only: %i[index new create update destroy]
 
-  get '/stocks/n/:fly_to_stock' => 'stocks#create'
-  get '/stocks/x/add' => 'stocks#add'
+  get "up" => "rails/health#show", as: :rails_health_check
 
-  get 'copy/:id' => 'crosses#copy', :as => 'copy'
+  root "static_pages#home"
 
-  root :to => "static_pages#home"
-
-  mathjax 'mathjax'
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
+  # Short links are printed on labels as QR codes, so these paths must not change.
+  get "crosses/:id", to: "crosses#show"
+  get "crosses/:id/history", to: "crosses#history"
+  get "crosses/:id/qr", to: "crosses#qr"
+  get ":id", to: "crosses#show", as: :short
+  get ":id/history", to: "crosses#history", as: :history
+  get ":id/qr", to: "crosses#qr", as: :qr
+  get ":id/chr", to: "crosses#chromosome", as: :chromosome
+  get ":id/pnt", to: "crosses#punnett", as: :punnett
 end

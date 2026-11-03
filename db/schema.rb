@@ -1,103 +1,101 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151210064558) do
-
+ActiveRecord::Schema[8.1].define(version: 2026_11_03_200000) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "crosses", force: :cascade do |t|
-    t.integer  "male_id"
-    t.integer  "female_id"
-    t.string   "link"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.text     "description"
-    t.text     "balancers"
-    t.text     "lethal"
-    t.integer  "parent"
-    t.string   "slug"
-    t.integer  "user_id"
-    t.date     "crossdate"
+    t.bigint "user_id", null: false
+    t.bigint "male_fly_id"
+    t.bigint "female_fly_id"
+    t.bigint "parent_id"
+    t.string "slug", null: false
+    t.text "description"
+    t.text "balancers", default: "", null: false
+    t.text "lethal", default: "", null: false
+    t.date "crossdate", null: false
+    t.boolean "shared", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["female_fly_id"], name: "index_crosses_on_female_fly_id"
+    t.index ["male_fly_id"], name: "index_crosses_on_male_fly_id"
+    t.index ["parent_id"], name: "index_crosses_on_parent_id"
+    t.index ["slug"], name: "index_crosses_on_slug", unique: true
+    t.index ["user_id"], name: "index_crosses_on_user_id"
   end
 
   create_table "flies", force: :cascade do |t|
-    t.text     "chr1"
-    t.text     "chr2"
-    t.text     "chr3"
-    t.text     "chr4"
-    t.integer  "cross_id"
+    t.text "chr1", null: false
+    t.text "chr2", null: false
+    t.text "chr3", null: false
+    t.text "chr4", null: false
+    t.bigint "cross_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cross_id"], name: "index_flies_on_cross_id"
   end
-
-  create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",                      null: false
-    t.integer  "sluggable_id",              null: false
-    t.string   "sluggable_type", limit: 50
-    t.string   "scope"
-    t.datetime "created_at"
-  end
-
-  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
-  add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
-  add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
-  add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
   create_table "rooms", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "temperature"
-    t.integer  "user_id"
-    t.integer  "lab_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string "name", null: false
+    t.integer "temperature"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_rooms_on_user_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "stocks", force: :cascade do |t|
-    t.integer  "number"
-    t.string   "name"
-    t.integer  "fly_id"
-    t.integer  "lab_id"
-    t.integer  "user_id"
-    t.text     "comment"
-    t.date     "date_established"
-    t.integer  "room_id"
-    t.text     "reference"
-    t.text     "received_from"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.integer "number"
+    t.string "name"
+    t.bigint "fly_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "room_id"
+    t.text "comment"
+    t.date "date_established"
+    t.text "reference"
+    t.text "received_from"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fly_id"], name: "index_stocks_on_fly_id"
+    t.index ["room_id"], name: "index_stocks_on_room_id"
+    t.index ["user_id"], name: "index_stocks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.string   "provider"
-    t.string   "uid"
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["provider"], name: "index_users_on_provider", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["uid"], name: "index_users_on_uid", using: :btree
-
+  add_foreign_key "crosses", "crosses", column: "parent_id", on_delete: :nullify
+  add_foreign_key "crosses", "flies", column: "female_fly_id"
+  add_foreign_key "crosses", "flies", column: "male_fly_id"
+  add_foreign_key "crosses", "users"
+  add_foreign_key "flies", "crosses", on_delete: :nullify
+  add_foreign_key "rooms", "users"
+  add_foreign_key "sessions", "users"
+  add_foreign_key "stocks", "flies"
+  add_foreign_key "stocks", "rooms", on_delete: :nullify
+  add_foreign_key "stocks", "users"
 end

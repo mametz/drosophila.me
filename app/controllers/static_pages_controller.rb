@@ -1,14 +1,13 @@
 class StaticPagesController < ApplicationController
+  allow_unauthenticated_access
+  before_action :resume_session
+
   def home
-  	@user_n = User.all.count
-  	@cross_n = Cross.all.count * 2
-  	@stock_n = Stock.all.count
-
+    @user_count = User.count
+    @cross_count = Cross.count
+    @stock_count = Stock.count
   end
 
-  def help
-  end
-
-  def about
+  def team
   end
 end
