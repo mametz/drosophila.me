@@ -1,4 +1,4 @@
-# Readable examples of the genetics rules, including known quirks.
+# Readable examples of the genetics rules.
 require "test_helper"
 
 class GenotypeTest < Minitest::Test
@@ -74,14 +74,21 @@ class PunnettSquareTest < Minitest::Test
     assert_equal [ [ "Cy", "Sb" ], [ "Cy", "+" ], [ "+", "Sb" ], [ "+", "+" ] ], square.male_chrs
   end
 
-  # Known bugs, pinned so they change on purpose rather than by accident.
-  def test_quirk_fourth_chromosome_mutation_only_in_male_crashes
-    assert_raises(NoMethodError) { PunnettSquare.new([ "+/+", "+/+", "+/+", "ey/+" ], WILD) }
+  def test_fourth_chromosome_mutated_only_in_male_is_padded
+    square = PunnettSquare.new([ "+/+", "+/+", "+/+", "ey/+" ], WILD)
+    assert_equal [ "ey", "+" ], square.male_chrs
+    assert_equal [ "+" ], square.female_chrs
   end
 
-  def test_quirk_fourth_chromosome_mutation_only_in_female_is_dropped
+  def test_fourth_chromosome_mutated_only_in_female_is_padded
     square = PunnettSquare.new(WILD, [ "+/+", "+/+", "+/+", "ey/+" ])
-    assert_equal [ [ "+" ] ], square.male_chrs
-    assert_equal [ [ "+" ] ], square.female_chrs
+    assert_equal [ "+" ], square.male_chrs
+    assert_equal [ "ey", "+" ], square.female_chrs
+  end
+
+  def test_fourth_chromosome_is_combined_with_the_others
+    square = PunnettSquare.new([ "+/+", "Cy/+", "+/+", "+/+" ], [ "+/+", "+/+", "+/+", "ey/+" ])
+    assert_equal [ [ "Cy", "+" ], [ "+", "+" ] ], square.male_chrs
+    assert_equal [ [ "+", "ey" ], [ "+", "+" ] ], square.female_chrs
   end
 end

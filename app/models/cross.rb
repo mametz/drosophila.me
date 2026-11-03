@@ -65,11 +65,18 @@ class Cross < ApplicationRecord
     transaction do
       copy = self.class.create!(user: new_owner, parent: parent, description: description, balancers: balancers,
                                 lethal: lethal, crossdate: crossdate)
-      male = Fly.from_chromosomes(male_fly.chromosomes, cross: copy).tap(&:save!)
-      female = Fly.from_chromosomes(female_fly.chromosomes, cross: copy).tap(&:save!)
-      progeny.each { |fly| Fly.from_chromosomes(fly.chromosomes, cross: copy).save! }
+      male = duplicate_fly(male_fly, copy)
+      female = duplicate_fly(female_fly, copy)
+      progeny.each { |fly| duplicate_fly(fly, copy) }
       copy.update!(male_fly: male, female_fly: female)
       copy
     end
+  end
+
+  private
+
+  # Flies from the old app may not match today's check for typed genotypes.
+  def duplicate_fly(fly, copy)
+    Fly.from_chromosomes(fly.chromosomes, cross: copy).tap { |duplicate| duplicate.save!(validate: false) }
   end
 end

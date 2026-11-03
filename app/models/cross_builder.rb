@@ -26,8 +26,10 @@ class CrossBuilder
       @cross.save!
       male = save_parent(male)
       female = save_parent(female)
+      # Parents from the old app can hold chromosomes such as "/w", so the
+      # progeny they produce can't pass the check for typed genotypes.
       CrossCalculator.progeny(male.chromosomes, female.chromosomes).each do |chromosomes|
-        Fly.from_chromosomes(chromosomes, cross: @cross).save!
+        Fly.from_chromosomes(chromosomes, cross: @cross).save!(validate: false)
       end
       @cross.update!(male_fly: male, female_fly: female)
     end
@@ -64,12 +66,7 @@ class CrossBuilder
     when "new"
       typed(CHROMOSOME_NAMES, male: prefix == "m")
     when chromosomes_choice
-      if names(prefix).any? { |name| @params[name].blank? }
-        @errors << "Not all chromosomes were selected."
-        nil
-      else
-        typed(names(prefix))
-      end
+      picked(names(prefix))
     else
       existing_fly(choice)
     end
@@ -95,20 +92,36 @@ class CrossBuilder
     Fly.from_chromosomes(values.map { |value| Genotype.homozygous(value) })
   end
 
+  # Picked from the chromosomes of a previous cross, so old notation is allowed.
+  def picked(fields)
+    values = fields.map { |field| @params[field].to_s }
+    if values.any?(&:blank?)
+      @errors << "Not all chromosomes were selected."
+      return nil
+    end
+
+    Fly.from_chromosomes(values.map { |value| Genotype.homozygous(value) })
+  end
+
   # Only flies the user can reach through their own crosses or stocks.
   def existing_fly(id)
     fly = Fly.find_by(id: id)
-    return fly if fly && @user.can_use_fly?(fly)
-
-    @errors << "That fly was not found."
-    nil
+    unless fly && @user.can_use_fly?(fly)
+      @errors << "That fly was not found."
+      return nil
+    end
+    unless fly.chromosomes.all? { |chromosome| chromosome.split("/").size >= 2 }
+      @errors << "That fly has an incomplete genotype. Enter it as a new genotype to cross it."
+      return nil
+    end
+    fly
   end
 
   def save_parent(fly)
     return fly if fly.persisted?
 
     fly.cross = @cross
-    fly.save!
+    fly.save!(validate: false)
     fly
   end
 end

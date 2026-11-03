@@ -1,0 +1,15 @@
+{
+  "name": "drosophila.me",
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web check",
+        "description": "Rails health endpoint responds",
+        "path": "/up",
+        "attempts": 6,
+        "wait": 5
+      }
+    ]
+  }
+}

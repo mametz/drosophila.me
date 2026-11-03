@@ -170,6 +170,18 @@ class CrossesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "\\frac{Cy}{+} ; \\frac{Sb}{+}"
   end
 
+  test "Punnett page shows a chromosome IV mutation carried by only one parent" do
+    sign_in_as @owner
+    [ { male: %w[+/- +/+ +/+ ey/+], female: %w[+/+ +/+ +/+ +/+] },
+      { male: %w[+/- +/+ +/+ +/+], female: %w[+/+ +/+ +/+ ey/+] } ].each do |parents|
+      cross = create_founder(**parents)
+      get punnett_path(cross)
+      assert_response :success
+      assert_includes response.body, "\\frac{ey}{+}" if parents[:male][3] != "+/+"
+      assert_includes response.body, "\\frac{+}{ey}" if parents[:female][3] != "+/+"
+    end
+  end
+
   test "chromosome view offers the chromosomes of viable progeny" do
     sign_in_as @owner
     cross = create_founder(male: %w[w/- Cy/+ +/+ +/+], female: %w[w/w +/+ +/+ +/+])
@@ -264,5 +276,40 @@ class CrossesTest < ActionDispatch::IntegrationTest
     get crosses_path
     assert_response :success
     assert_not_includes response.body, mine.slug
+  end
+
+  test "flies with old notation from the previous app can be viewed, crossed and copied" do
+    cross = @owner.crosses.create!(crossdate: Date.current)
+    male = Fly.new(chr1: "/w", chr2: "a/b/c", chr3: "+/+", chr4: "+/+", cross: cross)
+    female = Fly.new(chr1: "w/w", chr2: "+/+", chr3: "", chr4: "+/+", cross: cross)
+    progeny = Fly.new(chr1: "/w", chr2: "a/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    [ male, female, progeny ].each { |fly| fly.save!(validate: false) }
+    cross.update!(male_fly: male, female_fly: female)
+
+    sign_in_as @owner
+    [ short_path(cross), chromosome_path(cross), punnett_path(cross), history_path(cross), qr_path(cross) ].each do |path|
+      get path
+      assert_response :success, path
+    end
+
+    assert_difference("Cross.count", 1) { follow_on(cross.id, male_id: male.id.to_s, female_id: progeny.id.to_s) }
+    assert_equal "/w", Cross.order(:id).last.male_fly.chr1
+
+    assert_difference("Cross.count", 1) do
+      follow_on(cross.id, male_id: "male_chr_s", female_id: progeny.id.to_s, m_X: "/w", m_II: "a/+", m_III: "+", m_IV: "+")
+    end
+
+    sign_out
+    sign_in_as @other
+    assert_difference("Cross.count", 1) { post copy_cross_path(cross) }
+  end
+
+  test "a fly missing an allele gets a message instead of a crash" do
+    cross = @owner.crosses.create!(crossdate: Date.current)
+    fly = Fly.new(chr1: "w/", chr2: "+/+", chr3: "+/+", chr4: "+/+", cross: cross)
+    fly.save!(validate: false)
+    sign_in_as @owner
+    assert_no_difference("Cross.count") { follow_on(cross.id, male_id: fly.id.to_s, female_id: fly.id.to_s) }
+    assert_includes flash[:alert], "incomplete genotype"
   end
 end

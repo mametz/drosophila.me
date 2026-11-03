@@ -32,6 +32,10 @@ class GoldenTest < ActiveSupport::TestCase
     end
   end
 
+  def fourth_mutated?(chromosomes)
+    chromosomes[3] != "+/+"
+  end
+
   def founder_chromosomes(male, female)
     x = Genotype.homozygous(Genotype.founder_male_x(male[0]))
     [ [ x, *male[1..].map { |c| Genotype.homozygous(c) } ], female.map { |c| Genotype.homozygous(c) } ]
@@ -45,7 +49,15 @@ class GoldenTest < ActiveSupport::TestCase
         recorded = GOLDEN.fetch("seeded: #{key}")
         punnett = recorded.fetch("punnett")
 
-        if punnett["error"]
+        # The old app crashed or misaligned the square when only one parent had a
+        # mutation on chromosome IV. That was fixed on purpose, so these pairs differ.
+        if fourth_mutated?(male) != fourth_mutated?(female)
+          square = PunnettSquare.new(male, female)
+          assert_equal square.p_mal.size, square.p_femal.size
+          mutated, wild = fourth_mutated?(male) ? [ square.p_mal, square.p_femal ] : [ square.p_femal, square.p_mal ]
+          assert_equal "ey", mutated.last[0]
+          assert_equal [ "+", "+" ], wild.last
+        elsif punnett["error"]
           assert_raises(NoMethodError) { PunnettSquare.new(male, female) }
         else
           square = PunnettSquare.new(male, female)

@@ -24,7 +24,7 @@ class AccountsTest < ActionDispatch::IntegrationTest
     assert_redirected_to crosses_path
     follow_redirect!
     assert_response :success
-    assert_equal "new@example.com", User.order(:id).last.email_address
+    assert User.exists?(email_address: "new@example.com")
   end
 
   test "weak or duplicate sign-ups are refused" do

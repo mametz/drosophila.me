@@ -12,9 +12,8 @@ class PunnettSquare
     @p_mal = @par_male.map { |chromosome| chromosome unless wild_type?(chromosome) }
     @p_femal = @par_female.map { |chromosome| chromosome unless wild_type?(chromosome) }
 
-    # Stops at chromosome III, so a mutation only on IV in one parent is not
-    # padded. Pinned by the characterization tests as existing behaviour.
-    3.times do |i|
+    # A chromosome mutated in only one parent is wild type in the other.
+    4.times do |i|
       @p_mal[i] = [ "+", "+" ] if @p_mal[i].nil? && !@p_femal[i].nil?
       @p_femal[i] = [ "+", "+" ] if !@p_mal[i].nil? && @p_femal[i].nil?
     end

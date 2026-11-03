@@ -25,7 +25,7 @@ bin/rails test
 `test/genetics/golden_test.rb` replays them, so a failure there means the genetics
 changed. If that is intended, say why in the commit.
 
-Known genetics quirks are pinned in `test/genetics/genetics_test.rb`.
+Readable examples of the rules are in `test/genetics/genetics_test.rb`.
 
 ## Where things live
 
@@ -38,5 +38,6 @@ those paths must keep working.
 
 ## Production
 
-Needs `SECRET_KEY_BASE` and `DATABASE_URL`. HTTPS is required, because `force_ssl` is on.
-Password reset emails need SMTP settings in `config/environments/production.rb`.
+See [docs/deploy.md](docs/deploy.md). Needs `SECRET_KEY_BASE`, `DATABASE_URL` and HTTPS.
+Password reset emails need the `SMTP_*` variables. `bin/rails legacy:import` copies a
+restored database from the old app.
