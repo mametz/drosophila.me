@@ -1,7 +1,7 @@
 class StocksController < ApplicationController
   before_action :set_stock, only: [:show, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit,:update,:destroy,:show]
-  before_action :logged_user, only: [:index, :new, :create, :show, :newstock]
+  before_action :logged_user, only: [:index, :new, :create, :show, :newstock, :add]
 
   # GET /stocks
   # GET /stocks.json
@@ -106,7 +106,7 @@ class StocksController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def stock_params
-    params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :user_id, :comment, :date_established, :room_id, :reference, :received_from, :lethal, :balancers)
+    params.require(:stock).permit(:number, :name, :fly_id, :lab_id, :comment, :date_established, :room_id, :reference, :received_from, :lethal, :balancers)
   end
   def cross_params
     params.require(:cross).permit(:description,:m_X,:m_II,:m_III,:m_IV,:f_X,:f_II,:f_III,:f_IV,:lethal,:balancers,
