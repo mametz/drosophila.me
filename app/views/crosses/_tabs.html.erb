@@ -1,5 +1,6 @@
 <nav class="tabs" aria-label="Cross views">
   <%= tab_link "Offspring", short_path(cross), current == :fly %>
   <%= tab_link "Chromosomes", chromosome_path(cross), current == :chromosome %>
+  <%= tab_link "Recombinants", recombinants_path(cross), current == :recombinants %>
   <%= tab_link "Punnett square", punnett_path(cross), current == :punnett %>
 </nav>

@@ -24,6 +24,13 @@ module GenotypeHelper
     alleles.to_a.join("/")
   end
 
+  def no_recombinants_reason(reason)
+    { fourth: "Chromosome IV doesn't normally cross over.",
+      balancer: "A balancer suppresses crossing over here.",
+      too_many: "More than #{RecombinantCalculator::MAX_DIFFERING_ALLELES} alleles differ, which is too many to list.",
+      identical: "The mother would need two differing alleles here." }[reason]
+  end
+
   def punnett_header(gamete)
     "\\[#{Array(gamete).flatten.join(" ; ")}\\]"
   end

@@ -266,6 +266,8 @@ details.more[open] summary { margin-bottom: .7rem; }
   transition: border-color .12s, box-shadow .12s;
 }
 .fly:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.fly-recombinant { border-style: dashed; }
+.fly-tag { color: var(--muted); font-size: .75rem; }
 .fly-parent { border-color: var(--accent); background: var(--accent-soft); }
 .fly-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .25rem; }
 .fly-actions .button-text { margin-left: auto; }

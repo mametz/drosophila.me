@@ -1,5 +1,5 @@
 class CrossesController < ApplicationController
-  PUBLIC_ACTIONS = %i[show chromosome punnett history qr].freeze
+  PUBLIC_ACTIONS = %i[show chromosome recombinants punnett history qr].freeze
 
   allow_unauthenticated_access only: PUBLIC_ACTIONS
   before_action :resume_session, only: PUBLIC_ACTIONS
@@ -17,12 +17,17 @@ class CrossesController < ApplicationController
   end
 
   def chromosome
-    sets = @cross.progeny.map { |fly| fly.genotype.allele_sets }
-    @chromosome_lists = (0..3).map { |index| chromosome_list(sets.map { |fly_sets| fly_sets[index] }.uniq) }
-    @male_x = @chromosome_lists[0].select { |alleles| alleles.intersect?(Genotype::Y_MARKERS.to_set) }
-    @female_x = @chromosome_lists[0] - @male_x
-    # Old crosses with a male written as "w/w" stored no sons, so work out what they would be.
-    @male_x = chromosome_list(Genotype.sons_x(@cross.female_fly.chr1)) if @male_x.empty?
+    load_chromosome_lists
+  end
+
+  def recombinants
+    load_chromosome_lists
+    calculator = RecombinantCalculator.new(@cross.male_fly.chromosomes, @cross.female_fly.chromosomes, @cross.balancer_list)
+    @recombinants = (0..3).map do |index|
+      options = calculator.options(index)
+      known = index.zero? ? @male_x + @female_x : @chromosome_lists[index]
+      options.with(offspring: chromosome_list(options.offspring) - known)
+    end
   end
 
   def punnett
@@ -82,6 +87,15 @@ class CrossesController < ApplicationController
 
   def set_owned_cross
     @cross = Current.user.crosses.find_by!(slug: params[:id])
+  end
+
+  def load_chromosome_lists
+    sets = @cross.progeny.map { |fly| fly.genotype.allele_sets }
+    @chromosome_lists = (0..3).map { |index| chromosome_list(sets.map { |fly_sets| fly_sets[index] }.uniq) }
+    @male_x = @chromosome_lists[0].select { |alleles| alleles.intersect?(Genotype::Y_MARKERS.to_set) }
+    @female_x = @chromosome_lists[0] - @male_x
+    # Old crosses with a male written as "w/w" stored no sons, so work out what they would be.
+    @male_x = chromosome_list(Genotype.sons_x(@cross.female_fly.chr1)) if @male_x.empty?
   end
 
   def chromosome_list(sets)

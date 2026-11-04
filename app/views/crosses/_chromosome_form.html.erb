@@ -1,0 +1,60 @@
+<% owner = cross.owned_by?(Current.user) %>
+<% recombinants = local_assigns[:recombinants] %>
+<% recombinant_x = recombinants ? recombinants[0].offspring : [] %>
+<% recombinant_male_x, recombinant_female_x = recombinant_x.partition { |alleles| alleles.intersect?(Genotype::Y_MARKERS.to_set) } %>
+<%= form_with url: crosses_path, scope: :cross do |f| %>
+  <%= f.hidden_field :parent, value: cross.id if owner %>
+  <div class="<%= "layout-side" if owner %>">
+    <section>
+      <% if owner %>
+        <p class="hint">Build the next parents chromosome by chromosome.</p>
+      <% end %>
+      <div class="chromosome-columns">
+        <div>
+          <h2>X</h2>
+          <% [ [ @male_x, recombinant_male_x, :m_X, "♂ Male" ], [ @female_x, recombinant_female_x, :f_X, "♀ Female" ] ].each do |list, recombinant_list, field, label| %>
+            <% only_one = (list + recombinant_list).one? %>
+            <% list.each do |alleles| %>
+              <%= render "chromosome_card", form: (f if owner), alleles: alleles, picks: [ [ field, label ] ], checked: only_one, recombinant: false %>
+            <% end %>
+            <% recombinant_list.each do |alleles| %>
+              <%= render "chromosome_card", form: (f if owner), alleles: alleles, picks: [ [ field, label ] ], checked: only_one, recombinant: true %>
+            <% end %>
+          <% end %>
+          <% if recombinants&.first&.reason %>
+            <p class="hint"><%= no_recombinants_reason(recombinants[0].reason) %></p>
+          <% end %>
+        </div>
+        <% [ [ "II", :II, 1 ], [ "III", :III, 2 ], [ "IV", :IV, 3 ] ].each do |title, name, index| %>
+          <% list = @chromosome_lists[index] %>
+          <% recombinant_list = recombinants ? recombinants[index].offspring : [] %>
+          <% only_one = (list + recombinant_list).one? %>
+          <% picks = [ [ :"m_#{name}", "♂" ], [ :"f_#{name}", "♀" ] ] %>
+          <div>
+            <h2><%= title %></h2>
+            <% list.each do |alleles| %>
+              <%= render "chromosome_card", form: (f if owner), alleles: alleles, picks: picks, checked: only_one, recombinant: false %>
+            <% end %>
+            <% recombinant_list.each do |alleles| %>
+              <%= render "chromosome_card", form: (f if owner), alleles: alleles, picks: picks, checked: only_one, recombinant: true %>
+            <% end %>
+            <% if recombinants && recombinants[index].reason %>
+              <p class="hint"><%= no_recombinants_reason(recombinants[index].reason) %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+    <% if owner %>
+      <aside class="panel sticky-panel">
+        <h2>Next cross</h2>
+        <label class="choice"><%= f.radio_button :male_id, "male_chr_s", checked: true %> Male from these chromosomes</label>
+        <label class="choice"><%= f.radio_button :female_id, "female_chr_s", checked: true %> Female from these chromosomes</label>
+        <br>
+        <%= render "next_cross_fields", form: f %>
+        <%= render "new_fly_fields", form: f %>
+        <p style="margin: 1rem 0 0"><%= f.submit "Set up cross", class: "button-wide" %></p>
+      </aside>
+    <% end %>
+  </div>
+<% end %>

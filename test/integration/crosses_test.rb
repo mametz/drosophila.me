@@ -422,4 +422,87 @@ class CrossesTest < ActionDispatch::IntegrationTest
     assert_no_difference("Cross.count") { follow_on(cross.id, male_id: fly.id.to_s, female_id: fly.id.to_s) }
     assert_includes flash[:alert], "incomplete genotype"
   end
+
+  test "the recombinants tab lists recombinants beside the normal chromosomes" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y +/+ +/+ +/+], female: %w[w/w a/b +/+ +/+])
+
+    get recombinants_path(cross)
+
+    assert_response :success
+    assert_select ".fly-recombinant", 2
+    assert_select ".fly-recombinant input[name='cross[f_II]'][value='+/a,b']"
+    assert_select ".fly:not(.fly-recombinant) input[name='cross[f_II]'][value='+/a']"
+    assert_select "p.hint", text: /Chromosome IV/
+  end
+
+  test "the chromosomes tab does not show recombinants" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y +/+ +/+ +/+], female: %w[w/w a/b +/+ +/+])
+
+    get chromosome_path(cross)
+
+    assert_response :success
+    assert_select ".fly-recombinant", 0
+  end
+
+  test "a recombinant already among the normal chromosomes is not repeated" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y +/a +/+ +/+], female: %w[w/w a/b +/+ +/+])
+
+    get recombinants_path(cross)
+
+    assert_select ".fly-recombinant input[name='cross[f_II]'][value='+/a']", 0
+    assert_select ".fly:not(.fly-recombinant) input[name='cross[f_II]'][value='+/a']"
+  end
+
+  test "lethal recombinants are left out" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y a,b/+ +/+ +/+], female: %w[w/w a/b +/+ +/+], lethal: "a")
+
+    get recombinants_path(cross)
+
+    assert_select ".fly-recombinant input[value='a,b']", 0
+    assert_select ".fly-recombinant input[name='cross[f_II]'][value='a,b/+']"
+  end
+
+  test "a balancer stops recombinants on that chromosome" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y +/+ +/+ +/+], female: %w[w/w a/CyO +/+ +/+])
+
+    get recombinants_path(cross)
+
+    assert_select ".fly-recombinant", 0
+    assert_select "p.hint", text: /balancer suppresses/
+  end
+
+  test "a recombinant picked on the tab becomes a parent of the next cross" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y +/+ +/+ +/+], female: %w[w/w a/b +/+ +/+])
+
+    follow_on(cross.id, male_id: "male_chr_s", female_id: "female_chr_s",
+              m_X: "w/-", m_II: "+/+", m_III: "+/+", m_IV: "+/+",
+              f_X: "w/w", f_II: "+/a,b", f_III: "+/+", f_IV: "+/+")
+
+    child = Cross.order(:id).last
+    assert_equal cross, child.parent
+    assert_equal "+/a,b", child.female_fly.chr2
+    assert_equal Set["+", "a,b"], child.progeny.map(&:chr2).flat_map { |chr| chr.split("/") }.to_set
+  end
+
+  test "strangers can see the tab on a shared cross but not a private one and get no form" do
+    sign_in_as @owner
+    cross = create_founder(male: %w[w/Y +/+ +/+ +/+], female: %w[w/w a/b +/+ +/+])
+    cross.update!(shared: false)
+    delete session_path
+
+    get recombinants_path(cross)
+    assert_response :not_found
+
+    cross.update!(shared: true)
+    get recombinants_path(cross)
+    assert_response :success
+    assert_select ".fly-recombinant", 2
+    assert_select "input[type=radio]", 0
+  end
 end

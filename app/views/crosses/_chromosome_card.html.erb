@@ -1,0 +1,13 @@
+<div class="fly<%= " fly-recombinant" if recombinant %>">
+  <div class="genotype"><%= chromosome_math(alleles) %></div>
+  <% if recombinant %>
+    <div class="fly-tag">Recombinant</div>
+  <% end %>
+  <% if form %>
+    <div class="fly-actions">
+      <% picks.each do |field, label| %>
+        <label class="pick"><%= form.radio_button field, chromosome_string(alleles), checked: checked %><span><%= label %></span></label>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -30,5 +30,6 @@ Rails.application.routes.draw do
   get ":id/history", to: "crosses#history", as: :history
   get ":id/qr", to: "crosses#qr", as: :qr
   get ":id/chr", to: "crosses#chromosome", as: :chromosome
+  get ":id/rec", to: "crosses#recombinants", as: :recombinants
   get ":id/pnt", to: "crosses#punnett", as: :punnett
 end

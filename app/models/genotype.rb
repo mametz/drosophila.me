@@ -74,7 +74,6 @@ class Genotype
   def self.comma_alleles(allele)
     allele.split(",").map(&:strip)
   end
-  private_class_method :comma_alleles
 
   def initialize(chromosomes)
     @chromosomes = chromosomes

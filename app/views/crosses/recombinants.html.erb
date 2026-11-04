@@ -1,0 +1,10 @@
+<% content_for(:title) { "Recombinants · drosophila.me" } %>
+<%= render "header", cross: @cross %>
+<%= render "parents", cross: @cross %>
+<%= render "tabs", cross: @cross, current: :recombinants %>
+<p class="hint">
+  Dashed cards carry a chromosome the mother could pass on after crossing over. Males don't recombine, so the father's chromosomes stay whole.
+  These are possibilities, not predictions: without map positions the site can't give frequencies, and it can't tell when two alleles belong to the same gene.
+  Name any balancer the site doesn't recognise in the cross's balancer list.
+</p>
+<%= render "chromosome_form", cross: @cross, recombinants: @recombinants %>
