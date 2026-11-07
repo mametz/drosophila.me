@@ -83,7 +83,7 @@ git remote add dokku dokku@NEW_IP:drosophila
 ```
 
 ```bash
-git push dokku rails-8-rewrite:master
+git push dokku master
 ```
 
 Then on the droplet:
