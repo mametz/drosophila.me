@@ -55,6 +55,9 @@
           <%= nav_link "Crosses", crosses_path, section: "crosses" %>
           <%= nav_link "Stocks", stocks_path, section: "stocks" %>
           <% if authenticated? %>
+            <% if Current.user&.admin? %>
+              <%= nav_link "Stats", admin_root_path, section: "dashboard" %>
+            <% end %>
             <%= nav_link "Profile", edit_account_path, section: "accounts" %>
             <%= button_to "Log out", session_path, method: :delete %>
           <% else %>

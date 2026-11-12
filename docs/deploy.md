@@ -247,6 +247,16 @@ Errors from the nightly job go to `/var/log/drosophila-dump.log`. Test a full re
 
 Once you're sure you won't go back to the old server, raise the HTTPS rule to a year: `expires` in `config/environments/production.rb` and `dokku nginx:set drosophila hsts-max-age 31536000`, then rebuild and deploy. Don't remove `drosophila` from the old droplet until the new site has run well for a week or two.
 
+## Usage stats
+
+The stats page at `/admin` opens only for the accounts listed in `ADMIN_EMAILS`, separated by commas. Everyone else gets the normal not-found page:
+
+```bash
+dokku config:set drosophila ADMIN_EMAILS=you@example.com
+```
+
+It counts daily visits per account and page views per type of page, from the release that added it. It stores no IP addresses, browsers or which cross was viewed.
+
 ## If it goes wrong
 
 Before DNS has changed, restart the old app with `dokku ps:start drosophila` on the old droplet.

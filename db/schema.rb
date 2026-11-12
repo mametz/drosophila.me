@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_03_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "activity_days", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "day", null: false
+    t.integer "requests", default: 0, null: false
+    t.index ["day"], name: "index_activity_days_on_day"
+    t.index ["user_id", "day"], name: "index_activity_days_on_user_id_and_day", unique: true
+  end
 
   create_table "crosses", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -43,6 +51,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_03_200000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cross_id"], name: "index_flies_on_cross_id"
+  end
+
+  create_table "page_views", force: :cascade do |t|
+    t.date "day", null: false
+    t.string "page", null: false
+    t.boolean "signed_in", null: false
+    t.integer "views", default: 0, null: false
+    t.index ["day", "page", "signed_in"], name: "index_page_views_on_day_and_page_and_signed_in", unique: true
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -88,6 +104,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_03_200000) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "activity_days", "users", on_delete: :cascade
   add_foreign_key "crosses", "crosses", column: "parent_id", on_delete: :nullify
   add_foreign_key "crosses", "flies", column: "female_fly_id"
   add_foreign_key "crosses", "flies", column: "male_fly_id"

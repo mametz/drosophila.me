@@ -20,6 +20,10 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  namespace :admin do
+    root "dashboard#show"
+  end
+
   root "static_pages#home"
 
   # Short links are printed on labels as QR codes, so these paths must not change.

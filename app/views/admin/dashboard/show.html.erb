@@ -1,0 +1,359 @@
+<% content_for(:title) { "Usage stats · drosophila.me" } %>
+<% o = @overview %>
+<div class="page-head">
+  <div>
+    <p class="eyebrow">Admin</p>
+    <h1>Usage stats</h1>
+    <p>Live from the database, <%= l(@stats.now, format: "%-d %B %Y, %H:%M UTC") %>. Counts only: accounts appear by number and email domain.</p>
+  </div>
+</div>
+
+<nav class="tabs stats-toc" aria-label="Sections">
+  <a href="#overview">Overview</a><a href="#growth">Growth</a><a href="#engagement">Engagement</a>
+  <a href="#retention">Retention</a><a href="#accounts">Accounts</a><a href="#places">Institutions</a>
+  <a href="#rhythm">Rhythm</a><a href="#features">Features</a><a href="#pages">Pages</a>
+  <a href="#devices">Devices</a><a href="#system">System</a>
+</nav>
+
+<section id="overview" class="stats-section">
+  <div class="kpis">
+    <div class="kpi">
+      <span class="kpi-label">Accounts</span>
+      <span class="kpi-value"><%= number_with_delimiter(o[:accounts]) %></span>
+      <span class="delta"><%= percent(o[:accounts_with_data], o[:accounts]) %> have added something</span>
+    </div>
+    <% [ [ :active_7, "Active, last 7 days", 7 ], [ :active_30, "Active, last 30 days", 30 ], [ :active_365, "Active, last 12 months", 365 ] ].each do |key, label, days| %>
+      <div class="kpi">
+        <span class="kpi-label"><%= label %></span>
+        <span class="kpi-value"><%= number_with_delimiter(o[key][:current]) %></span>
+        <%= change(o[key][:current], o[key][:previous], days) %>
+      </div>
+    <% end %>
+    <div class="kpi">
+      <span class="kpi-label">New accounts, 30 days</span>
+      <span class="kpi-value"><%= number_with_delimiter(o[:new_accounts_30][:current]) %></span>
+      <%= change(o[:new_accounts_30][:current], o[:new_accounts_30][:previous], 30) %>
+    </div>
+    <div class="kpi">
+      <span class="kpi-label">Crosses added, 30 days</span>
+      <span class="kpi-value"><%= number_with_delimiter(o[:crosses_30][:current]) %></span>
+      <%= change(o[:crosses_30][:current], o[:crosses_30][:previous], 30) %>
+    </div>
+    <div class="kpi">
+      <span class="kpi-label">Stocks added, 30 days</span>
+      <span class="kpi-value"><%= number_with_delimiter(o[:stocks_30][:current]) %></span>
+      <%= change(o[:stocks_30][:current], o[:stocks_30][:previous], 30) %>
+    </div>
+    <div class="kpi">
+      <span class="kpi-label">All time</span>
+      <span class="kpi-value kpi-value-small"><%= number_with_delimiter(o[:crosses]) %> crosses</span>
+      <span class="delta"><%= number_with_delimiter(o[:stocks]) %> stocks · <%= number_with_delimiter(o[:rooms]) %> rooms<% if o[:first_signup] %> · since <%= o[:first_signup].year %><% end %></span>
+    </div>
+  </div>
+  <p class="hint">"Active" means the account logged in, visited, or added or changed a cross, stock or room. Before <%= @engagement[:tracking_since] ? l(@engagement[:tracking_since], format: "%-d %B %Y") : "visit counting started" %> only additions and changes count, so older periods read lower.</p>
+</section>
+
+<section id="growth" class="stats-section">
+  <div class="section-head"><h2>Growth</h2><span class="muted small">By month, all time</span></div>
+  <div class="chart-grid-2">
+    <div class="panel">
+      <h3>Accounts in total</h3>
+      <%= line_chart(@cumulative, summary: "Running total of accounts by month", label: month_label, tip: month_tip) %>
+    </div>
+    <div class="panel">
+      <h3>Active accounts per month</h3>
+      <%= column_chart(@growth[:active], summary: "Active accounts per month", label: month_label, tip: month_tip) %>
+    </div>
+    <div class="panel">
+      <h3>New accounts per month</h3>
+      <%= column_chart(@growth[:accounts], summary: "New accounts per month", label: month_label, tip: month_tip, css: "series-2") %>
+    </div>
+    <div class="panel">
+      <h3>Crosses added per month</h3>
+      <%= column_chart(@growth[:crosses], summary: "Crosses added per month", label: month_label, tip: month_tip, css: "series-3") %>
+    </div>
+    <div class="panel">
+      <h3>Stocks added per month</h3>
+      <%= column_chart(@growth[:stocks], summary: "Stocks added per month", label: month_label, tip: month_tip, css: "series-4") %>
+    </div>
+    <div class="panel table-wrap">
+      <h3>Year by year</h3>
+      <table class="stats-table">
+        <thead><tr><th scope="col">Year</th><th scope="col">New accounts</th><th scope="col">Active</th><th scope="col">Crosses</th><th scope="col">Stocks</th></tr></thead>
+        <tbody>
+          <% @years.each do |row| %>
+            <tr>
+              <th scope="row"><%= row["year"] %></th>
+              <td><%= number_with_delimiter(row["accounts"]) %></td>
+              <td><%= number_with_delimiter(row["active"]) %></td>
+              <td><%= number_with_delimiter(row["crosses"]) %></td>
+              <td><%= number_with_delimiter(row["stocks"]) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="hint">The old site's accounts that never added anything weren't brought over, so sign-ups before November 2026 are undercounted.</p>
+</section>
+
+<section id="engagement" class="stats-section">
+  <div class="section-head"><h2>Engagement</h2><span class="muted small">Last 90 days</span></div>
+  <% e = @engagement %>
+  <div class="kpis">
+    <div class="kpi"><span class="kpi-label">Active today</span><span class="kpi-value"><%= e[:dau_today] %></span><span class="delta">accounts that visited</span></div>
+    <div class="kpi"><span class="kpi-label">Daily average, 28 days</span><span class="kpi-value"><%= e[:avg_dau] %></span><span class="delta">of <%= e[:mau] %> who visited in that time</span></div>
+    <div class="kpi"><span class="kpi-label">Stickiness</span><span class="kpi-value"><%= e[:stickiness] ? number_to_percentage(e[:stickiness] * 100, precision: 0) : "–" %></span><span class="delta">daily ÷ monthly visitors</span></div>
+    <div class="kpi"><span class="kpi-label">Visit days per account</span><span class="kpi-value"><%= e[:visit_days_per_account].zero? ? "–" : e[:visit_days_per_account] %></span><span class="delta">in 28 days, among visitors</span></div>
+    <div class="kpi"><span class="kpi-label">Pages per visit day</span><span class="kpi-value"><%= e[:requests_per_visit] || "–" %></span><span class="delta">requests by signed-in accounts</span></div>
+  </div>
+  <div class="chart-grid-2">
+    <div class="panel">
+      <h3>Active accounts per day</h3>
+      <%= column_chart(@recent[:active], summary: "Active accounts per day, last 90 days", label: day_label) %>
+    </div>
+    <div class="panel">
+      <h3>Active accounts per week, last year</h3>
+      <%= column_chart(@recent[:weekly_active], summary: "Active accounts per week", label: day_label, tip: week_tip) %>
+    </div>
+    <div class="panel">
+      <h3>Crosses added per day</h3>
+      <%= column_chart(@recent[:crosses], summary: "Crosses added per day, last 90 days", label: day_label, css: "series-3") %>
+    </div>
+    <div class="panel">
+      <h3>Stocks added per day</h3>
+      <%= column_chart(@recent[:stocks], summary: "Stocks added per day, last 90 days", label: day_label, css: "series-4") %>
+    </div>
+  </div>
+  <% unless e[:tracking_since] %><p class="hint">Visit counting starts with this release, so the visit numbers fill in from today.</p><% end %>
+</section>
+
+<section id="retention" class="stats-section">
+  <div class="section-head"><h2>Retention</h2><span class="muted small">Share of each sign-up group active again later</span></div>
+  <% a = @activation %>
+  <div class="kpis">
+    <div class="kpi"><span class="kpi-label">Sign-ups, last 180 days</span><span class="kpi-value"><%= a[:accounts] %></span></div>
+    <div class="kpi"><span class="kpi-label">Added something in week 1</span><span class="kpi-value"><%= percent(a[:week], a[:accounts]) %></span><span class="delta"><%= percent(a[:ever], a[:accounts]) %> ever did</span></div>
+    <div class="kpi"><span class="kpi-label">Time to first cross or stock</span><span class="kpi-value"><%= a[:median_hours] ? (a[:median_hours].to_f < 48 ? "#{a[:median_hours].to_f.round(1)} h" : "#{(a[:median_hours].to_f / 24).round} days") : "–" %></span><span class="delta">median</span></div>
+  </div>
+  <div class="panel table-wrap">
+    <h3>By sign-up month</h3>
+    <table class="stats-table cohort">
+      <thead><tr><th scope="col">Signed up</th><th scope="col">Accounts</th><% 12.times do |k| %><th scope="col">M<%= k %></th><% end %></tr></thead>
+      <tbody>
+        <% @monthly_cohorts.each do |cohort| %>
+          <% months = (@stats.today.year * 12 + @stats.today.month) - (cohort[:start].year * 12 + cohort[:start].month) %>
+          <tr>
+            <th scope="row"><%= cohort[:start].strftime("%b %Y") %></th>
+            <td><%= cohort[:size] %></td>
+            <% 12.times do |k| %>
+              <% if k > months %><td></td><% else %><%= heat_cell(percent(cohort[:shares][k].to_f, 1), cohort[:shares][k].to_f) %><% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel table-wrap">
+    <h3>By sign-up year</h3>
+    <table class="stats-table cohort">
+      <thead><tr><th scope="col">Signed up</th><th scope="col">Accounts</th><% 12.times do |k| %><th scope="col">Y<%= k %></th><% end %></tr></thead>
+      <tbody>
+        <% @yearly_cohorts.each do |cohort| %>
+          <% years = @stats.today.year - cohort[:start].year %>
+          <tr>
+            <th scope="row"><%= cohort[:start].year %></th>
+            <td><%= cohort[:size] %></td>
+            <% 12.times do |k| %>
+              <% if k > years %><td></td><% else %><%= heat_cell(percent(cohort[:shares][k].to_f, 1), cohort[:shares][k].to_f) %><% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">M0 is the month of sign-up, M1 the month after, and so on; years work the same way. Accounts brought over from the old site had all added something, so their early columns read higher than for new sign-ups.</p>
+</section>
+
+<section id="accounts" class="stats-section">
+  <div class="section-head"><h2>Accounts</h2></div>
+  <div class="chart-grid-3">
+    <div class="panel">
+      <h3>Where accounts stand</h3>
+      <% stages = [ [ "new", "New (joined in the last 30 days)" ], [ "active", "Active in the last 30 days" ], [ "cooling", "Last active 1–3 months ago" ], [ "dormant", "Last active 3–12 months ago" ], [ "lapsed", "Last active over a year ago" ], [ "never", "Never active" ] ] %>
+      <%= bar_list(stages.map { |key, label| [ label, @lifecycle.fetch(key, 0) ] }, total: o[:accounts]) %>
+    </div>
+    <div class="panel">
+      <h3>Crosses per account</h3>
+      <%= bar_list(@cross_sizes, total: o[:accounts]) %>
+    </div>
+    <div class="panel">
+      <h3>Stocks per account</h3>
+      <%= bar_list(@stock_sizes, total: o[:accounts]) %>
+    </div>
+  </div>
+  <div class="panel table-wrap">
+    <h3>Busiest accounts, last 90 days</h3>
+    <table class="stats-table">
+      <thead><tr><th scope="col">Account</th><th scope="col">Email domain</th><th scope="col">Actions</th><th scope="col">New crosses</th><th scope="col">New stocks</th><th scope="col">Crosses in total</th><th scope="col">Stocks in total</th><th scope="col">Joined</th><th scope="col">Last active</th></tr></thead>
+      <tbody>
+        <% @top_accounts.each do |row| %>
+          <tr>
+            <th scope="row">#<%= row["user_id"] %></th>
+            <td><%= row["domain"] %></td>
+            <td><%= number_with_delimiter(row["actions"]) %></td>
+            <td><%= number_with_delimiter(row["new_crosses"]) %></td>
+            <td><%= number_with_delimiter(row["new_stocks"]) %></td>
+            <td><%= number_with_delimiter(row["crosses"]) %></td>
+            <td><%= number_with_delimiter(row["stocks"]) %></td>
+            <td><%= row["created_at"].to_date.strftime("%b %Y") %></td>
+            <td><%= row["last_at"] ? "#{time_ago_in_words(row["last_at"].to_time)} ago" : "–" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @top_accounts.empty? %><p class="muted small">Nobody was active in the last 90 days.</p><% end %>
+  </div>
+</section>
+
+<section id="places" class="stats-section">
+  <div class="section-head"><h2>Institutions and countries</h2><span class="muted small">From email addresses</span></div>
+  <div class="chart-grid-2">
+    <div class="panel table-wrap">
+      <h3>Email domains</h3>
+      <table class="stats-table">
+        <thead><tr><th scope="col">Domain</th><th scope="col">Accounts</th><th scope="col">Active, 90 days</th><th scope="col">Crosses</th></tr></thead>
+        <tbody>
+          <% @domains.each do |row| %>
+            <tr>
+              <th scope="row"><%= row["domain"] %><% if UsageStats::PERSONAL_DOMAINS.include?(row["domain"]) %> <span class="muted small">personal</span><% end %></th>
+              <td><%= row["accounts"] %></td>
+              <td><%= row["active"] %></td>
+              <td><%= number_with_delimiter(row["crosses"].to_i) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3>Countries</h3>
+      <%= bar_list(@countries.first(20).map { |row| [ "#{row[:country]}#{" · #{row[:active]} active" if row[:active].positive?}", row[:accounts] ] }, total: o[:accounts]) %>
+      <p class="hint">A guess from the address ending: .edu counts as the United States, and personal addresses<% if @personal_share %> (<%= number_to_percentage(@personal_share * 100, precision: 0) %> of accounts)<% end %> can't be placed. "Active" means the last 90 days.</p>
+    </div>
+  </div>
+</section>
+
+<section id="rhythm" class="stats-section">
+  <div class="section-head"><h2>Rhythm</h2><span class="muted small">Logins and changes over the last 12 months, UTC</span></div>
+  <div class="panel table-wrap">
+    <table class="heatmap">
+      <thead><tr><th scope="col"></th><% 24.times do |h| %><th scope="col"><%= h %></th><% end %></tr></thead>
+      <tbody>
+        <% %w[Mon Tue Wed Thu Fri Sat Sun].each_with_index do |day, i| %>
+          <tr>
+            <th scope="row"><%= day %></th>
+            <% 24.times do |h| %>
+              <% n = @heatmap[:counts].fetch([ i + 1, h ], 0) %>
+              <%= heat_cell("", @heatmap[:max].zero? ? 0 : n.to_f / @heatmap[:max], title: "#{day} #{h}:00–#{h}:59 UTC: #{n}") %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% total = @weekdays.values.sum %>
+    <p class="hint">Darker means busier. Weekends: <%= percent(@weekdays.fetch(6, 0) + @weekdays.fetch(7, 0), total) %> of all actions. 12:00 UTC is 13:00 in Zürich in winter, 07:00 in New York.</p>
+  </div>
+</section>
+
+<section id="features" class="stats-section">
+  <div class="section-head"><h2>Features</h2></div>
+  <% c = @cross_features %>
+  <% s = @stock_features %>
+  <div class="chart-grid-3">
+    <div class="panel">
+      <h3>Crosses</h3>
+      <%= bar_list([ [ "Continue an earlier cross", c[:with_parent].to_i ], [ "Have balancers set", c[:with_balancers].to_i ], [ "Have lethal alleles set", c[:with_lethal].to_i ], [ "Have a description", c[:with_description].to_i ], [ "Private", c[:private].to_i ] ], total: c[:total].to_i) %>
+      <p class="hint">Median <%= c[:median_flies] ? c[:median_flies].to_f.round : "–" %> flies per cross (mean <%= c[:mean_flies] || "–" %>). Crosses are entered a median of <%= c[:median_entry_delay] ? c[:median_entry_delay].to_f.round : "–" %> days after their cross date.</p>
+    </div>
+    <div class="panel">
+      <h3>Generations per family of crosses</h3>
+      <%= bar_list(@generations, total: @generations.sum(&:last)) %>
+      <p class="hint">Crosses linked by "continue" form a family; this counts how many generations deep each goes.</p>
+    </div>
+    <div class="panel">
+      <h3>Stocks</h3>
+      <%= bar_list([ [ "In a room", s[:with_room].to_i ], [ "Have a source", s[:with_source].to_i ], [ "Have a name", s[:with_name].to_i ], [ "Have a comment", s[:with_comment].to_i ], [ "Have a reference", s[:with_reference].to_i ], [ "Have a date established", s[:with_date].to_i ] ], total: s[:total].to_i) %>
+      <p class="hint"><%= s[:accounts_with_rooms] %> accounts use rooms.</p>
+    </div>
+    <div class="panel">
+      <h3>Most used balancers</h3>
+      <%= bar_list(@balancers.map { |row| [ "#{row["name"]} · #{row["accounts"]} accounts", row["uses"].to_i ] }) %>
+    </div>
+    <div class="panel">
+      <h3>Most used lethal alleles</h3>
+      <%= bar_list(@lethal.map { |row| [ "#{row["name"]} · #{row["accounts"]} accounts", row["uses"].to_i ] }) %>
+    </div>
+    <div class="panel">
+      <h3>Where stocks come from</h3>
+      <%= bar_list(@sources.map { |row| [ "#{row["name"]} · #{row["accounts"]} accounts", row["stocks"].to_i ] }) %>
+      <h3>Room temperatures</h3>
+      <%= bar_list(@temperatures, total: o[:rooms]) %>
+    </div>
+  </div>
+</section>
+
+<section id="pages" class="stats-section">
+  <div class="section-head"><h2>Pages and actions</h2><span class="muted small"><%= @pages[:since] ? "Counted since #{l(@pages[:since], format: "%-d %B %Y")}" : "Counting starts with this release" %></span></div>
+  <div class="chart-grid-2">
+    <div class="panel">
+      <h3>Signed-in views per day, 30 days</h3>
+      <%= column_chart(@pages[:signed_in], summary: "Page views by signed-in visitors per day", label: day_label) %>
+    </div>
+    <div class="panel">
+      <h3>Visitors not signed in, 30 days</h3>
+      <%= column_chart(@pages[:signed_out], summary: "Page views by visitors who aren't signed in per day", label: day_label, css: "series-2") %>
+      <p class="hint">Mostly shared cross links and scanned QR labels, plus the home page.</p>
+    </div>
+  </div>
+  <div class="panel table-wrap">
+    <table class="stats-table">
+      <thead><tr><th scope="col">Page or action</th><th scope="col">7 days</th><th scope="col">30 days</th><th scope="col">Not signed in, 30 days</th><th scope="col">Since counting began</th></tr></thead>
+      <tbody>
+        <% @pages[:rows].each do |row| %>
+          <tr>
+            <th scope="row"><%= row["name"] %></th>
+            <td><%= number_with_delimiter(row["week"].to_i) %></td>
+            <td><%= number_with_delimiter(row["month"].to_i) %></td>
+            <td><%= percent(row["month_out"].to_i, row["month"].to_i) %></td>
+            <td><%= number_with_delimiter(row["total"].to_i) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @pages[:rows].empty? %><p class="muted small">No pages counted yet.</p><% end %>
+    <p class="hint">Bots, failed requests and this page aren't counted. Only the kind of page is stored, never which cross or who viewed it.</p>
+  </div>
+</section>
+
+<section id="devices" class="stats-section">
+  <% d = @devices %>
+  <div class="section-head"><h2>Devices</h2><span class="muted small">From <%= number_with_delimiter(d[:logins]) %> logins since the move to the new site</span></div>
+  <div class="chart-grid-3">
+    <div class="panel"><h3>Device</h3><%= bar_list(d[:device].map { |row| [ "#{row[:label]} · #{row[:accounts]} accounts", row[:logins] ] }, total: d[:logins]) %></div>
+    <div class="panel"><h3>Browser</h3><%= bar_list(d[:browser].map { |row| [ "#{row[:label]} · #{row[:accounts]} accounts", row[:logins] ] }, total: d[:logins]) %></div>
+    <div class="panel"><h3>Operating system</h3><%= bar_list(d[:os].map { |row| [ "#{row[:label]} · #{row[:accounts]} accounts", row[:logins] ] }, total: d[:logins]) %></div>
+  </div>
+  <div class="panel">
+    <h3>Logins per week</h3>
+    <%= column_chart(d[:weekly_logins], summary: "Logins per week, last 26 weeks", label: day_label, tip: week_tip, css: "series-2") %>
+    <p class="hint">A login lasts until the person logs out, so people who stay logged in show up rarely here. Daily visits under Engagement are the better measure.</p>
+  </div>
+</section>
+
+<section id="system" class="stats-section">
+  <div class="section-head"><h2>System</h2></div>
+  <div class="panel">
+    <%= bar_list(@system[:tables].to_a) %>
+    <p class="hint">Database size <%= number_to_human_size(@system[:database_size]) %>. This page took <%= @elapsed_ms %> ms to compute.</p>
+  </div>
+</section>

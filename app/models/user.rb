@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :crosses, dependent: :destroy
   has_many :stocks, dependent: :destroy
   has_many :rooms, dependent: :destroy
+  has_many :activity_days, dependent: :delete_all
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
@@ -14,6 +15,11 @@ class User < ApplicationRecord
     (fly.cross && fly.cross.user_id == id) ||
       stocks.exists?(fly_id: fly.id) ||
       crosses.where(male_fly_id: fly.id).or(crosses.where(female_fly_id: fly.id)).exists?
+  end
+
+  # Set ADMIN_EMAILS on the server, separated by commas, to open the stats page.
+  def admin?
+    ENV.fetch("ADMIN_EMAILS", "").split(",").map { |email| email.strip.downcase }.include?(email_address)
   end
 
   def gravatar_url(size: 80)
